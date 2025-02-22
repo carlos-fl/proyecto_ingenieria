@@ -8,7 +8,7 @@
     <li>Diagramas del sistema (UML)</li>
     <li>Diseños de vistas</li>
     <li>Reportes</li>
-    <li><Entrevistas/li>
+    <li><Entrevistas</li>
     <li>Manuales</li>
   </ol>
 </p>
