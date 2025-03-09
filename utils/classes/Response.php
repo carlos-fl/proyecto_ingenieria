@@ -13,16 +13,19 @@
      * @param bool $isBadResponse
      * @return PostResponse $response
      */
-    public static function returnPostResponse(?int $code = null, string $status, ?string $message = null, bool $isBadResponse): PostResponse {
+    public static function returnPostResponse(bool $isBadResponse, ?string $status, ?int $code = null, ?string $message = null, ?array $data = null, ?string $sessionData = null): PostResponse {
       //TODO: validate code is a number in range of http code
       //TODO: validate status and message with regex
+
+      $response = new PostResponse();
       if (!$isBadResponse) {
-        $response = new PostResponse();
         $response->status = $status;
+        $response->data = $data;
+        $response->sessionData = $sessionData;
+        $response->error = null;
         return $response;
       }
 
-      $response = new PostResponse();
       $errorResponse = new ErrorResponse();
       $errorResponse->errorCode = $code;
       $errorResponse->errorMessage = $message;
