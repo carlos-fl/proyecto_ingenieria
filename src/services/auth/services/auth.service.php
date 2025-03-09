@@ -23,8 +23,8 @@
       $db = $GLOBALS['db'];
       $env = $GLOBALS['env'];
 
-      $email = $request->email;
-      $password = $request->password;
+      $email = $request->getEmail();
+      $password = $request->getPassword();
       if (!EmailValidator::validateInstitutionalEmail($email)) {
         return Response::returnPostResponse(401, 'failure', 'Incorrect email or password', true);
       }
@@ -59,6 +59,11 @@
       if (!in_array($ROLE, $roles->fetch_assoc())) {
         return Response::returnPostResponse(403, 'failure', 'Access denied', true);
       }
+
+      /**
+       * close connection to database
+       */
+      $mysqli->close();
 
       $_SESSION['USER_ID'] = $userData['USER_ID'];
       $_SESSION['INST_EMAIL'] = $userData['INST_EMAIL'];
