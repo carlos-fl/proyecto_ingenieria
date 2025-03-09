@@ -1,7 +1,7 @@
 <?php
 
   class Request {
-    public static function isWrongRequestMethod(int $HTTPMethod): void {
+    public static function isWrongRequestMethod(string $HTTPMethod): void {
       if ($_SERVER['REQUEST_METHOD'] !== $HTTPMethod) {
         echo json_encode([
           "status" => "failure",

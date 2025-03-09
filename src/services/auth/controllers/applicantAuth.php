@@ -5,6 +5,7 @@
   include_once __DIR__ .'/../services/auth.service.php';
   include_once __DIR__ . '/../types/logApplicant.php';
   include_once __DIR__ . '/../../../../utils/classes/Response.php';
+  include_once __DIR__ . '/../../../../utils/classes/Request.php';
   include_once __DIR__ . '/../../../../utils/functions/jsonParse.php';
 
   header("Content-Type: application/json");
