@@ -7,5 +7,7 @@
 
   class PostResponse {
    public string $status; 
-   public ErrorResponse $error; 
+   public ?array $data = null;
+   public ?string $sessionData = null;
+   public ?ErrorResponse $error = null; 
   }

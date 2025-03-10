@@ -8,6 +8,6 @@
 
   header("Content-Type: application/json");
 
-  Request::isWrongRequestMethod('POST');  
+  Request::isWrongRequestMethod('POST'); 
 
-  Logger::loginAuth('ADMINISTRATOR');
+  Logger::loginAuth('APPLICANT_REVIEWER');
