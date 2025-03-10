@@ -1,0 +1,43 @@
+#adminSection{
+    margin-top: 10vh;
+}
+
+#adminComponent{
+    outline: .1em solid var(--black);
+    width: 90%;
+    background-color: white;
+}
+
+
+#asideControl{
+    height: 100%;
+    position: relative;
+    border-right: 0.05em solid var(--light-gray);
+}
+
+#listaExamenes{
+    overflow-y: auto;
+    overflow-x: auto;
+    max-height: 200px;
+}
+
+#endSession{
+    display: block
+}
+
+#examenes{
+    list-style-type: none;
+    padding: 0;
+}
+
+ul#examenes>li{
+    font-weight: bold;
+}
+
+ul#examenes>li:hover{
+    cursor: pointer;
+    background-color: rgba(0, 0, 255, 0.1);
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}

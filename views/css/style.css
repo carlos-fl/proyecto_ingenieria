@@ -1,0 +1,31 @@
+:root{
+    font-family: "Helvetica Neue", sans-serif !important; 
+    --primary-color: #FFBF00;
+    --bs-primary: var(--primary-color);
+    --secondary-color: #000E33;
+    --warning-color : #990000;
+    --black: #111111;
+}
+
+.primary-text{
+    color: var(--primary-color)
+}
+
+.btn-primary{
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    font-weight: 600;
+    outline: none;
+}
+
+.btn-primary:hover{
+    background-color: var(--black);
+}
+
+.text-danger{
+    color: var(--warning-color)
+}
+
+.no-underline{
+    text-decoration: none;
+}
