@@ -36,6 +36,11 @@
             </div>
         </div>
     </section>
+    <!--Container para mostrar si hubo un error en la petición. General Component (Styles.css)-->
+    <div id="popUp" class="d-flex align-items-center ps-3 pop-up fail-popup">
+        <img id="popUpImg"src="assets/img/crossmark.png" alt="">
+        <span class="ms-2" id="popUpMessage"></span>
+    </div>
     
     
 </body>

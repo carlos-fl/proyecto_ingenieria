@@ -29,3 +29,48 @@
 .no-underline{
     text-decoration: none;
 }
+
+.pop-up{
+    position: absolute;
+    bottom: 0px;
+    right: 10px;
+    width: 300px;
+    height: 50px;
+    border: 0.01em solid black;
+    opacity: 0;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+    font-weight: 600;
+}
+
+.pop-up>img{
+    width: 20px;
+    height: 20px;
+}
+
+.fail-popup{
+    background-color: var(--warning-color);
+    color: white;
+}
+
+@keyframes showPopUp{
+    25%{
+        display: block;
+        bottom: 20px;
+        opacity: 1;
+    }
+
+    50%{
+        display: block;
+        bottom: 20px;
+        opacity: 1;
+    }
+
+    100%{
+        bottom: 0px;
+        display: none;
+        opacity: 0;
+    }
+}
+
