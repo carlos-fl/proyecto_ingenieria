@@ -1,0 +1,150 @@
+:root{
+  font-family: "Helvetica Neue", sans-serif !important; 
+  --primary-color: #FFBF00;
+  --bs-primary: var(--primary-color);
+  --secondary-color: #000E33;
+  --warning-color : #990000;
+  --black: #111111;
+}
+
+#loginSection{
+  margin-top: 10vh;
+}
+
+#loginComponent{
+  background-color: white;
+}
+
+#heroUnah{
+  width:450px;
+  height:600px;
+  float: left;
+}
+
+#loginBox{
+  display: inline-block;
+}
+
+.outline-grey{
+  outline: 0.1em solid --black
+}
+
+.btn-primary{
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  font-weight: 600;
+  outline: none;
+}
+
+.btn-primary:hover{
+  background-color: var(--black);
+}
+
+.text-danger{
+  color: var(--warning-color)
+}
+
+.no-underline{
+  text-decoration: none;
+}
+
+.nav-link{
+  color: var(--black)!important;
+}
+
+.navbar{
+  border-bottom: 1px solid var(--primary-color);
+}  
+
+.navbar-brand img {
+  width: 25%;
+}
+
+#profile-container{
+  background-color: white; 
+  width: 100%; 
+  height: 95vh; 
+  margin: 25px auto; 
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.sidebar {
+  border-right: 1px solid #dee2e6;
+  width: 28%!important;
+  height: 87vh!important;
+  padding: 0 15px;
+}
+
+.nav-tabs{
+  width: 22em;
+}
+
+.main-content{
+  width: 71%!important;
+}
+.exam-list {
+  height: 70vh; 
+  overflow-y: auto;
+  margin-top: 15px;
+}
+
+.exam-item:hover {
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+.exam-box {
+  max-width: 60em; 
+  height: 43em;   
+  margin: auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 20px;
+  background-color: #fff;
+  overflow: hidden;
+}
+
+.buttons-container {
+  margin-top: 15px;
+}
+
+.btn-primary{
+  background-color: var(--primary-color)!important;
+  border-color: var(--primary-color)!important;
+  color: var(--secondary-color);
+  font-weight: 600;
+  outline: none;
+}
+
+.btn-primary:hover{
+  background-color: var(--black)!important;
+}
+
+.btn-danger{
+  background-color: var(--warning-color)!important;
+  border-color: var(--warning-color)!important;
+}
+
+.btn-danger:hover{
+  background-color: var(--black)!important;
+}
+
+.buttons-container {
+  margin-top: 15px;
+}
+
+.logout-btn {
+  margin-top: 15px;
+}
+
+.main-content {
+  padding: 1rem;
+}
+
+#examImage {
+  max-width: 100%;
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 5px;
+}
