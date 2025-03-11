@@ -28,13 +28,13 @@
                         <input id="password" placeholder="Contraseña" type="password" class="form-control">
                     </div>
                     <div class="d-flex justify-content-end">
-                        <a href="views/solicitudesAdmision.php"><button class="btn btn-primary mt-3">Ingresar</button></a>
+                        <a href="solicitudesAdmision.php"><button class="btn btn-primary mt-3">Ingresar</button></a>
                     </div>
                     <small class="float-end mt-2"><a href="" class="text-danger no-underline">Olvidé mi contraseña</a></small>
                 </div>
                 <br>
                 <div class="text-center mt-3">
-                    <a href="views/admisiones.php" id="back-link">← Regresar</a>
+                    <a href="admisiones.php" id="back-link">← Regresar</a>
                 </div>
             </div>
         </div>
@@ -50,8 +50,8 @@
                 </div>
                 <div class="modal-body d-flex justify-content-center align-items-center">
                     <div class="btn-group" role="group" aria-label="Select reviewer type">
-                        <a href="views/loginSolicitudesAdmision.php"><button type="button" class="btn btn-warning mx-3" id="admissionReviewer">Revisor de Solicitud de Admision</button></a>
-                        <a href="views/loginRevisoreExamenes.php"><button type="button" class="btn btn-warning mx-3" id="examReviewer">Revisor de Examen de Admision</button></a>  
+                        <a href="loginSolicitudesAdmision.php"><button type="button" class="btn btn-warning mx-3" id="admissionReviewer">Revisor de Solicitud de Admision</button></a>
+                        <a href="loginRevisoreExamenes.php"><button type="button" class="btn btn-warning mx-3" id="examReviewer">Revisor de Examen de Admision</button></a>  
                     </div>
                 </div>
             </div>
