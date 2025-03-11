@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Revisión de Exámenes de Admisión</title>
-  <link rel="icon" type="image/png" href="/assets/img/UNAH-escudo.png">
-  <link rel="stylesheet" href="/css/revisoreExamenesStyle.css">
+  <link rel="icon" type="image/png" href="assets/img/UNAH-escudo.png">
+  <link rel="stylesheet" href="views/css/revisoreExamenesStyle.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
 </head>
 <body style="background-color: #000E33;">
@@ -13,7 +13,7 @@
     <header>
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#"><img src="/assets/img/logo-unah.png" alt="Logo UNAH"></a>
+          <a class="navbar-brand" href="#"><img src="assets/img/logo-unah.png" alt="Logo UNAH"></a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
                   aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -92,7 +92,7 @@
               </div>
             </div>
             <div class="logout-btn">
-              <a href="/js/modules/loginRevisoreExamenes.php">  <button class="btn btn-danger w-100">Cerrar Sesión</button></a>
+              <a href="views/loginRevisoreExamenes.php">  <button class="btn btn-danger w-100">Cerrar Sesión</button></a>
             </div>
           </div>  
           <div class="col-9 main-content d-none">

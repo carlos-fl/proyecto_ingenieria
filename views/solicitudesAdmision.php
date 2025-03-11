@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Solicitudes de Admision</title>
-  <link rel="icon" type="image/png" href="/assets/img/UNAH-escudo.png">
-  <link rel="stylesheet" href="/css/solicitudesAdmisionStyle.css">
+  <link rel="icon" type="image/png" href="assets/img/UNAH-escudo.png">
+  <link rel="stylesheet" href="views/css/solicitudesAdmisionStyle.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
 </head>
 <body style="background-color: #000E33;">
@@ -13,7 +13,7 @@
       <header>
           <nav class="navbar">
               <div class="container-fluid" id="top-bar">
-                  <a class="navbar-brand" href="#"><img src="/assets/img/logo-unah.png" alt="Logo"></a>
+                  <a class="navbar-brand" href="#"><img src="assets/img/logo-unah.png" alt="Logo"></a>
                   <span class="navbar-text mx-auto">
                       Solicitudes de Admision
                   </span>
@@ -52,7 +52,7 @@
                               </ul>
                           </div>
                       </div>
-                      <a href="/js/modules/loginSolicitudesAdmision.php"><button class="btn btn-danger w-100 mt-3">Cerrar Sesion</button></a>
+                      <a href="views/loginSolicitudesAdmision.php"><button class="btn btn-danger w-100 mt-3">Cerrar Sesion</button></a>
                   </div>
                   <div class="col-9 main-content d-none" id="requestDetail">
                       <div class="request-box mx-auto">
