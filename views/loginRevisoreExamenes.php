@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="icon" type="image/png" href="/assets/img/UNAH-escudo.png">
+    <link rel="icon" type="image/png" href="assets/img/UNAH-escudo.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://fonts.cdnfonts.com/css/helvetica-neue-5" rel="stylesheet">
-    <link rel="stylesheet" href="/css/revisoreExamenesStyle.css">
+    <link rel="stylesheet" href="views/css/revisoreExamenesStyle.css">
 </head>
 <body style="background-color: var(--secondary-color);">
     <section id="loginSection" class="container d-flex justify-content-center">
         <div id="loginComponent" class="outline-grey">
-            <img id="heroUnah" src="/assets/img/unah.png" alt="#UNAH" >
+            <img id="heroUnah" src="assets/img/unah.png" alt="#UNAH" >
             <div id="loginBox" class="pt-3 ps-3 pe-5">
                 <h3 class="fw-bold">Servicios al Revisor de Examenes</h3>
                 <small>Para acceder a los servicios de revisor debes autenticarte</small>
@@ -28,13 +28,13 @@
                         <input id="password" placeholder="Contraseña" type="password" class="form-control">
                     </div>
                     <div class="d-flex justify-content-end">
-                        <a href="/js/modules/revisoreExamenes.php"><button class="btn btn-primary mt-3">Ingresar</button></a>
+                        <a href="views/revisoreExamenes.php"><button class="btn btn-primary mt-3">Ingresar</button></a>
                     </div>
                     <small class="float-end mt-2"><a href="" class="text-danger no-underline">Olvidé mi contraseña</a></small>
                 </div>
                 <br>
                 <div class="text-center mt-3">
-                    <a href="/js/modules/admisiones.php" id="back-link">← Regresar</a>
+                    <a href="views/admisiones.php" id="back-link">← Regresar</a>
                 </div>
             </div>
         </div>
@@ -50,8 +50,8 @@
                 </div>
                 <div class="modal-body d-flex justify-content-center align-items-center">
                     <div class="btn-group" role="group" aria-label="Select reviewer type">
-                        <a href="/js/modules/loginSolicitudesAdmision.php"><button type="button" class="btn btn-warning mx-3" id="admissionReviewer">Revisor de Solicitud de Admision</button></a>
-                        <a href="/js/modules/loginRevisoreExamenes.php"><button type="button" class="btn btn-warning mx-3" id="examReviewer">Revisor de Examen de Admision</button></a>  
+                        <a href="views/loginSolicitudesAdmision.php"><button type="button" class="btn btn-warning mx-3" id="admissionReviewer">Revisor de Solicitud de Admision</button></a>
+                        <a href="views/loginRevisoreExamenes.php"><button type="button" class="btn btn-warning mx-3" id="examReviewer">Revisor de Examen de Admision</button></a>  
                     </div>
                 </div>
             </div>
