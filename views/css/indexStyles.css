@@ -168,7 +168,7 @@ footer{
 }
 
 #underConstruccion {
-    background-image: url('/assets/img/sitio-en-construccion.jpg');
+    background-image: url('/views/assets/img/sitio-en-construccion.jpg');
     height: 100vh;
 }
 

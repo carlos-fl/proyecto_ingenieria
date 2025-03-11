@@ -92,7 +92,7 @@
               </div>
             </div>
             <div class="logout-btn">
-              <a href="views/loginRevisoreExamenes.php">  <button class="btn btn-danger w-100">Cerrar Sesión</button></a>
+              <a href="loginRevisoreExamenes.php">  <button class="btn btn-danger w-100">Cerrar Sesión</button></a>
             </div>
           </div>  
           <div class="col-9 main-content d-none">

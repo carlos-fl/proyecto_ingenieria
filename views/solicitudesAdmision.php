@@ -52,7 +52,7 @@
                               </ul>
                           </div>
                       </div>
-                      <a href="views/loginSolicitudesAdmision.php"><button class="btn btn-danger w-100 mt-3">Cerrar Sesion</button></a>
+                      <a href="loginSolicitudesAdmision.php"><button class="btn btn-danger w-100 mt-3">Cerrar Sesion</button></a>
                   </div>
                   <div class="col-9 main-content d-none" id="requestDetail">
                       <div class="request-box mx-auto">

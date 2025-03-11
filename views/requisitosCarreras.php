@@ -20,22 +20,22 @@
                 <div class="collapse navbar-collapse" id="navbarText">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="views/construccion.php">Estudiantes</a>
+                            <a class="nav-link" aria-current="page" href="construccion.php">Estudiantes</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="views/construccion.php">Docentes</a>
+                            <a class="nav-link" href="construccion.php">Docentes</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#reviewerModal">Revisores</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="views/adminLogin.php">Administradores</a>
+                            <a class="nav-link" href="adminLogin.php">Administradores</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="views/index.php">Registro</a>
+                            <a class="nav-link" href="index.php">Registro</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="views/construccion.php">Biblioteca</a>
+                            <a class="nav-link" href="construccion.php">Biblioteca</a>
                         </li>
                     </ul>
                 </div>
@@ -69,7 +69,7 @@
         </div>
         </div>
         <div class="text-center mt-3">
-            <a href="views/admisiones.php" id="back-link">← Regresar</a>
+            <a href="admisiones.php" id="back-link">← Regresar</a>
         </div>   
     </main>
     <footer>
@@ -90,8 +90,8 @@
                 </div>
                 <div class="modal-body d-flex justify-content-center align-items-center">
                 <div class="btn-group" role="group" aria-label="Select reviewer type">
-                    <a href="views/loginSolicitudesAdmision.php"><button type="button" class="btn btn-warning mx-3" id="admissionReviewer">Revisor de Solicitud de Admision</button></a>
-                    <a href="views/loginRevisoreExamenes.php"><button type="button" class="btn btn-warning mx-3" id="examReviewer">Revisor de Examen de Admision</button></a>  
+                    <a href="loginSolicitudesAdmision.php"><button type="button" class="btn btn-warning mx-3" id="admissionReviewer">Revisor de Solicitud de Admision</button></a>
+                    <a href="loginRevisoreExamenes.php"><button type="button" class="btn btn-warning mx-3" id="examReviewer">Revisor de Examen de Admision</button></a>  
                 </div>
                 </div>
             </div>
