@@ -13,10 +13,8 @@
       try {
         shell_exec($command);
       } catch(Throwable $error) {
-        echo "ERROR SENDING EMAIL...";
+        //TODO write error to log file in server
       }
     }
   }
-
-  EmailService::sendEmail("josue.ham@unah.hn", "CONFIRMACIÓN DE APLICACIÓN", ["name" => "ham"], "postulantFormSent.html");
 
