@@ -4,7 +4,7 @@ require_once __DIR__ . "/../../../../config/env/Environment.php";
 
 header("Content-Type: application/json");
 
-// Validar que la solicitud sea PUT
+
 if ($_SERVER["REQUEST_METHOD"] !== "PUT") {
     http_response_code(405);
     echo json_encode([
@@ -14,10 +14,10 @@ if ($_SERVER["REQUEST_METHOD"] !== "PUT") {
     exit;
 }
 
-// Obtener datos del cuerpo de la solicitud
+
 $data = json_decode(file_get_contents("php://input"), true);
 
-// Validar que todos los campos obligatorios estén presentes
+
 if (
     !isset($data["applicationCode"], $data["firstName"], $data["lastName"], $data["id"], 
     $data["phoneNumber"], $data["email"], $data["gender"], $data["primaryMajor"], 
@@ -31,7 +31,7 @@ if (
     exit;
 }
 
-// Obtener variables de entorno y conectar a la base de datos
+
 $env = Environment::getVariables();
 $db = new Database(
     $env["DB_HOST"],
@@ -44,19 +44,20 @@ $db = new Database(
 $conn = $db->getConnection();
 
 try {
-    // Llamar al procedimiento almacenado
-    $stmt = $conn->prepare("CALL UpdateAdmission(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+    $stmt = $conn->prepare("CALL SP_Update_Admission(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param(
-        "isssssssis",
+        "isssssssiis",  
         $data["applicationCode"],
         $data["firstName"],
         $data["lastName"],
-        $data["id"],
+        $data["id"],  
         $data["phoneNumber"],
         $data["email"],
         $data["gender"],
         $data["primaryMajor"],
         $data["secondaryMajor"],
+        $data["comment"],
         $data["certificate"]
     );
 

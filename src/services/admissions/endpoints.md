@@ -49,3 +49,23 @@ curl -X PUT "http://localhost:8000/src/services/admissions/controllers/updateAdm
 {"status": "success"}
 ```
 
+### 3. ENDPOINT QUE RETORNA LAS CARRERAS JUNTO A SU ICON Y SCORE
+```bash
+curl -i -X GET "http://localhost:8000/src/services/administrator/controllers/majorsScoreIcon.php"
+```
+
+#### Objeto que responde con http status 200
+`{"status": "success", data:[{major string, centers:[strings], score, icon}] }`
+
+
+### 4. ENDPOINT QUE NOS RETORNA LOS TIPOS DE EXÁMENES JUNTO A SU PUNTUACIÓN MÁXIMA Y MÍNIMA
+
+```bash
+curl -i -X GET "http://localhost:8000/src/services/administrator/controllers/admissionsExams.php"
+```
+
+#### Objeto que responde con http status 200
+`{"status": "success"}`
+
+#### Objeto que responde con http status distinto a 200
+`{"status": "failure", data:[{examCode int, examName string, maxScore int, minScore int}] }`

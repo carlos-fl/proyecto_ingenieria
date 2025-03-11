@@ -4,7 +4,7 @@ require_once __DIR__ . "/../../../../config/env/Environment.php";
 
 header("Content-Type: application/json");
 
-// Validar que la solicitud sea POST
+
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     http_response_code(405);
     echo json_encode([
@@ -14,10 +14,10 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     exit;
 }
 
-// Obtener las variables de entorno
+
 $env = Environment::getVariables();
 
-// Instanciar la conexión a la base de datos correctamente
+
 $db = new Database(
     $env["DB_HOST"],
     $env["DB_NAME"],
@@ -28,10 +28,10 @@ $db = new Database(
 
 $conn = $db->getConnection();
 
-// Leer el JSON del request
+
 $data = json_decode(file_get_contents("php://input"), true);
 
-// Validar que todos los campos obligatorios estén presentes
+
 if (
     !isset($data["firstName"], $data["lastName"], $data["id"], $data["phoneNumber"], 
     $data["email"], $data["gender"], $data["primaryMajor"], $data["secondaryMajor"], 
@@ -46,8 +46,8 @@ if (
 }
 
 try {
-    // Llamar al procedimiento almacenado
-    $stmt = $conn->prepare("CALL InsertAdmission(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+    $stmt = $conn->prepare("CALL SP_Create_Admission(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param(
         "sssssssiis",
         $data["firstName"],

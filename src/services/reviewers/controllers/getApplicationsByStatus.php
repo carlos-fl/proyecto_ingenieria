@@ -27,7 +27,7 @@ $db = new Database(
 $conn = $db->getConnection();
 
 try {
-    $stmt = $conn->prepare("CALL GetApplicationsByStatus(?)");
+    $stmt = $conn->prepare("CALL SP_Get_Applications_By_Status(?)");
     $stmt->bind_param("s", $status);
     $stmt->execute();
 

@@ -36,7 +36,7 @@ $db = new Database(
 $conn = $db->getConnection();
 
 try {
-    $stmt = $conn->prepare("CALL ApproveApplication(?)");
+    $stmt = $conn->prepare("CALL SP_Approve_Application(?)");
     $stmt->bind_param("i", $data["applicantCode"]);
     $stmt->execute();
 

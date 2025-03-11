@@ -27,7 +27,7 @@ $db = new Database(
 $conn = $db->getConnection();
 
 try {
-    $stmt = $conn->prepare("CALL GetApplicantByCode(?)");
+    $stmt = $conn->prepare("CALL SP_Get_Applicant_By_Code(?)");
     $stmt->bind_param("i", $applicant_code);
     $stmt->execute();
     

@@ -36,7 +36,7 @@ $db = new Database(
 $conn = $db->getConnection();
 
 try {
-    $stmt = $conn->prepare("CALL RejectApplication(?, ?)");
+    $stmt = $conn->prepare("CALL SP_Reject_Application(?, ?)");
     $stmt->bind_param("is", $data["applicantCode"], $data["commentary"]);
     $stmt->execute();
 
