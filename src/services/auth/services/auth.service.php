@@ -92,6 +92,7 @@
       }
 
       // check match with applicantCode
+      // TODO: verify with regex application code
       $applicationData = $applicant->fetch_assoc();
       if ($applicationData['APPLICATION_CODE'] !== $request->getApplicantCode()) {
         return Response::returnPostResponse(true, 'failure', 401, 'Incorrect email or application code');
