@@ -1,0 +1,43 @@
+#adminSection{
+    margin-top: 5vh;
+}
+
+#adminComponent{
+    outline: .1em solid var(--black);
+    width: 90%;
+    background-color: white;
+}
+
+
+#asideControl{
+    height: 100%;
+    position: relative;
+    border-right: 0.05em solid var(--light-gray);
+}
+
+#endSession{
+    position: absolute;
+    bottom: 0;
+}
+
+#personalInfo{
+    outline: 0.01em solid var(--black);
+    padding: 1em;
+}
+
+#profilePic{
+    width: 150px;
+    height: 150px;
+}
+
+#newPhoto{
+    vertical-align: bottom;
+}
+
+.action-image{
+    height: 70px;
+    width: 70px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
