@@ -1,6 +1,6 @@
 <?php
 
-  include_once __DIR__ . '/../../src/services/auth/types/loginRequest.php';
+  include_once __DIR__ . '/../../services/auth/types/loginRequest.php';
   include_once __DIR__ . '/../functions/jsonParse.php';
 
   class Logger {
