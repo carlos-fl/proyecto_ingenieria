@@ -1,0 +1,18 @@
+#loginSection {
+    margin-top: 7vh;
+    margin-bottom: 7.4vh;
+}
+
+#loginComponent {
+    background-color: white;
+}
+
+#heroUnah {
+    width: 450px;
+    height: 600px;
+    float: left;
+}
+
+#loginBox {
+    display: inline-block;
+}
