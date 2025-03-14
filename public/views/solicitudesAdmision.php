@@ -1,118 +1,105 @@
+<?php ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Solicitudes de Admision</title>
-  <link rel="icon" type="image/png" href="assets/img/UNAH-escudo.png">
-  <link rel="stylesheet" href="css/solicitudesAdmisionStyle.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Revisión de Solicitudes</title>
+  <link rel="icon" type="image/png" href="assets/img/UNAH-escudo.png" />
+  <link rel="stylesheet" href="/public/views/css/style.css">
+  <link rel="stylesheet" href="/public/views/css/solicitudesAdmisionStyles.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/6130fb0810.js" crossorigin="anonymous"></script>
 </head>
-<body style="background-color: #000E33;">
-  <div class="container" id="profile-container">
-      <header>
-          <nav class="navbar">
-              <div class="container-fluid" id="top-bar">
-                  <a class="navbar-brand" href="#"><img src="assets/img/logo-unah.png" alt="Logo"></a>
-                  <span class="navbar-text mx-auto">
-                      Solicitudes de Admision
-                  </span>
-              </div>
-          </nav>
-      </header>
-      <main>
-          <div class="container-fluid">
-              <div class="row">
-                  <div class="col-3 sidebar">
-                      <ul class="nav nav-tabs mt-3" id="requestsTab" role="tablist">
-                          <li class="nav-item" role="presentation">
-                              <button class="nav-link active" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab" aria-controls="pending" aria-selected="true">Pendientes</button>
-                          </li>
-                          <li class="nav-item" role="presentation">
-                              <button class="nav-link" id="approved-tab" data-bs-toggle="tab" data-bs-target="#approved" type="button" role="tab" aria-controls="approved" aria-selected="false">Aprobadas</button>
-                          </li>
-                          <li class="nav-item" role="presentation">
-                              <button class="nav-link" id="rejected-tab" data-bs-toggle="tab" data-bs-target="#rejected" type="button" role="tab" aria-controls="rejected" aria-selected="false">Rechazadas</button>
-                          </li>
-                      </ul>
-                      <div class="tab-content requests-list" id="requestsTabContent">
-                          <div class="tab-pane fade show active" id="pending" role="tabpanel" aria-labelledby="pending-tab">
-                              <ul class="list-group list-group-flush" id="listPending">
-                                  <li class="list-group-item request-item" data-id="1" data-name="Prueba1" data-lastname="PruebaApellido" data-idnum="123456789" data-email="prueba@correo.com" data-center="Centro 1" data-major1="Carrera1" data-major2="Carrera2">Solicitud 1</li>
-                              </ul>
-                          </div>
-                          <div class="tab-pane fade" id="approved" role="tabpanel" aria-labelledby="approved-tab">
-                              <ul class="list-group list-group-flush" id="listApproved">
-                                  <li class="list-group-item request-item" data-id="1" data-name="Prueba2" data-lastname="PruebaApellido1" data-idnum="123456789" data-email="prueba1@correo.com" data-center="Centro 2" data-major1="Carrera3" data-major2="Carrera4">Solicitud 2</li>
-                              </ul>
-                          </div>
-                          <div class="tab-pane fade" id="rejected" role="tabpanel" aria-labelledby="rejected-tab">
-                              <ul class="list-group list-group-flush" id="listRejected">
-                                  <li class="list-group-item request-item" data-id="1" data-name="Prueba3" data-lastname="PruebaApellido2" data-idnum="123456789" data-email="prueba2@correo.com" data-center="Centro 3" data-major1="Carrera6" data-major2="Carrera5">Solicitud 3</li>
-                              </ul>
-                          </div>
-                      </div>
-                      <a href="loginSolicitudesAdmision.php"><button class="btn btn-danger w-100 mt-3">Cerrar Sesion</button></a>
-                  </div>
-                  <div class="col-9 main-content d-none" id="requestDetail">
-                      <div class="request-box mx-auto">
-                          <h4 id="requestTitle" class="text-center mb-3">Solicitud</h4>
-                          <form id="requestForm">
-                              <div class="mb-2"><strong>Nombres:</strong> <span id="requestName"></span></div>
-                              <div class="mb-2"><strong>Apellidos:</strong> <span id="requestLastName"></span></div>
-                              <div class="mb-2"><strong>ID:</strong> <span id="requestID"></span></div>
-                              <div class="mb-2"><strong>Correo:</strong> <span id="requestEmail"></span></div>
-                              <div class="mb-2"><strong>Centro Regional:</strong> <span id="requestCenter"></span></div>
-                              <div class="mb-2"><strong>Carrera Principal:</strong> <span id="requestMajor1"></span></div>
-                              <div class="mb-2"><strong>Carrera Secundaria:</strong> <span id="requestMajor2"></span></div>
-                              <button type="button" class="btn btn-info w-100 mt-2" data-bs-toggle="modal" data-bs-target="#modalCertificate">Ver Certificado de Secundaria</button>
-                              <div class="mt-3">
-                                  <label for="comments" class="form-label">Observaciones:</label>
-                                  <textarea id="comments" class="form-control" rows="3"></textarea>
-                              </div>
-                              <div class="d-flex justify-content-between mt-3">
-                                  <button type="button" class="btn btn-success" id="btnApprove">Aprobar</button>
-                                  <button type="button" class="btn btn-danger" id="btnReject">Rechazar</button>
-                              </div>
-                          </form>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </main>
-  </div>
 
-<!--Ventana Modal-->
-  <div class="modal fade" id="modalCertificate" tabindex="-1" aria-labelledby="modalCertificateLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="modalCertificateLabel">Certificado de Secundaria</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body text-center">
-                  <img id="certificateImage" src="#" alt="Certificado" class="img-fluid">
-              </div>
+<body>
+  <header>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <div>
+          <a href="/public/index.php"><img style="width: 45%;" src="assets/img/logo-unah.png" alt="Logo UNAH" /></a>
+        </div>
+        <div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+            aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" href="/public/index.php">Inicio</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/public/views/login.php">Estudiantes</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/public/views/login.php">Docentes</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#reviewerModal">Revisores</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/public/views/login.php">Matricula</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/public/views/login.php">Biblioteca</a>
+              </li>
+            </ul>
           </div>
+        </div>
       </div>
-  </div>
+    </nav>
+    <div class="top-bar">
+      <div>
+        <nav class="navbar bg-body-tertiary" id="header-bar">
+          <div class="container-fluid">
+            <h1 class="navbar-brand">
+              Revisión de Solicitudes
+            </h1>
+          </div>
+        </nav>
+      </div>
+  </header>
+  <main>
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 75vh;">
+      <div class="card shadow" id="form-card" style="max-width: 900px; width: 100%;">
+        <div class="card-body">
+          <div id="counter" class="text-center mb-3"></div>
+          <div id="requestDetails" class="mb-3"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <nav class="navbar bg-body-tertiary">
+      <div class="container-fluid" id="footer-cf">
+        <p>&copy; 2024 Universidad Nacional Autónoma de Honduras</p>
+      </div>
+    </nav>
+  </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    document.querySelectorAll('.request-item').forEach(item => {
-    item.addEventListener('click', function() {
-        document.querySelectorAll('.request-item').forEach(el => el.classList.remove('active'));
-        this.classList.add('active');
-        document.getElementById('requestName').textContent = this.dataset.name;
-        document.getElementById('requestLastName').textContent = this.dataset.lastname;
-        document.getElementById('requestID').textContent = this.dataset.idnum;
-        document.getElementById('requestEmail').textContent = this.dataset.email;
-        document.getElementById('requestCenter').textContent = this.dataset.center;
-        document.getElementById('requestMajor1').textContent = this.dataset.major1;
-        document.getElementById('requestMajor2').textContent = this.dataset.major2;
-        document.getElementById('requestDetail').classList.remove('d-none');
-        });
-    });
-  </script>
+  <!-- Ventana modal -->
+  <div class="modal fade" id="reviewerModal" tabindex="-1" aria-labelledby="reviewerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="reviewerModalLabel">Revisores</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body d-flex justify-content-center align-items-center">
+          <div class="btn-group" role="group" aria-label="Select reviewer type">
+            <a href="/public/views/login.php"><button type="button" class="btn btn-warning mx-3" id="admissionReviewer">Revisor de Solicitud de Admision</button></a>
+            <a href="/public/views/login.php"><button type="button" class="btn btn-warning mx-3" id="examReviewer">Revisor de Examen de Admision</button></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!---->
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/solicitudesAdmision.js"></script>
 </body>
+
 </html>

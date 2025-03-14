@@ -1,0 +1,156 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 40px;
+  height: 85vh;
+  width: 100%;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.row {
+  width: 72.5em;
+}
+
+.col-sm-3 {
+  width: 10em !important;
+  height: 50.2em;
+  border-right: 1px solid !important;
+}
+
+.col-8.col-sm-6 {
+  width: 72.5em !important;
+  height: 50.2em;
+}
+
+#left-bar-h {
+  padding: 10px !important;
+  color: rgb(0, 0, 0);
+  border-bottom: 1px solid;
+  width: 100% !important;
+  margin-bottom: 10%;
+}
+
+.btn-danger {
+  margin-top: 34.5em !important;
+}
+
+#profile-bar-h {
+  text-align: left;
+  padding: 10px !important;
+  color: rgb(0, 0, 0);
+  border-bottom: 1px solid;
+  width: 100% !important;
+}
+
+.rounded {
+  width: 11%;
+  height: 7.5em !important;
+  overflow: hidden;
+}
+
+#welcome-msg {
+  width: 100% !important;
+  text-align: right;
+  margin-top: 1%;
+  margin-bottom: 5%;
+}
+
+.info-card {
+  margin: 0 auto;
+  margin-top: 1%;
+  width: 75%;
+  border: 1px solid #000;
+  border-radius: 5px;
+  padding: 10px;
+  position: relative;
+}
+
+.info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 8px 0;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.info-labels span {
+  color: #999;
+}
+
+.edit-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.edit-btn i {
+  color: #007bff;
+}
+
+.save-btn,
+.cancel-btn {
+  display: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.save-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+}
+
+.cancel-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  margin-left: 10px;
+}
+
+input {
+  width: 100%;
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.buttons {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-primary {
+  background-color: #FFBF00!important;
+  color: #000!important;
+  border-color: #916d03!important;
+  transition: background-color 0.3s ease;
+}
+.btn-primary:hover {
+  background-color: #b4922b!important;
+}
+
+table th{
+  background-color:  #000E33!important;
+  color: #ffffff!important;
+}
+
+.table td {
+  background-color:  #555555!important;
+  color: white!important;
+}

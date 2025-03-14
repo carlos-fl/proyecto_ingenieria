@@ -1,0 +1,14 @@
+.container {
+    margin-top: 1%;
+}
+
+#form-card {
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.request-card {
+    max-width: 800px;
+    margin: auto;
+}
