@@ -2,17 +2,25 @@
 
 Ubicados en la ruta `/src/services/resources/controllers`
 
-### 1. ENDPOINT PARA OBTENER IMÁGENES DE EVENTOS
+### 1. ENDPOINT PARA AUTENTICAR ADMINISTRADOR 
 
 ```bash
-curl -X GET http://18.117.9.170:80/proyecto_ingenieria/src/services/resources/controllers/eventImages.php
+curl -X POST http://18.117.9.170:80/api/adminLogin.php
 ```
-- Endpoint utilizado para obtener las rutas de imágenes de eventos próximos no cancelados. Útil para el slide (carrusel) en vista del frontend.
-- No necesita autenticación
-- No crea sesión
+- Endpoint utilizado para autenticar un administrador
+- crea sesión
+- sessionData is delivered as a JSON. Needs to be parsed to get the object
 
 #### Objeto que responde con http status 200
-`{"status": "success", data: [{IMAGE: 'image_path'}]}`
+`{
+  "status": "success",
+  "data": [],
+  "sessionData": {user: {}, roles: []},
+  "error": {
+    "errorCode": 401,
+    "errorMessage": "Incorrect email or password"
+  }
+}`
 
 #### Objeto que responde con http status distinto a 200
 `{"status": "failure", data: []}`
