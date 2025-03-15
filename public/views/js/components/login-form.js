@@ -136,8 +136,8 @@ class LoginForm extends HTMLElement{
             // Successful login
             // Load user data to sessionStorage
             this.#loadUserData(data.user)
-            // TODO: Considerar ramificaciones. Quizas disparando un evento?
-            window.location.href ="adminProfile.php"
+            // TODO: Revisar este evento
+            this.emit("success")
         })
         .catch(error => {
             // Unsuccessful login
