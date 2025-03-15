@@ -20,9 +20,11 @@ jobs:
         env:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
         
-      - name: Deploy appo
+      - name: Deploy app
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
           cd /var/www/html/proyecto_ingenieria  # Change this to your deployment folder
           git pull origin main  # Pull latest changes
           EOF
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
