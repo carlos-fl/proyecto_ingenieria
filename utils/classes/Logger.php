@@ -17,7 +17,7 @@
       }
 
       $sessionData = json_decode($userAuthServiceResponse->sessionData);
-      if (!in_array($role, $sessionData['roles'])) {
+      if (!in_array($role, $sessionData->roles)) {
         http_response_code(403);
         echo json_encode([
           "status" => "failure",
@@ -33,10 +33,11 @@
       http_response_code(200);
       echo json_encode($userAuthServiceResponse);
 
-      $_SESSION['FIRST_NAME'] = $sessionData['user']['FIRST_NAME']; 
-      $_SESSION['LAST_NAME'] = $sessionData['user']['LAST_NAME']; 
-      $_SESSION['DNI'] = $sessionData['user']['DNI']; 
-      $_SESSION['EMAIL'] = $sessionData['user']['EMAIL']; 
-      $_SESSION['ROLES'] = $sessionData['roles']; 
+      $_SESSION['FIRST_NAME'] = $sessionData->user->FIRST_NAME; 
+      $_SESSION['LAST_NAME'] = $sessionData->user->LAST_NAME; 
+      $_SESSION['DNI'] = $sessionData->user->DNI; 
+      $_SESSION['INST_EMAIL'] = $sessionData->user->INST_EMAIL; 
+      $_SESSION['PERSONAL_EMAIL'] = $sessionData->user->PERSONAL_EMAIL; 
+      $_SESSION['ROLES'] = $sessionData->roles; 
     }
   }
