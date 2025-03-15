@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sitio PUMA en construccion</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="icon" type="image/png" href="assets/img/UNAH-escudo.png">
     <link rel="stylesheet" href="css/indexStyles.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
     <script src="https://kit.fontawesome.com/6130fb0810.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -54,10 +55,9 @@
                         Sitio PUMA en construccion...
                       </h1>
                     </div>
-                  </nav>
+                </nav>
             </div>
-            <div class="banner-container" id="underConstruccion">
-            </div>
+            <div class="banner-container" id="underConstruction"></div>
         </div>
     </main>
         

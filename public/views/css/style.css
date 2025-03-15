@@ -119,9 +119,10 @@ footer {
 /* =====================================
  Sección "Sitio en Construcción"
 ===================================== */
-#underConstruccion {
-    background-image: url('/views/assets/img/sitio-en-construccion.jpg');
+#underConstruction {
+    background-image: url('../assets/img/sitio-en-construccion.jpg');
     height: 100vh;
     background-size: cover;
     background-position: center;
+    z-index: 5
 }

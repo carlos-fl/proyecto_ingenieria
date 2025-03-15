@@ -10,50 +10,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
     <link href="https://fonts.cdnfonts.com/css/helvetica-neue-5" rel="stylesheet" />
-    <link rel="stylesheet" href="/public/views/css/style.css" />
-    <link rel="stylesheet" href="/public/views/css/loginStyle.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/loginStyle.css" />
 </head>
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
-            <div class="container-fluid">
-                <div>
-                    <a href="/public/index.php">
-                        <img style="width: 45%" src="assets/img/logo-unah.png" alt="Logo UNAH" />
-                    </a>
-                </div>
-                <div>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
-                        aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarText">
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/public/index.php">Inicio</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="./login.php">Estudiantes</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="./login.php">Docentes</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-bs-toggle="modal"
-                                    data-bs-target="#reviewerModal">Revisores</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="./login.php">Matrícula</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="./login.php">Biblioteca</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </nav>
+        <navbar-unah></navbar-unah>
         <div class="top-bar">
             <nav class="navbar bg-body-tertiary" id="header-bar">
                 <div class="container-fluid">
@@ -65,17 +28,11 @@
     
     <main>
         <login-form action="src/services/auth/controllers/login.php" imgSource="assets/img/unah.png" imgAlt="Logo UNAH"
-            heading="Inicio de Sesión" message="Debes autenticarte para usar este servicio">
+            heading="Log in" message="Debes autenticarte para usar este servicio">
         </login-form>
     </main>
 
-    <footer>
-        <nav class="navbar bg-body-tertiary">
-            <div class="container-fluid" id="footer-cf">
-                <p>&copy; 2024 Universidad Nacional Autónoma de Honduras</p>
-            </div>
-        </nav>
-    </footer>
+    <footer-unah></footer-unah>
     <pop-up
       id="popUp"
       imgsource="assets/img/crossmark.png"
@@ -112,6 +69,10 @@
     <script src="js/login.js"></script>
     <script type="module" src="js/components/login-form.js"></script>
     <script type="module" src="js/components/pop-up.js"></script>
+    <script type="module" src="js/components/navbar.js"></script>
+    <script type="module" src="js/components/footer.js"></script>
+
+
 </body>
 
 </html>
