@@ -1,0 +1,28 @@
+name: Proyecto Deployment
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps: 
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "PRIVATE KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+        env:
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+        
+      - name: Deploy appo
+        run: |
+          ssh -o StrictHostKeyChecking=no $ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+          cd /var/www/html/proyecto_ingenieria  # Change this to your deployment folder
+          git pull origin main  # Pull latest changes
+          EOF
