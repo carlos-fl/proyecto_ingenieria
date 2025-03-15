@@ -74,7 +74,6 @@ curl -X POST -d '{ "email": "carlos.rodriguez@unah.hn", "applicantCode": 1234435
 }`
 - sessionData es un objeto en formato JSON. su valor en objeto es: `{ user: {DNI: str, FIRST_NAME: str, LAST_NAME: str, PHONE_NUMBER: str, PERSONAL_EMAIL: str, INST_EMAIL: str, PASSWORD: str, GENDER: str, PHOTO: str, ACTIVE: boolean, REGIONAL_CENTER_ID: int}}, roles: [strings]}`
 
-
 #### Objeto que responde con http status 401
 `{
   "status": "failure",
