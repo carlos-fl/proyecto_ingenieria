@@ -4,7 +4,7 @@
   include_once __DIR__ . '/../../../utils/types/getResponse.php';
 
   class Resources {
-    
+
     /**
      * @param string $query
      * query to call stored procedure according to required resource
@@ -26,6 +26,6 @@
       }
       
       $mysqli->close();
-      return new GetResponse(status: 'success', data: $resourcesResult->fetch_all());
+      return new GetResponse(status: 'success', data: $resourcesResult->fetch_all(1));
     }
   }

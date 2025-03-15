@@ -50,7 +50,7 @@
       }
       // if password match check if it is a admin[role] ROLE: ADMIN
       $query = "CALL SP_GET_ROLES_BY_USER(?)";
-      $roles = $db->callStoredProcedure($query, "i", [$userData["USER_ID"]], $mysqli);
+      $roles = $db->callStoredProcedure($query, "s", [$userData["DNI"]], $mysqli);
 
       if ($roles->num_rows == 0) {
         return Response::returnPostResponse(true, 'failure', 403, 'Access denied');
@@ -63,7 +63,7 @@
 
       $data = json_encode([
         "user" => $userData,
-        "roles" => array_column($roles->fetch_all(), 'ROLE_NAME')
+        "roles" => array_map(fn($el) => $el[0], $roles->fetch_all())
       ]);
 
       return Response::returnPostResponse(status: "success", isBadResponse: false, data: [], sessionData: $data);
@@ -73,7 +73,6 @@
     /**
      * @param LogApplicant $request
      * object containing applicantCode and email
-     * @return ApplicantAuthResponse
      * object containing status(string), data(array) and error(ErrorResponse)
      */
     public static function logApplicant(LogApplicant $request): PostResponse {
@@ -104,7 +103,7 @@
         return Response::returnPostResponse(false, status: 'success', data: []);
       }
 
-      $data = $applicantExamsResults->fetch_all();
+      $data = $applicantExamsResults->fetch_all(1);
 
       $sessionData = json_encode([
         "user" => $applicant->fetch_assoc(),
