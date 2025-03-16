@@ -40,7 +40,7 @@
           <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#notasModal">
             Subir Notas
           </button>
-          <button type="button" class="btn btn-danger">Cerrar Sesion</button>
+          <log-out></log-out>
         </div>
         <div class="col-sm-9">
           <div class="row">
@@ -52,7 +52,7 @@
                 <aside id="welcome-msg">
                   <h4>Bienvenido Docente!</h4>
                 </aside>
-                <img src="assets/img/default-profile.png" class="rounded mx-auto d-block" alt="..." style="background-color: black" />
+                <img id="profile-photo" src="assets/img/default-profile.png" class="rounded mx-auto d-block" alt="..." style="background-color: black" />
               </section>
               <section>
                 <div class="info-card">
@@ -64,13 +64,13 @@
                   </div>
                   <hr />
                   <div class="info-row info-labels">
-                    <span>Nombre Completo</span>
+                    <span>Nombre</span>
                     <span>Correo</span>
                     <span>Teléfono</span>
                   </div>
                   <div class="info-row">
                     <span id="name">Nombre de ejemplo</span>
-                    <span>ejemplo@correo.com</span>
+                    <span id="mail">ejemplo@correo.com</span>
                     <span id="phone">00000000</span>
                   </div>
                   <div class="buttons">
@@ -94,7 +94,7 @@
                           <th scope="col">Acciones</th>
                         </tr>
                       </thead>
-                      <tbody>
+                      <tbody id="teacher-sections">
                         <tr>
                           <td>MAT101</td>
                           <td>1100</td>
@@ -276,6 +276,8 @@
   <script src="js/docentes.js"></script>
   <script src="js/components/navbar.js"></script>
   <script src="js/components/footer.js"></script>
+  <script src="js/components/log-out.js"></script>
+
 
 </body>
 

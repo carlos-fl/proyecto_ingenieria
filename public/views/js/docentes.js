@@ -1,6 +1,124 @@
+// Lógica para la carga y comportamiento de la vista docente.php
 const editButton = document.getElementById("editButton");
 const saveButton = document.getElementById("saveButton");
 const cancelButton = document.getElementById("cancelButton");
+const teacherNumber = localStorage.getItem("teacherNumber")
+
+// Abre la modal y muestra el código de la clase seleccionado
+function openModal(codigoClase) {
+  document.getElementById('claseCodigo').textContent = codigoClase;
+  // Aquí se podría actualizar la lista de alumnos según la clase.
+  let alumnosModal = new bootstrap.Modal(document.getElementById('alumnosModal'));
+  alumnosModal.show();
+}
+
+// Lógica para la carga de datos en la página
+function loadTeacherProfile(){
+  // Fetch and load the teacher's profile data
+  let name = document.getElementById("name")
+  let mail = document.getElementById("mail")
+  let phone = document.getElementById("phone")
+  let employeeNumber = document.getElementById("employee-number")
+  let photo = document.getElementById("profile-photo")
+  fetch(`/api/teachers/controllers/getTeacher.php?teacher-number=${teacherNumber}`, {METHOD: "GET"})
+  .then((response) => response.json())
+  .then((data) => {
+    name.innerText = data.firstName + " " + data.lastName
+    mail.innerTex = data.email
+    phone.innerText = data.phone
+    employeeNumber.innerText = data.employeeNumber
+    // TODO: Implement Image change
+  })
+  // TODO: Implementar pantalla de error de conexión 
+  .catch(console.log("Hubo un error de conexión con el servidor. No se pudieron conseguir los datos del perfil")) 
+}
+
+function newTableData(content, name=""){
+  let data = document.createElement("td")
+  data.name = name
+  data.innerText = content
+  return data
+}
+
+function newPrimaryBtn(content){
+  // Create a new Primary button HTML Element
+    let btn = document.createElement("button")
+    btn.innerText = content
+    viewStudentsBtn.className = "btn btn-primary btn-sm"
+    return btn
+}
+
+function loadShowSectionData(event){
+  // Load and show a section's data
+  let studentTable = document.getElementById("tablaAlumnos")
+  let parent = event.target.parent
+  let classCode = parent.getElementsByName("class-code")[0]
+  let section = parent.getElementsByName("section-code")[0]
+  let sectionId = section.dataset.sectionId
+  //TODO: CHECK ENDPOINT PATH
+  fetch(`/api/teachers/controllers/sections.php?section-id=${sectionId}`, {METHOD: "GET"})
+  .then(response => response.json())
+  .then(data => {
+    let studentTableBody = studentTable.querySelector("tbody")
+    studentTableBody.innerHTML = ""
+    let counter = 1
+    for (let student in data.students){
+      let row = document.createElement("tr")
+      let rowCount = newTableData(counter)
+      //TODO: Implement logic to add student's account number
+      let studentFirstName = newTableData(student.firstName, "student-firstname")
+      let studentLastName = newTableData(student.lastName, "student-lastname")
+      let studentEmail = newTableData(student.email, "student-email")
+      row.appendChild(rowCount)
+      row.appendChild(studentFirstName)
+      row.appendChild(studentLastName)
+      row.appendChild(studentEmail)
+      studentTable.appendChild(row)
+      counter++
+    }
+    // Show the modal
+    openModal(classCode)
+  })
+  .catch()
+}
+
+function getTeacherSections(){
+  // Conseguir las secciones que imparte un docente
+  let classesTableBody = document.getElementById("teacher-sections")
+  fetch(`/api/teachers/controllers/teacherSections.php?teacher-number=${teacherNumber}`, {METHOD: "GET"})
+  .then(response => response.json())
+  .then(data => {
+    for (let classData in data){
+      let row = document.createElement("tr")
+      let classCode = newTableData(classData.classCode, "class-code")
+      let sectionCode = newTableData(classData.sectionCode, "section-code")
+      sectionCode.dataset.sectionId = classData.sectionId
+      let className = newTableData(classData.className, "class-name")
+      let actions = document.createElement("td")
+      let viewStudentsBtn = newPrimaryBtn("Ver Alumnos")
+      let uploadGradesBtn = newPrimaryBtn("Subir Notas")
+      viewStudentsBtn.onclick = loadShowSectionData
+      // TODO: Implement logic to upload a class' results
+      actions.appendChild(viewStudentsBtn)
+      actions.appendChild(uploadGradesBtn)
+      row.appendChild(classCode)
+      row.appendChild(sectionCode)
+      row.appendChild(className)
+      row.appendChild(actions)
+      classesTableBody.appendChild(row)
+    }
+  })
+  // TODO: Implementar pantalla de error de conexión 
+  .catch(console.log("Hubo un error de conexión con el servidor. No se pudieron conseguir las clases"))
+  
+  
+}
+function main(){
+  loadTeacherProfile()
+  getTeacherSections()
+
+}
+
 
 editButton.addEventListener("click", function () {
     let nameSpan = document.getElementById("name");
@@ -44,30 +162,22 @@ saveButton.addEventListener("click", function () {
     cancelButton.style.display = "none";
 });
 
-// Abre la modal y muestra el código de la clase seleccionado
-function openModal(codigoClase) {
-    document.getElementById('claseCodigo').textContent = codigoClase;
-    // Aquí se podría actualizar la lista de alumnos según la clase.
-    var alumnosModal = new bootstrap.Modal(document.getElementById('alumnosModal'));
-    alumnosModal.show();
-  }
-
   // Función para exportar la tabla de alumnos a CSV (simulación de descarga Excel)
   function exportTableToCSV(filename) {
-    var csv = [];
-    var rows = document.querySelectorAll("#tablaAlumnos tr");
+    let csv = [];
+    let rows = document.querySelectorAll("#tablaAlumnos tr");
     
-    for (var i = 0; i < rows.length; i++) {
-        var row = [], cols = rows[i].querySelectorAll("td, th");
-        for (var j = 0; j < cols.length; j++) {
+    for (let i = 0; i < rows.length; i++) {
+        let row = [], cols = rows[i].querySelectorAll("td, th");
+        for (let j = 0; j < cols.length; j++) {
             row.push('"' + cols[j].innerText + '"');
         }
         csv.push(row.join(","));
     }
 
     // Crea un Blob y genera el enlace de descarga
-    var csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
-    var downloadLink = document.createElement("a");
+    let csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+    let downloadLink = document.createElement("a");
     downloadLink.download = filename;
     downloadLink.href = window.URL.createObjectURL(csvFile);
     downloadLink.style.display = "none";
@@ -128,3 +238,6 @@ function openModal(codigoClase) {
     alert("Archivo CSV subido exitosamente");
     fileInput.value = "";
   }
+
+  
+main()
