@@ -15,7 +15,9 @@ class LogOut extends HTMLElement{
     logOut(){
         localStorage.clear()
         sessionStorage.clear()
-        // TODO: Make fetch to log out in back-end
+        fetch("/api/auth/controllers/logout.php", {METHOD: "GET"})
+        .then(response => console.log("Se cerró la sesión"))
+        .catch(error => console.log("No hubo conexión con el server"))
         window.location.href = "/"
     }
 }
