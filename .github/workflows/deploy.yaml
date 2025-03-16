@@ -15,17 +15,15 @@ jobs:
       - name: Set up SSH Key
         run: |
           mkdir -p ~/.ssh
-          echo "PRIVATE KEY" > ~/.ssh/id_rsa
+          echo "${{ secrets.PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
         env:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
         
       - name: Deploy app
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+          ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
           cd /var/www/html/proyecto_ingenieria  # Change this to your deployment folder
           git pull origin main  # Pull latest changes
           EOF
-        env:
-          IS802PEM: ${{ secrets.PRIVATE_KEY }}
-          EC2_HOST: ${{ secrets.EC2_HOST }}
