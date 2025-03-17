@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistema de Registro</title>
   <link rel="icon" type="image/png" href="views/assets/img/UNAH-escudo.png">
-  <link rel="stylesheet" href="views/css/style.css">
+  <link rel="stylesheet" href="views/css/styles.css">
   <link rel="stylesheet" href="views/css/indexStyles.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <script src="https://kit.fontawesome.com/6130fb0810.js" crossorigin="anonymous"></script>
@@ -31,10 +31,10 @@
                 <a class="nav-link" href="index.php">Inicio</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="./views/login.php">Estudiantes</a>
+                <a class="nav-link" href="./views/loginEstudiantes.php">Estudiantes</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="./views/login.php">Docentes</a>
+                <a class="nav-link" href="./views/loginDocentes.php">Docentes</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#reviewerModal">Revisores</a>
@@ -43,7 +43,10 @@
                 <a class="nav-link" href="./views/login.php">Matricula</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="./views/login.php">Biblioteca</a>
+                <a class="nav-link" href="./views/admisiones.php">Admisiones</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="./views/loginEstudiantes.php">Biblioteca</a>
               </li>
             </ul>
           </div>
@@ -70,21 +73,21 @@
       <nav class="user-selection">
         <div class="row w-100">
           <div class="col">
-            <a href="views/login.php">
+            <a href="views/loginEstudiantes.php">
               <div><i class="fa-solid fa-user"></i></div>
               <strong>Estudiantes</strong><br>Ingresa como estudiante
             </a>
           </div>
           <div class="col">
-            <a href="views/login.php">
+            <a href="./views/loginDocentes.php">
               <div><i class="fa-solid fa-user-tie"></i></div>
               <strong>Docentes</strong><br>Ingresa como docente
             </a>
           </div>
           <div class="col">
-            <a href="views/login.php">
-              <div><i class="fa-solid fa-user-plus"></i></div>
-              <strong>Administradores</strong><br>Ingresa como administrador
+            <a href="views/admisiones.php">
+              <div><i class="fa-solid fa-file"></i></i></div>
+              <strong>Admisiones</strong><br>Ingresa a admisiones
             </a>
           </div>
         </div>
@@ -124,14 +127,14 @@
         </div>
         <div class="modal-body d-flex justify-content-center align-items-center">
           <div class="btn-group" role="group" aria-label="Select reviewer type">
-            <a href="./views/login.php"><button type="button" class="btn btn-warning mx-3" id="admissionReviewer">Revisor de Solicitud de Admision</button></a>
-            <a href="./views/login.php"><button type="button" class="btn btn-warning mx-3" id="examReviewer">Revisor de Examen de Admision</button></a>
+            <a href="./views/loginRevisorSolicitudesAd.php"><button type="button" class="btn btn-warning mx-3" id="admissionReviewer">Revisor de Solicitud de Admision</button></a>
+            <a href="./views/loginRevisorExamenes.php"><button type="button" class="btn btn-warning mx-3" id="examReviewer">Revisor de Examen de Admision</button></a>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <!---->
+
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 </body>

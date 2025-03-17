@@ -84,6 +84,11 @@ hr {
   margin-top: 8px;
 }
 
+.info-row span {
+  flex: 1;
+  text-align: center;
+}
+
 .info-labels span {
   color: #999;
 }
