@@ -2,8 +2,9 @@
 
   class Regex {
     public static function isValidDNI(string $DNI): bool {
-      $PATTERN = "/\d{4}-\d{4}\d{5}/";
+      $FIRST_PATTERN = "/\d{4}-\d{4}-\d{5}/";
+      $SECOND_PATTERN = "/^\d{13}$/";
 
-      return preg_match($PATTERN, $DNI);
+      return (preg_match($FIRST_PATTERN, $DNI) || preg_match($SECOND_PATTERN, $DNI));
     }
   }

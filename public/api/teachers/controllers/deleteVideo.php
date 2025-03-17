@@ -6,27 +6,26 @@
   include_once __DIR__ . '/../../../../services/teachers/types/DataResponse.php';
   include_once __DIR__ . '/../../../../utils/functions/setErrorResponse.php';
   include_once __DIR__ . '/../../../../utils/functions/setUnauthorizedResponse.php';
-  include_once __DIR__ . '/../../../../services/teachers/types/AddVideoRequest.php';
 
   session_start();
   header('Content-Type: application/json');
 
-  Request::isWrongRequestMethod('POST');
+  Request::isWrongRequestMethod('DELETE');
   
   if (empty($_SESSION)) {
-    setUnauthorizedResponse(); 
-    return;
+    setUnauthorizedResponse();
+    return; 
   }
 
   $requestBody = getJsonData();
-  $addVideoRequest = new AddVideoRequest($requestBody->sectionID, $requestBody->URL);
-  $addVideoServiceResponse = TeacherService::addVideo($addVideoRequest, $_SESSION["DNI"]);
+  $deleteVideoServiceResponse = TeacherService::deleteVideo($requestBody->sectionID, $_SESSION['DNI']);
 
-  if ($addVideoServiceResponse->status == 'failure') {
-    setErrorResponse($addVideoServiceResponse); 
+  if ($deleteVideoServiceResponse->status == 'failure') {
+    setErrorResponse($deleteVideoServiceResponse); 
     return;
   }
 
   http_response_code(200);
-  echo json_encode($addVideoServiceResponse);
+  echo json_encode($deleteVideoServiceResponse);
+
 

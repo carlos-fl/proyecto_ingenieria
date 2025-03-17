@@ -27,7 +27,7 @@
       $email = $request->getEmail();
       $password = $request->getPassword();
       if (!EmailValidator::validateInstitutionalEmail($email)) {
-        return Response::returnPostResponse(true, 'failure', 401, 'Incorrect email or password');
+        return Response::returnPostResponse(true, "failure", 401, "Incorrect email or password");
       }
 
 
