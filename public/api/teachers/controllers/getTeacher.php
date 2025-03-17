@@ -1,29 +1,16 @@
 <?php
 
   include_once __DIR__ . '/../../../../utils/classes/Request.php';
-  include_once __DIR__ . '/../../../../services/teachers/types/TeacherResponse.php';
-  include_once __DIR__ . '/../../../../utils/types/postResponse.php';
-  include_once __DIR__ . '/../../../../services/teachers/services/Teachers.php';
-  include_once __DIR__ . '/../../../../utils/functions/setErrorResponse.php';
-  include_once __DIR__ . '/../../../../utils/functions/setUnauthorizedResponse.php';
 
   session_start();
-  header("Content-Type: application/json");
 
   Request::isWrongRequestMethod('GET');
-
-  if (empty($_SESSION)) {
-    setUnauthorizedResponse();
-    return;
-  }
-
-  $teacherNumber = (int) $_GET['teacher-number'];
-  $teacherResponse = TeacherService::getTeacher($teacherNumber);
   
-  if ($teacherResponse->getStatus() == 'failure') {
-    setErrorResponse($teacherResponse);
+  if (empty($_SESSION)) {
+    echo json_encode(new TeacherResponse("failure", error: new ErrorResponse(401, "Unathorized")));
     return;
   }
 
-  http_response_code(200);
+  $teacherNumber = $_GET['teacher-number'];
+  $teacherResponse = TeacherService::getTeacher((int) $teacherNumber);
   echo json_encode($teacherResponse);

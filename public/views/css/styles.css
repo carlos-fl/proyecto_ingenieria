@@ -1,0 +1,128 @@
+:root {
+    font-family: "Helvetica Neue", sans-serif !important;
+    --primary-color: #FFBF00;
+    --bs-primary: var(--primary-color);
+    --secondary-color: #000E33;
+    --warning-color: #990000;
+    --black: #111111;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+    background-color: var(--secondary-color) !important;
+}
+
+.primary-text {
+    color: var(--primary-color)
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    font-weight: 600;
+    outline: none;
+}
+
+.btn-primary:hover {
+    background-color: var(--black);
+}
+
+.text-danger {
+    color: var(--warning-color)
+}
+
+.no-underline {
+    text-decoration: none;
+}
+
+.container-fluid {
+    display: flex;
+    justify-content: space-between;
+    height: 3.5em;
+}
+
+.navbar.bg-body-tertiary {
+    border-top: 1px solid var(--primary-color);
+    border-bottom: 1px solid var(--primary-color);
+}
+
+h1 {
+    font-weight: bold!important;
+}
+
+#header-bar {
+    width: 100%;
+    background-color: var(--secondary-color) !important;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    color: var(--primary-color) !important;
+}
+
+footer {
+    margin-top: 1%;
+}
+
+#footer-cf {
+    height: 1.5em;
+}
+
+.pop-up{
+    position: absolute;
+    bottom: 0px;
+    right: 10px;
+    width: 300px;
+    height: 50px;
+    border: 0.01em solid black;
+    opacity: 0;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+    font-weight: 600;
+}
+
+.pop-up>img{
+    width: 20px;
+    height: 20px;
+}
+
+.fail-popup{
+    background-color: var(--warning-color);
+    color: white;
+}
+
+@keyframes showPopUp{
+    25%{
+        display: block;
+        bottom: 20px;
+        opacity: 1;
+    }
+
+    50%{
+        display: block;
+        bottom: 20px;
+        opacity: 1;
+    }
+
+    100%{
+        bottom: 0px;
+        display: none;
+        opacity: 0;
+    }
+}
+
+/* =====================================
+ Sección "Sitio en Construcción"
+===================================== */
+#underConstruction {
+    background-image: url('../assets/img/sitio-en-construccion.jpg');
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    z-index: 5
+}

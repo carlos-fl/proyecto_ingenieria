@@ -20,7 +20,7 @@
         <div class="top-bar">
             <nav class="navbar bg-body-tertiary" id="header-bar">
                 <div class="container-fluid">
-                    <h1 class="navbar-brand">Inicio de Sesión</h1>
+                    <h1 class="navbar-brand">Inicio de Sesión de Docente</h1>
                 </div>
             </nav>
         </div>
@@ -28,7 +28,8 @@
 
     <main>
         <login-form action="src/services/auth/controllers/login.php" imgSource="assets/img/unah.png" imgAlt="Logo UNAH"
-            heading="Log in" message="Debes autenticarte para usar este servicio">
+            heading="Bienvenido Docente" message="Debe autenticarse como docente para usar este servicio" id="login-docente"
+            data-redirect-success="docentes.php">
         </login-form>
     </main>
 
@@ -59,6 +60,7 @@
         </div>
     </div>
 
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
@@ -67,6 +69,16 @@
     <script type="module" src="js/components/pop-up.js"></script>
     <script type="module" src="js/components/navbar.js"></script>
     <script type="module" src="js/components/footer.js"></script>
+    <script>
+        document.querySelectorAll("login-form").forEach((form) => {
+            form.addEventListener("login-form:success", () => {
+                const redirectUrl = form.getAttribute("data-redirect-success");
+                if (redirectUrl) {
+                    window.location.href = redirectUrl;
+                }
+            });
+        });
+    </script>
 
 </body>
 

@@ -1,0 +1,22 @@
+#loginSection {
+    margin-top: 7vh;
+    margin-bottom: 7.4vh;
+    width: 70vw;
+}
+
+#loginComponent {
+    background-color: white;
+    width: 100%;
+    display: flex;
+}
+
+#heroUnah {
+    width: 450px;
+    height: 600px;
+    float: left;
+}
+
+#loginBox {
+    display: inline-block;
+    flex-grow: 1;
+}

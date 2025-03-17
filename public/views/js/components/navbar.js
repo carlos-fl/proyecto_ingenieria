@@ -1,4 +1,17 @@
 class Navbar extends HTMLElement{
+    static get observedAttributes() {
+        return [
+          'home-href', // para el enlace del logo
+          'logo', 'logo-alt',
+          'inicio-href',
+          'estudiantes-href',
+          'docentes-href',
+          'revisores-href',
+          'matricula-href',
+          'admisiones-href',
+          'biblioteca-href'
+        ];
+      }
 
     connectedCallback(){
         this.render()
@@ -9,11 +22,21 @@ class Navbar extends HTMLElement{
     }
 
     render(){
+        // valores por defecto.
+       // Se definen los valores por defecto si no se especifican los atributos.
+    const homeHref = this.getAttribute('home-href') || '/index.php';
+    const logo = this.getAttribute('logo') || 'assets/img/logo-unah.png';
+    const logoAlt = this.getAttribute('logo-alt') || 'Logo UNAH';
+    const estudiantesHref = this.getAttribute('estudiantes-href') || './loginEstudiantes.php';
+    const docentesHref = this.getAttribute('docentes-href') || './loginDocentes.php';
+    const matriculaHref = this.getAttribute('matricula-href') || './login.php';
+    const admisionesHref = this.getAttribute('admisiones-href') || './admisiones.php';
+
         this.innerHTML = `
             <nav class="navbar navbar-expand-lg bg-body-tertiary">
                 <div class="container-fluid">
                     <div>
-                    <a href="/index.php"><img style="width: 45%;" src="assets/img/logo-unah.png" alt="Logo UNAH" /></a>
+                    <a href="index.php"><img style="width: 45%;" src="${logo}" alt="${logoAlt}" /></a>
                     </div>
                     <div>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
@@ -23,46 +46,31 @@ class Navbar extends HTMLElement{
                     <div class="collapse navbar-collapse" id="navbarText">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link" href="/index.php">Inicio</a>
+                            <a class="nav-link" href="${homeHref}">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/views/login.php">Estudiantes</a>
+                            <a class="nav-link" href="${estudiantesHref}">Estudiantes</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/views/login.php">Docentes</a>
+                            <a class="nav-link" href="${docentesHref}">Docentes</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#reviewerModal">Revisores</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/views/login.php">Matricula</a>
+                            <a class="nav-link" href="${matriculaHref}">Matricula</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/views/login.php">Biblioteca</a>
+                            <a class="nav-link" href="${admisionesHref}">Admisiones</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="${estudiantesHref}">Biblioteca</a>
                         </li>
                         </ul>
                     </div>
                     </div>
                 </div>
             </nav>
-
-        <!-Ventana modal-->
-        <div class="modal fade" id="reviewerModal" tabindex="-1" aria-labelledby="reviewerModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="reviewerModalLabel">Revisores</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body d-flex justify-content-center align-items-center">
-            <div class="btn-group" role="group" aria-label="Select reviewer type">
-                <a href="/views/loginSolicitudesAdmision.php"><button type="button" class="btn btn-warning mx-3" id="admissionReviewer">Revisor de Solicitud de Admision</button></a>
-                <a href="/views/construccion.php"><button type="button" class="btn btn-warning mx-3" id="examReviewer">Revisor de Examen de Admision</button></a>  
-            </div>
-            </div>
-        </div>
-        </div>
-    </div>  
     `
     }
 }
