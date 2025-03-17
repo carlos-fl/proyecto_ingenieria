@@ -162,4 +162,72 @@ curl -X GET 'http://18.117.9.170:80/api/teachers/controllers/deleteVideo.php'
   }
 }`
 
+### 6. ENDPOINT PARA SUBIR NOTAS DE ESTUDIANTES
+```bash
+curl -X POST http://localhost:8000/api/teachers/controllers/uploadGrades.php
+```
+#### REQUEST BODY
+{
+  "sectionId": int,
+  "csvPath": "string",
+  "formatType": "grades"
+}
 
+
+#### Objeto que responde con http status 200
+{
+  "status": "success",
+  "data": [],
+  "error": null
+}
+
+
+#### Objeto que responde con http status 200
+{
+  "status": "failure",
+  "data": [],
+  "error": {
+    "errorCode": 400,
+    "errorMessage": "Bad request. Missing sectionId, csvPath, or formatType."
+  }
+}
+
+#### Objeto que responde con http status 400 si faltan parametros
+{
+  "status": "failure",
+  "data": [],
+  "error": {
+    "errorCode": 400,
+    "errorMessage": "Invalid format type. Expected 'grades'."
+  }
+}
+
+#### Objeto que responde con http status 400 si el formato no es valido
+{
+  "status": "failure",
+  "data": [],
+  "error": {
+    "errorCode": 500,
+    "errorMessage": "CSV file not found or unreadable: <path>"
+  }
+}
+
+#### Objeto que responde con http status 500 si no es legible
+{
+  "status": "failure",
+  "data": [],
+  "error": {
+    "errorCode": 500,
+    "errorMessage": "Failed to read CSV file."
+  }
+}
+
+#### Objeto que responde con http status 500 si no se pudo leer correctamente el csv
+{
+  "status": "failure",
+  "data": [],
+  "error": {
+    "errorCode": 500,
+    "errorMessage": "Error updating grade for student <idStudent>"
+  }
+}
