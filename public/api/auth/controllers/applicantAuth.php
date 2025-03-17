@@ -37,7 +37,7 @@
   ]);
 
   $sessionData = json_decode($authServiceResponse->sessionData);
-  $_SESSION['FIRST_NAME'] = $sessionData['user']['FIRST_NAME']; 
-  $_SESSION['LAST_NAME'] = $sessionData['user']['LAST_NAME']; 
-  $_SESSION['DNI'] = $sessionData['user']['DNI']; 
-  $_SESSION['EMAIL'] = $sessionData['user']['EMAIL']; 
+  $_SESSION['FIRST_NAME'] = $sessionData->user->FIRST_NAME; 
+  $_SESSION['LAST_NAME'] = $sessionData->user->LAST_NAME; 
+  $_SESSION['DNI'] = $sessionData->user->DNI; 
+  $_SESSION['EMAIL'] = $sessionData->user->EMAIL; 
