@@ -8,7 +8,7 @@ get () {
 
   endpoint="$URL/$file"
   echo $endpoint $desc
-  curl -s -X GET -b "PHPSESSID=mdnu73bum9e47inptlgo7bgj3a" $endpoint | jq
+  curl -s -X GET -b "PHPSESSID=3ogidfbn51m90ms0dpepj12l9a" $endpoint | jq
 }
 
 post () {
@@ -18,7 +18,7 @@ post () {
 
   endpoint="$URL/$file"
   echo $endpoint $desc
-  curl -s -X POST -b "PHPSESSID=mdnu73bum9e47inptlgo7bgj3a" -d $body $endpoint | jq
+  curl -s -X POST -b "PHPSESSID=3ogidfbn51m90ms0dpepj12l9a" -d $body $endpoint | jq
 }
 
 delete () {
@@ -28,7 +28,7 @@ delete () {
 
   endpoint="$URL/$file"
   echo $endpoint $desc
-  curl -s -X DELETE -b "PHPSESSID=mdnu73bum9e47inptlgo7bgj3a" -d $body $endpoint | jq
+  curl -s -X DELETE -b "PHPSESSID=3ogidfbn51m90ms0dpepj12l9a" -d $body $endpoint | jq
 }
 
 get "getTeacher.php?teacher-number=1" "Endpoint to get data of a teacher"
