@@ -98,19 +98,23 @@
 
       // take results data
       $applicantResultsQuery = "CALL SP_GET_APPLICANT_CALIFICATIONS(?)";
-      $applicantExamsResults = $db->callStoredProcedure($applicantResultsQuery, 'i', [$applicationData['APPLICATION_CODE']], $mysqli);
-      if ($applicantExamsResults->num_rows == 0) {
-        return Response::returnPostResponse(false, status: 'success', data: []);
+      try {
+        $applicantExamsResults = $db->callStoredProcedure($applicantResultsQuery, 'i', [$applicationData['APPLICATION_CODE']], $mysqli);
+        if ($applicantExamsResults->num_rows == 0) {
+          return Response::returnPostResponse(false, status: 'success', data: []);
+        }
+  
+        $data = $applicantExamsResults->fetch_all(1);
+  
+        $sessionData = json_encode([
+          "user" => $applicationData,
+          "roles" => []
+        ]);
+  
+        $mysqli->close();
+        return Response::returnPostResponse(false, 'success', 200, data: $data, sessionData: $sessionData);
+      } catch (Throwable $err) {
+        return Response::returnPostResponse(true, "failure", 500, $err->getMessage());
       }
-
-      $data = $applicantExamsResults->fetch_all(1);
-
-      $sessionData = json_encode([
-        "user" => $applicant->fetch_assoc(),
-        "roles" => []
-      ]);
-
-      $mysqli->close();
-      return Response::returnPostResponse(false, 'success', 200, data: $data, sessionData: $sessionData);
     } 
   }

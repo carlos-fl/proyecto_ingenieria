@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . "/../../../../config/database/Database.php";
-require_once __DIR__ . "/../../../../config/env/Environment.php";
+require_once __DIR__ . "/../../../../../config/database/Database.php";
+require_once __DIR__ . "/../../../../../config/env/Environment.php";
 
 header("Content-Type: application/json");
 
@@ -15,14 +15,17 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 
 $data = json_decode(file_get_contents("php://input"), true);
 
-if (!isset($data["applicantCode"], $data["commentary"])) {
+if (!isset($data["applicationCode"], $data["commentary"]) || empty($data["commentary"])) {
     http_response_code(400);
     echo json_encode([
         "status" => "failure",
-        "error" => ["errorCode" => "400", "errorMessage" => "Missing required fields 'applicantCode' or 'commentary'"]
+        "error" => ["errorCode" => "400", "errorMessage" => "Missing required fields 'applicationCode' or 'commentary'"]
     ]);
     exit;
 }
+
+$applicationCode = $data["applicationCode"];
+$commentary = trim($data["commentary"]); 
 
 $env = Environment::getVariables();
 $db = new Database(
@@ -36,11 +39,26 @@ $db = new Database(
 $conn = $db->getConnection();
 
 try {
-    $stmt = $conn->prepare("CALL SP_Reject_Application(?, ?)");
-    $stmt->bind_param("is", $data["applicantCode"], $data["commentary"]);
-    $stmt->execute();
+    $checkStmt = $conn->prepare("SELECT APPLICATION_CODE FROM TBL_APPLICATIONS WHERE APPLICATION_CODE = ?");
+    $checkStmt->bind_param("i", $applicationCode);
+    $checkStmt->execute();
+    $checkResult = $checkStmt->get_result();
 
-    echo json_encode(["status" => "success"]);
+    if ($checkResult->num_rows === 0) {
+        echo json_encode([
+            "status" => "failure",
+            "error" => ["errorCode" => "404", "errorMessage" => "Application not found"]
+        ]);
+        exit;
+    }
+    $stmt = $conn->prepare("CALL SP_REJECT_APPLICATION(?, ?)");
+    $stmt->bind_param("is", $applicationCode, $commentary);
+
+    if ($stmt->execute()) {
+        echo json_encode(["status" => "success"]);
+    } else {
+        throw new Exception("Database error: " . $stmt->error);
+    }
 
 } catch (Exception $e) {
     http_response_code(500);

@@ -84,3 +84,18 @@ curl -X POST -d '{ "email": "carlos.rodriguez@unah.hn", "applicantCode": 1234435
     "errorMessage": "Incorrect email or application code"
   }
 }`
+
+
+## ENDPOINT PARA AUTENTICACIÓN DE DOCENTES
+
+### Objeto que retorna
+`{
+  "status": "success",
+  "data": [],
+  "sessionData": {
+    "user": "{\"DNI\":\"0802199805678\",\"FIRST_NAME\":\"Mar\\u00eda\",\"LAST_NAME\":\"Fern\\u00e1ndez\",\"PHONE_NUMBER\":\"9988-5678\",\"PERSONAL_EMAIL\":\"maria.fernandez@gmail.com\",\"INST_EMAIL\":\"mfernandez@unah.hn\",\"PASSWORD\":\"d404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db\",\"GENDER\":\"F\",\"PHOTO\":\"default_photo.png\",\"ACTIVE\":1,\"REGIONAL_CENTER_ID\":2}",
+    "roles": "[\"TEACHERS\"]",
+    "teacherNumber": "1"
+  },
+  "error": null
+}`

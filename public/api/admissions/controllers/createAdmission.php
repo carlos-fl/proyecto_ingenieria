@@ -1,9 +1,8 @@
 <?php
-require_once __DIR__ . "/../../../../config/database/Database.php";
-require_once __DIR__ . "/../../../../config/env/Environment.php";
+require_once __DIR__ . "/../../../../../config/database/Database.php";
+require_once __DIR__ . "/../../../../../config/env/Environment.php";
 
 header("Content-Type: application/json");
-
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     http_response_code(405);
@@ -14,9 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     exit;
 }
 
-
 $env = Environment::getVariables();
-
 
 $db = new Database(
     $env["DB_HOST"],
@@ -28,12 +25,10 @@ $db = new Database(
 
 $conn = $db->getConnection();
 
-
 $data = json_decode(file_get_contents("php://input"), true);
 
-
 if (
-    !isset($data["firstName"], $data["lastName"], $data["id"], $data["phoneNumber"], 
+    !isset($data["firstName"], $data["lastName"], $data["dni"], $data["phoneNumber"], 
     $data["email"], $data["gender"], $data["primaryMajor"], $data["secondaryMajor"], 
     $data["comment"], $data["certificate"])
 ) {
@@ -46,27 +41,27 @@ if (
 }
 
 try {
+    $stmt = $conn->prepare("CALL SP_CREATE_ADMISSION(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-    $stmt = $conn->prepare("CALL SP_Create_Admission(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param(
         "sssssssiis",
-        $data["firstName"],
-        $data["lastName"],
-        $data["id"],
-        $data["phoneNumber"],
-        $data["email"],
-        $data["gender"],
-        $data["primaryMajor"],
-        $data["secondaryMajor"],
-        $data["comment"],
-        $data["certificate"]
+        $data["firstName"],      
+        $data["lastName"],       
+        $data["dni"],           
+        $data["phoneNumber"],   
+        $data["email"],          
+        $data["gender"],        
+        $data["primaryMajor"],   
+        $data["secondaryMajor"], 
+        $data["comment"],        
+        $data["certificate"]     
     );
 
     if ($stmt->execute()) {
         $result = $stmt->get_result()->fetch_assoc();
-        echo json_encode(["status" => "success", "application_code" => $result["application_code"]]);
+        echo json_encode(["status" => "success", "application_code" => $result["APPLICATION_CODE"]]);
     } else {
-        throw new Exception("Database error");
+        throw new Exception("Database error: " . $stmt->error);
     }
 
 } catch (Exception $e) {

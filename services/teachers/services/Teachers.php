@@ -172,4 +172,22 @@
         return new SectionResponse("failure", error: new ErrorResponse(500, $err->getMessage()));
       }
     }
+
+    public static function getTeacherNumber(string $DNI): string {
+      $db = Database::getDatabaseInstace();
+      $mysqli = $db->getConnection();
+
+      $query = "CALL SP_GET_TEACHER_NUMBER(?)";
+      try {
+        $result = $db->callStoredProcedure($query, "s", [$DNI], $mysqli);
+        if ($result->num_rows == 0) {
+          return "";
+        }
+
+        $result = $result->fetch_assoc();
+        return $result["TEACHER_NUMBER"];
+      } catch(Throwable) {
+        return "";
+      }
+    }
   }

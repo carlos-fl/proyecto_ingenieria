@@ -5,7 +5,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Revisión de Solicitudes</title>
+  <title>Revisión de Exámenes</title>
   <link rel="icon" type="image/png" href="assets/img/UNAH-escudo.png" />
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/solicitudesAdmisionStyles.css">
@@ -20,19 +20,18 @@
       <div>
         <nav class="navbar bg-body-tertiary" id="header-bar">
           <div class="container-fluid">
-            <h1 class="navbar-brand">
-              Revisión de Solicitudes
-            </h1>
+            <h1 class="navbar-brand">Revisión de Exámenes</h1>
           </div>
         </nav>
       </div>
+    </div>
   </header>
   <main>
     <div class="container d-flex justify-content-center align-items-center" style="min-height: 75vh;">
       <div class="card shadow" id="form-card" style="max-width: 900px; width: 100%;">
         <div class="card-body">
           <div id="counter" class="text-center mb-3"></div>
-          <div id="requestDetails" class="mb-3"></div>
+          <div id="examDetails" class="mb-3"></div>
         </div>
         <log-out id="logOut"></log-out>
       </div>
@@ -62,7 +61,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/components/navbar.js"></script>
   <script src="js/components/footer.js"></script>
-  <script src="js/solicitudesAdmision.js"></script>
+  <script src="js/revisionExamenes.js"></script>
   <script src="js/components/log-out.js"></script>
 
 </body>
