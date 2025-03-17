@@ -180,11 +180,13 @@ a[href="/resultados.html"] {
 }
 
 #main-requirements {
+  height: 100vh;
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
 
 #main-requirements h1 {
+  color: #FFBF00!important;
   font-weight: 700;
 }
 

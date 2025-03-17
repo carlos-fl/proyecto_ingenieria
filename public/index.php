@@ -15,44 +15,13 @@
 
 <body>
   <header>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-      <div class="container-fluid">
-        <div>
-          <a href="index.php"><img style="width: 45%;" src="views/assets/img/logo-unah.png" alt="Logo UNAH" /></a>
-        </div>
-        <div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
-            aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarText">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link" href="index.php">Inicio</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./views/loginEstudiantes.php">Estudiantes</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./views/loginDocentes.php">Docentes</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#reviewerModal">Revisores</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./views/login.php">Matricula</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./views/admisiones.php">Admisiones</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./views/loginEstudiantes.php">Biblioteca</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </nav>
+    <navbar-unah logo="views/assets/img/logo-unah.png"
+      home-href="index.php"
+      estudiantes-href="views/loginEstudiantes.php"
+      docentes-href="views/loginDocentes.php"
+      matricula-href="views/login.php"
+      admisiones-href="views/admisiones.php"
+      biblioteca-href="views/LoginEstudiantes.php"></navbar-unah>
     <div class="top-bar">
       <div>
         <nav class="navbar bg-body-tertiary" id="header-bar">
@@ -79,7 +48,7 @@
             </a>
           </div>
           <div class="col">
-            <a href="./views/loginDocentes.php">
+            <a href="views/loginDocentes.php">
               <div><i class="fa-solid fa-user-tie"></i></div>
               <strong>Docentes</strong><br>Ingresa como docente
             </a>
@@ -109,13 +78,7 @@
       </div>
     </section>
   </main>
-  <footer>
-    <nav class="navbar bg-body-tertiary">
-      <div class="container-fluid" id="footer-cf">
-        <p>&copy; 2024 Universidad Nacional Autónoma de Honduras</p>
-      </div>
-    </nav>
-  </footer>
+  <footer-unah></footer-unah>
 
   <!-- Ventana modal -->
   <div class="modal fade" id="reviewerModal" tabindex="-1" aria-labelledby="reviewerModalLabel" aria-hidden="true">
@@ -127,8 +90,8 @@
         </div>
         <div class="modal-body d-flex justify-content-center align-items-center">
           <div class="btn-group" role="group" aria-label="Select reviewer type">
-            <a href="./views/loginRevisorSolicitudesAd.php"><button type="button" class="btn btn-warning mx-3" id="admissionReviewer">Revisor de Solicitud de Admision</button></a>
-            <a href="./views/loginRevisorExamenes.php"><button type="button" class="btn btn-warning mx-3" id="examReviewer">Revisor de Examen de Admision</button></a>
+            <a href="views/loginRevisorSolicitudesAd.php"><button type="button" class="btn btn-warning mx-3" id="admissionReviewer">Revisor de Solicitud de Admision</button></a>
+            <a href="views/loginRevisorExamenes.php"><button type="button" class="btn btn-warning mx-3" id="examReviewer">Revisor de Examen de Admision</button></a>
           </div>
         </div>
       </div>
@@ -137,6 +100,9 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+  <script src="views/js/components/navbar.js"></script>
+  <script src="views/js/components/footer.js"></script>
+
 </body>
 
 </html>
