@@ -1,9 +1,8 @@
 <?php
-require_once __DIR__ . "/../../../../config/database/Database.php";
-require_once __DIR__ . "/../../../../config/env/Environment.php";
+require_once __DIR__ . "/../../../../../config/database/Database.php";
+require_once __DIR__ . "/../../../../../config/env/Environment.php";
 
 header("Content-Type: application/json");
-
 
 if ($_SERVER["REQUEST_METHOD"] !== "PUT") {
     http_response_code(405);
@@ -14,14 +13,12 @@ if ($_SERVER["REQUEST_METHOD"] !== "PUT") {
     exit;
 }
 
-
 $data = json_decode(file_get_contents("php://input"), true);
 
-
 if (
-    !isset($data["applicationCode"], $data["firstName"], $data["lastName"], $data["id"], 
+    !isset($data["applicationCode"], $data["firstName"], $data["lastName"], $data["dni"], 
     $data["phoneNumber"], $data["email"], $data["gender"], $data["primaryMajor"], 
-    $data["secondaryMajor"], $data["certificate"])
+    $data["secondaryMajor"], $data["comment"], $data["certificate"])
 ) {
     http_response_code(400);
     echo json_encode([
@@ -30,7 +27,6 @@ if (
     ]);
     exit;
 }
-
 
 $env = Environment::getVariables();
 $db = new Database(
@@ -44,14 +40,26 @@ $db = new Database(
 $conn = $db->getConnection();
 
 try {
+    $checkStmt = $conn->prepare("SELECT APPLICATION_CODE FROM TBL_APPLICATIONS WHERE APPLICATION_CODE = ?");
+    $checkStmt->bind_param("i", $data["applicationCode"]);
+    $checkStmt->execute();
+    $checkResult = $checkStmt->get_result();
 
-    $stmt = $conn->prepare("CALL SP_Update_Admission(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    if ($checkResult->num_rows === 0) {
+        echo json_encode([
+            "status" => "failure",
+            "error" => ["errorCode" => "404", "errorMessage" => "Application not found"]
+        ]);
+        exit;
+    }
+
+    $stmt = $conn->prepare("CALL SP_UPDATE_ADMISSION(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param(
         "isssssssiis",  
         $data["applicationCode"],
         $data["firstName"],
         $data["lastName"],
-        $data["id"],  
+        $data["dni"],  
         $data["phoneNumber"],
         $data["email"],
         $data["gender"],
@@ -64,7 +72,7 @@ try {
     if ($stmt->execute()) {
         echo json_encode(["status" => "success"]);
     } else {
-        throw new Exception("Database error");
+        throw new Exception("Database error: " . $stmt->error);
     }
 
 } catch (Exception $e) {
@@ -77,3 +85,4 @@ try {
 
 $conn->close();
 ?>
+

@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . "/../../../../config/database/Database.php";
-require_once __DIR__ . "/../../../../config/env/Environment.php";
+require_once __DIR__ . "/../../../../../config/database/Database.php";
+require_once __DIR__ . "/../../../../../config/env/Environment.php";
 
 header("Content-Type: application/json");
 
@@ -15,14 +15,16 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 
 $data = json_decode(file_get_contents("php://input"), true);
 
-if (!isset($data["applicantCode"])) {
+if (!isset($data["applicationCode"]) || empty($data["applicationCode"])) {
     http_response_code(400);
     echo json_encode([
         "status" => "failure",
-        "error" => ["errorCode" => "400", "errorMessage" => "Missing required field 'applicantCode'"]
+        "error" => ["errorCode" => "400", "errorMessage" => "Missing required field 'applicationCode'"]
     ]);
     exit;
 }
+
+$applicationCode = $data["applicationCode"];
 
 $env = Environment::getVariables();
 $db = new Database(
@@ -36,11 +38,27 @@ $db = new Database(
 $conn = $db->getConnection();
 
 try {
-    $stmt = $conn->prepare("CALL SP_Approve_Application(?)");
-    $stmt->bind_param("i", $data["applicantCode"]);
-    $stmt->execute();
+    $checkStmt = $conn->prepare("SELECT APPLICATION_CODE FROM TBL_APPLICATIONS WHERE APPLICATION_CODE = ?");
+    $checkStmt->bind_param("i", $applicationCode);
+    $checkStmt->execute();
+    $checkResult = $checkStmt->get_result();
 
-    echo json_encode(["status" => "success"]);
+    if ($checkResult->num_rows === 0) {
+        echo json_encode([
+            "status" => "failure",
+            "error" => ["errorCode" => "404", "errorMessage" => "Application not found"]
+        ]);
+        exit;
+    }
+
+    $stmt = $conn->prepare("CALL SP_APPROVE_APPLICATION(?)");
+    $stmt->bind_param("i", $applicationCode);
+
+    if ($stmt->execute()) {
+        echo json_encode(["status" => "success"]);
+    } else {
+        throw new Exception("Database error: " . $stmt->error);
+    }
 
 } catch (Exception $e) {
     http_response_code(500);
