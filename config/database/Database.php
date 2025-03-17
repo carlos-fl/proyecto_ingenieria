@@ -65,7 +65,7 @@
      * @return array
      * 
      */
-    public function callStoredProcedure(string $query, string $storedProcedureTypes = ' ', array $parameters = [], mysqli $mysqli): mysqli_result {
+    public function callStoredProcedure(string $query, string $storedProcedureTypes = ' ', array $parameters = [], mysqli $mysqli): mysqli_result|bool {
       $stmt = $mysqli->prepare($query);
       if (count($parameters) > 0) {
         $stmt->bind_param($storedProcedureTypes, ...$parameters);

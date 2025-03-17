@@ -26,9 +26,7 @@
         return $response;
       }
 
-      $errorResponse = new ErrorResponse();
-      $errorResponse->errorCode = $code;
-      $errorResponse->errorMessage = $message;
+      $errorResponse = new ErrorResponse($code, $message);
       $response->status = $status;
       $response->error = $errorResponse;
       return $response;
