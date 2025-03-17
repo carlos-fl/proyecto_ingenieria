@@ -1,6 +1,7 @@
 <?php
     include_once __DIR__ . '/../../../../utils/classes/Request.php';
-    include_once __DIR__ . '/../../../../src/services/resources/services/Resources.php';
+    include_once __DIR__ . '/../../../../services/resources/services/Resources.php';
+
 
     header("Content-Type: application/json");
 

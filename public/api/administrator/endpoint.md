@@ -25,12 +25,13 @@ curl -i -X POST "http://localhost:8000/src/services/administrator/controllers/ad
 ### 2. ENDPOINT QUE PERMITE AL ADMINISTRADOR ASIGNAR ROLES
 
 ```bash
-curl -X PUT "http://localhost:8000/src/services/administrator/controllers/adminRoles.php" \
+curl -i -X PUT "http://localhost:8000/api/administrator/controllers/adminRoles.php" \
      -H "Content-Type: application/json" \
      -d '{
-           "userID": 2,
-           "rolesCode": 3
-         }'```
+          "dni": "0803200109123",
+          "rolesCode": 2
+     }'
+```
 
 
 #### Objeto que responde con http status 200
