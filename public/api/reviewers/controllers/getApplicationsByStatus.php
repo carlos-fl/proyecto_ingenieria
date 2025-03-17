@@ -1,19 +1,31 @@
 <?php
-require_once __DIR__ . "/../../../../config/database/Database.php";
-require_once __DIR__ . "/../../../../config/env/Environment.php";
+require_once __DIR__ . "/../../../../../config/database/Database.php";
+require_once __DIR__ . "/../../../../../config/env/Environment.php";
+
 
 header("Content-Type: application/json");
 
-if ($_SERVER["REQUEST_METHOD"] !== "GET" || !isset($_GET["requests"])) {
+if ($_SERVER["REQUEST_METHOD"] !== "GET" || !isset($_GET["status"])) {
     http_response_code(400);
     echo json_encode([
         "status" => "failure",
-        "error" => ["errorCode" => "400", "errorMessage" => "Missing or invalid 'requests' parameter"]
+        "error" => ["errorCode" => "400", "errorMessage" => "Missing or invalid 'status' parameter"]
     ]);
     exit;
 }
 
-$status = $_GET["requests"];
+$status = trim(strtolower($_GET["status"])); 
+
+$validStatuses = ["pending", "approved", "rejected"];
+
+if (!in_array($status, $validStatuses, true)) {
+    http_response_code(400);
+    echo json_encode([
+        "status" => "failure",
+        "error" => ["errorCode" => "400", "errorMessage" => "Invalid status value"]
+    ]);
+    exit;
+}
 
 $env = Environment::getVariables();
 $db = new Database(
@@ -27,7 +39,7 @@ $db = new Database(
 $conn = $db->getConnection();
 
 try {
-    $stmt = $conn->prepare("CALL SP_Get_Applications_By_Status(?)");
+    $stmt = $conn->prepare("CALL SP_GET_APPLICATIONS_BY_STATUS(?)");
     $stmt->bind_param("s", $status);
     $stmt->execute();
 

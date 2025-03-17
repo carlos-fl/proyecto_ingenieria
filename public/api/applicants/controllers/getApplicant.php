@@ -1,19 +1,19 @@
 <?php
-require_once __DIR__ . "/../../../../config/database/Database.php";
-require_once __DIR__ . "/../../../../config/env/Environment.php";
+require_once __DIR__ . "/../../../../../config/database/Database.php";
+require_once __DIR__ . "/../../../../../config/env/Environment.php";
 
 header("Content-Type: application/json");
 
-if ($_SERVER["REQUEST_METHOD"] !== "GET" || !isset($_GET["applicant-code"])) {
+if ($_SERVER["REQUEST_METHOD"] !== "GET" || !isset($_GET["applicationCode"]) || empty($_GET["applicationCode"])) {
     http_response_code(400);
     echo json_encode([
         "status" => "failure",
-        "error" => ["errorCode" => "400", "errorMessage" => "Missing or invalid applicant-code"]
+        "error" => ["errorCode" => "400", "errorMessage" => "Missing or invalid applicationCode"]
     ]);
     exit;
 }
 
-$applicant_code = $_GET["applicant-code"];
+$applicationCode = $_GET["applicationCode"];
 
 $env = Environment::getVariables();
 $db = new Database(
@@ -27,8 +27,8 @@ $db = new Database(
 $conn = $db->getConnection();
 
 try {
-    $stmt = $conn->prepare("CALL SP_Get_Applicant_By_Code(?)");
-    $stmt->bind_param("i", $applicant_code);
+    $stmt = $conn->prepare("CALL SP_GET_APPLICANT_BY_CODE(?)");
+    $stmt->bind_param("i", $applicationCode);
     $stmt->execute();
     
     $result = $stmt->get_result();
