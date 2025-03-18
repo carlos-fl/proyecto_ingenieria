@@ -40,6 +40,25 @@
   </main>
   <footer-unah></footer-unah>
 
+  <!-- Ventana modal PDF-->
+  <div class="modal fade" id="certificateModal" tabindex="-1" aria-labelledby="certificateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="certificateModalLabel">Certificado de Secundaria</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <object id="modalCertificateObject" data="" type="application/pdf" width="100%" height="600px">
+            <p>Tu navegador no soporta la visualización de PDFs.
+              <a href="" target="_blank">Descarga el certificado</a>.
+            </p>
+          </object>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Ventana modal -->
   <div class="modal fade" id="reviewerModal" tabindex="-1" aria-labelledby="reviewerModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -57,7 +76,6 @@
       </div>
     </div>
   </div>
-
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/components/navbar.js"></script>

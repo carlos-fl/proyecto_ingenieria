@@ -9,7 +9,7 @@ const requests = [
     centroRegional: "CU",
     carreraPrincipal: "Ingeniería en Sistemas",
     carreraSecundaria: "Informática Administrativa",
-    certificateUrl: "assets/img/certificado.webp"
+    certificateUrl: "assets/img/certificado.webp",
   },
   {
     id: 2,
@@ -20,7 +20,7 @@ const requests = [
     centroRegional: "TE",
     carreraPrincipal: "Medicina",
     carreraSecundaria: "Enfermería",
-    certificateUrl: "assets/img/certificado.webp"
+    certificateUrl: "assets/img/certificado.webp",
   },
   {
     id: 3,
@@ -31,8 +31,8 @@ const requests = [
     centroRegional: "OC",
     carreraPrincipal: "Ingeniería Civil",
     carreraSecundaria: "Arquitectura",
-    certificateUrl: "assets/img/certificado.webp"
-  }
+    certificateUrl: "assets/img/certificado.webp",
+  },
 ];
 
 let currentIndex = 0;
@@ -76,69 +76,77 @@ function renderRequest(request) {
               <input type="text" readonly class="form-control-plaintext" value="${request.carreraSecundaria}">
             </div>
           </div>
+          <!-- Botón para mostrar el certificado -->
           <div class="text-center mb-4">
-            <img src="${request.certificateUrl}" alt="Certificado de Secundaria" class="img-thumbnail"
-                 style="max-width: 300px; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#certificateModal">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#certificateModal" data-certificate-url="${request.certificateUrl}">
+              Mostrar Certificado
+            </button>
           </div>
           <div class="d-flex justify-content-center">
-            <button type="button" id="approveButton" class="btn btn-success me-3">Aprobar</button>
+            <button type="button" id="approveButton" class="btn btn-aprobar me-3">Aprobar</button>
             <button type="button" id="rejectButton" class="btn btn-danger">Rechazar</button>
           </div>
         </form>
       </div>
     </div>
-
-    <div class="modal fade" id="certificateModal" tabindex="-1" aria-labelledby="certificateModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-          <div class="modal-header bg-primary text-white">
-            <h5 class="modal-title" id="certificateModalLabel">Certificado de Secundaria</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body text-center">
-            <img id="modalCertificateImage" src="${request.certificateUrl}" alt="Certificado Completo" class="img-fluid w-100">
-          </div>
-        </div>
-      </div>
-    </div>
   `;
 }
 
+// Listener para actualizar el certificado en la modal al abrirla
+var certificateModal = document.getElementById("certificateModal");
+certificateModal.addEventListener("show.bs.modal", function (event) {
+  var button = event.relatedTarget;
+  var certificateUrl = button.getAttribute("data-certificate-url");
+  var modalObject = document.getElementById("modalCertificateObject");
+  modalObject.setAttribute("data", certificateUrl);
+  var fallbackLink = modalObject.querySelector("a");
+  if (fallbackLink) {
+    fallbackLink.href = certificateUrl;
+  }
+});
+
 // Función para cargar la solicitud y actualizar el contador
 function loadRequest() {
-  const counterDiv = document.getElementById('counter');
-  const detailsDiv = document.getElementById('requestDetails');
+  const counterDiv = document.getElementById("counter");
+  const detailsDiv = document.getElementById("requestDetails");
   if (currentIndex < requests.length) {
-    counterDiv.innerText = `Solicitud ${currentIndex + 1} de ${requests.length}`;
+    counterDiv.innerText = `Solicitud ${currentIndex + 1} de ${
+      requests.length
+    }`;
     detailsDiv.innerHTML = renderRequest(requests[currentIndex]);
   } else {
-    counterDiv.innerText = '';
-    detailsDiv.innerHTML = '<p class="text-center">No hay más solicitudes asignadas.</p>';
+    counterDiv.innerText = "";
+    detailsDiv.innerHTML =
+      '<p class="text-center">No hay más solicitudes asignadas.</p>';
   }
 }
 
 // Manejo de eventos para aprobar o rechazar
-document.addEventListener('click', function (event) {
-  if (event.target && event.target.id === 'approveButton') {
-    alert('Solicitud aprobada');
+document.addEventListener("click", function (event) {
+  if (event.target && event.target.id === "approveButton") {
+    alert("Solicitud aprobada");
     currentIndex++;
     loadRequest();
   }
-  if (event.target && event.target.id === 'rejectButton') {
-    let reason = prompt('Ingrese el motivo de rechazo:');
+  if (event.target && event.target.id === "rejectButton") {
+    let reason = prompt("Ingrese el motivo de rechazo:");
     if (reason) {
-      alert('Solicitud rechazada: ' + reason);
+      alert("Solicitud rechazada: " + reason);
       currentIndex++;
       loadRequest();
     }
   }
 });
 
-document.addEventListener('click', function (event) {
-  if (event.target && event.target.tagName === 'IMG' && event.target.dataset.bsTarget === "#certificateModal") {
-      document.getElementById('modalCertificateImage').src = event.target.src;
+document.addEventListener("click", function (event) {
+  if (
+    event.target &&
+    event.target.tagName === "IMG" &&
+    event.target.dataset.bsTarget === "#certificateModal"
+  ) {
+    document.getElementById("modalCertificateImage").src = event.target.src;
   }
 });
 
 // Inicializar la carga de la primera solicitud cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', loadRequest);
+document.addEventListener("DOMContentLoaded", loadRequest);
