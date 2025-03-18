@@ -24,7 +24,7 @@ class PopUp extends HTMLElement{
 
     render(){
         this.innerHTML = `
-            <div id="popUpContainer" class="d-flex align-items-center ps-3 pop-up ${this.popUpClass}" disabled>
+            <div id="popUpContainer" class="d-flex align-items-center ps-2 pop-up ${this.popUpClass}" disabled>
                 <img id="popUpImg"src="${this.imgSource}" alt="">
                 <span class="ms-2" id="popUpMessage">${this.message}</span>
             </div>
