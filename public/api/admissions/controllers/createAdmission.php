@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . "/../../../../../config/database/Database.php";
-require_once __DIR__ . "/../../../../../config/env/Environment.php";
+require_once __DIR__ . "/../../../../config/database/Database.php";
+require_once __DIR__ . "/../../../../config/env/Environment.php";
 
 header("Content-Type: application/json");
 
