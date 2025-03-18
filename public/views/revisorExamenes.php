@@ -9,6 +9,7 @@
   <link rel="icon" type="image/png" href="assets/img/UNAH-escudo.png" />
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/solicitudesAdmisionStyles.css">
+  <link rel="stylesheet" href="css/revisorExamenesStyles.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <script src="https://kit.fontawesome.com/6130fb0810.js" crossorigin="anonymous"></script>
 </head>
@@ -27,15 +28,14 @@
     </div>
   </header>
   <main>
-    <div class="container d-flex justify-content-center align-items-center" style="min-height: 75vh;">
-      <div class="card shadow" id="form-card" style="max-width: 900px; width: 100%;">
-        <div class="card-body">
-          <div id="counter" class="text-center mb-3"></div>
-          <div id="examDetails" class="mb-3"></div>
-        </div>
-        <log-out id="logOut"></log-out>
+
+    <div class="container center-container">
+      <div class="upload-wrapper">
+        <label for="csvFile" class="upload-btn">Subir Resultados</label>
+        <input type="file" id="csvFile" name="csvFile" accept=".csv">
       </div>
     </div>
+    <log-out id="logOut"></log-out>
   </main>
   <footer-unah></footer-unah>
 
@@ -56,7 +56,6 @@
       </div>
     </div>
   </div>
-
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/components/navbar.js"></script>
