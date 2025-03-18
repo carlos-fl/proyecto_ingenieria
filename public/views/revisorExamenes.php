@@ -57,11 +57,21 @@
     </div>
   </div>
 
+  <!--Pop Up-->
+  <pop-up
+  id="popUp"
+  imgsource="assets/img/crossmark.png"
+  popupclass="fail-popup"
+  message="">
+  </pop-up>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="js/revisionExamenes.js"></script>
   <script src="js/components/navbar.js"></script>
   <script src="js/components/footer.js"></script>
-  <script src="js/revisionExamenes.js"></script>
   <script src="js/components/log-out.js"></script>
+  <script src="js/components/pop-up.js"></script>
+  
 
 </body>
 
