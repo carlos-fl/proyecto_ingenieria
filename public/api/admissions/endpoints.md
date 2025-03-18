@@ -6,21 +6,17 @@
 
 ```bash
 curl -X POST "http://18.117.9.170:80/api/admissions/controllers/createAdmission.php" \
-     -H "Content-Type: application/json" \
-     -d @- <<EOF | jq
-{
-  "firstName": "Juan",
-  "lastName": "Pérez",
-  "dni": "0801199905678",
-  "phoneNumber": "98765432",
-  "email": "juan.perez2@unah.edu.hn",
-  "gender": "M",
-  "primaryMajor": 101,
-  "secondaryMajor": 102,
-  "comment": "Solicitud de prueba",
-  "certificate": "certificado.pdf"
-}
-EOF
+     -H "Content-Type: multipart/form-data" \
+     -F "firstName=Juan" \
+     -F "lastName=Pérez" \
+     -F "dni=0801199905678" \
+     -F "phoneNumber=98765432" \
+     -F "email=juan.perez2@unah.edu.hn" \
+     -F "gender=M" \
+     -F "primaryMajor=101" \
+     -F "secondaryMajor=102" \
+     -F "comment=Solicitud de prueba con documento" \
+     -F "certificate=@/home/KojiKabuto75/Documents/ddl/certificado_prueba.pdf" | jq
 ```
 
 **Respuesta esperada:**
@@ -43,6 +39,8 @@ EOF
 ### 🔹 2. ACTUALIZAR SOLICITUD DE ADMISIÓN
 **Propósito:** Actualizar una solicitud de admisión existente.
 
+Sin Cambio en certificado
+
 ```bash
 curl -X PUT "http://18.117.9.170:80/api/admissions/controllers/updateAdmission.php" \
      -H "Content-Type: application/json" \
@@ -50,17 +48,46 @@ curl -X PUT "http://18.117.9.170:80/api/admissions/controllers/updateAdmission.p
 {
   "applicationCode": 20251000001,
   "firstName": "Juan Carlos",
-  "lastName": "Pérez",
+  "lastName": "Pérez Mejía",
   "dni": "0801199905678",
-  "phoneNumber": "98765433",
-  "email": "juan.perez3@unah.edu.hn",
+  "phoneNumber": "99887766",
+  "email": "juan.perez2@unah.edu.hn",
   "gender": "M",
   "primaryMajor": 101,
   "secondaryMajor": 102,
-  "comment": "Actualización de solicitud",
-  "certificate": "certificado_actualizado.pdf"
+  "comment": "Actualización sin cambiar el documento"
 }
 EOF
+```
+**Respuesta esperada:**
+```json
+{
+  "status": "success"
+}
+```
+**Errores posibles:**
+```json
+{
+  "status": "failure",
+  "error": { "errorCode": "404", "errorMessage": "Application not found" }
+}
+```
+Con Cambio en certificado
+
+```bash
+curl -X PUT "http://18.117.9.170:80/api/admissions/controllers/updateAdmission.php" \
+     -H "Content-Type: multipart/form-data" \
+     -F "applicationCode=20251000001" \
+     -F "firstName=Juan Carlos" \
+     -F "lastName=Pérez Mejía" \
+     -F "dni=0801199905678" \
+     -F "phoneNumber=99887766" \
+     -F "email=juan.perez2@unah.edu.hn" \
+     -F "gender=M" \
+     -F "primaryMajor=101" \
+     -F "secondaryMajor=102" \
+     -F "comment=Actualización con nuevo documento" \
+     -F "certificate=@/home/KojiKabuto75/Documents/ddl/nuevo_certificado.pdf" | jq
 ```
 **Respuesta esperada:**
 ```json

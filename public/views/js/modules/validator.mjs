@@ -5,3 +5,15 @@ export function validEmail(email){
     let re = new RegExp(pattern)
     return re.test(email)
 }
+
+export function validDNI(dni){
+    let pattern = /\d{4}-\d{4}-\d{5}$/
+    let re = new RegExp(pattern)
+    return re.test(dni)
+}
+
+export function validPhoneNumber(phone){
+    let pattern = /\d{4}-\d{4}$/
+    let re = new RegExp(pattern)
+    return re.test(phone)
+}

@@ -9,6 +9,12 @@ export function disableBtn(btn, time){
 }
 
 
+export function showPopUp(message){
+    let popUp = document.getElementById("popUp")
+    popUp.setAttribute("message", message)
+    popUp.show()
+}
+
 export function showFailPopUp(popUpId, content){
     let popUp = document.getElementById(popUpId)
     let popUpMessage = popUp.querySelector("#popUpMessage") 
@@ -19,6 +25,6 @@ export function showFailPopUp(popUpId, content){
     }, 2000)
 }
 
-export function addBorder(domElement, borderWidth, color){
+export function changeBorder(domElement, borderWidth, color){
     domElement.style.border = borderWidth + 'solid ' + color
 }

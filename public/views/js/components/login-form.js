@@ -77,7 +77,7 @@ class LoginForm extends HTMLElement{
             return
         }
         // Realizar petición
-        this.requestLogin(email, password)
+        this.requestLogin(emailInput, passwordInput)
     }
 
     disable(htmlElement, time){
@@ -110,8 +110,8 @@ class LoginForm extends HTMLElement{
 
     async requestLogin(email, password){
         let body = JSON.stringify({
-            "email": email,
-            "password": password
+            "email": email.value,
+            "password": password.value
         })
         fetch(this.action, {
             method: "POST",
@@ -128,8 +128,8 @@ class LoginForm extends HTMLElement{
             }
             if (data.status == "failure"){
                 // No se pudo loggear correctamente
-                this.changeBorder(emailInput,"var(--bs-border-width)", "red")
-                this.changeBorder(passwordInput,"var(--bs-border-width)", "red")
+                this.changeBorder(email,"var(--bs-border-width)", "red")
+                this.changeBorder(password,"var(--bs-border-width)", "red")
                 this.emit("fail", {message: "Usuario o contraseña incorrectos"});
                 return  
             }

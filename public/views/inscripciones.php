@@ -31,33 +31,41 @@
     <div class="container d-flex justify-content-center align-items-center min-vh-95" id="container-form">
       <div class="card shadow" id="form-card" style="max-width: 900px; width: 100%;">
         <div class="card-body">
-          <form id="registration-form">
+          <div id="registration-form">
             <div class="row g-4">
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label for="first-name" class="form-label">Nombres*</label>
+                  <label for="first-name" class="form-label">Nombres<span class="text-danger">*</span></label>
                   <input type="text" id="first-name" name="first-name" class="form-control" placeholder="Ingrese sus nombres" required />
                 </div>
                 <div class="mb-3">
-                  <label for="last-name" class="form-label">Apellidos*</label>
+                  <label for="last-name" class="form-label">Apellidos<span class="text-danger">*</span></label>
                   <input type="text" id="last-name" name="last-name" class="form-control" placeholder="Ingrese sus apellidos" required />
                 </div>
                 <div class="mb-3">
-                  <label for="user-id" class="form-label">Identidad*</label>
-                  <input type="text" id="user-id" name="user-id" class="form-control" placeholder="Ingrese su número de identidad" required />
+                  <label for="user-id" class="form-label">Identidad<span class="text-danger">*</span></label>
+                  <input type="text" id="user-id" name="user-id" class="form-control" placeholder="0801-0000-00000" required />
                 </div>
                 <div class="mb-3">
-                  <label for="phone" class="form-label">Teléfono*</label>
+                  <label for="phone" class="form-label">Teléfono<span class="text-danger">*</span></label>
                   <input type="tel" id="phone" name="phone" class="form-control" pattern="[0-9]{8}" placeholder="0000 0000" required />
                 </div>
                 <div class="mb-3">
-                  <label for="email" class="form-label">Correo*</label>
+                  <label for="email" class="form-label">Correo<span class="text-danger">*</span></label>
                   <input type="email" id="email" name="email" class="form-control" pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}" placeholder="ejemplo@correo.com" required />
                 </div>
               </div>
               <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="gender" class="form-label">Género<span class="text-danger">*</span></label>
+                    <select id="gender" name="gender" class="form-select" required>
+                      <option value="">Seleccione un género</option>
+                      <option value="M">Masculino</option>
+                      <option value="F">Femenino</option>
+                    </select>
+                  </div>
                 <div class="mb-3">
-                  <label for="regional-center" class="form-label">Centro Regional*</label>
+                  <label for="regional-center" class="form-label">Centro Regional<span class="text-danger">*</span></label>
                   <select id="regional-center" name="regional-center" class="form-select" required>
                     <option value="">Seleccione un centro regional</option>
                     <!-- fetch -->
@@ -71,24 +79,24 @@
                   </select>
                 </div>
                 <div class="mb-3">
-                  <label for="secondary-career" class="form-label">Carrera Secundaria*</label>
+                  <label for="secondary-career" class="form-label">Carrera Secundaria<span class="text-danger">*</span></label>
                   <select id="secondary-career" name="secondary-career" class="form-select" required>
                     <option value="">Seleccione una carrera secundaria</option>
                     <!-- fetch -->
                   </select>
                 </div>
                 <div class="mb-3">
-                  <label for="file-upload" class="form-label">Adjuntar Certificado de Secundaria*</label>
-                  <input type="file" id="file-upload" name="file-upload" class="form-control" required />
+                  <label for="file-upload" class="form-label">Adjuntar Certificado de Secundaria<span class="text-danger">*</span></label>
+                  <input type="file" id="file-upload" name="file-upload" accept=".pdf" class="form-control" required />
                 </div>
                 <div class="mb-3">
-                  <button type="submit" id="submit-button" class="btn btn-primary w-100">
+                  <button  id="submit-button" class="btn btn-primary w-100">
                     Enviar
                   </button>
                 </div>
               </div>
             </div>
-          </form>
+          </div>
           <div class="text-center mt-3">
             <a href="admisiones.php" id="back-link">← Regresar</a>
           </div>
@@ -116,15 +124,21 @@
     </div>
   </div>
 
+  <!--Pop Up-->
+  <pop-up
+    id="popUp"
+    imgsource="assets/img/crossmark.png"
+    popupclass="fail-popup"
+    message="">
+  </pop-up>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <script>
-    document.getElementById('reviewersBox').addEventListener('click', function() {
-      var myModal = new bootstrap.Modal(document.getElementById('reviewerModal'));
-      myModal.show();
-    });
   </script>
   <script src="js/components/navbar.js"></script>
   <script src="js/components/footer.js"></script>
+  <script src="js/components/pop-up.js"></script>
+  <script type="module" src="js/inscripciones.js"></script>
 
 </body>
 
