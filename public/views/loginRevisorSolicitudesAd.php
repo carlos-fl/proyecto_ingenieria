@@ -27,8 +27,8 @@
     </header>
 
     <main>
-        <login-form action="src/services/auth/controllers/login.php" imgSource="assets/img/unah.png" imgAlt="Logo UNAH"
-            heading="Bienvenido Revisor" message="Debe autenticarse como revisor para usar este servicio" id="login-revisorSolictAdmi"
+        <login-form action="/api/auth/controllers/applicantReviewer.php" imgSource="assets/img/unah.png" imgAlt="Logo UNAH"
+            heading="Bienvenido Revisor" message="Debe autenticarse como revisor para usar este servicio" id="login-form"
             data-redirect-success="solicitudeAdmision.php">
         </login-form>
     </main>
@@ -38,7 +38,6 @@
         id="popUp"
         imgsource="assets/img/crossmark.png"
         popupclass="fail-popup"
-        duration="4000"
         message="">
     </pop-up>
 
@@ -64,11 +63,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-    <script src="js/login.js"></script>
     <script type="module" src="js/components/login-form.js"></script>
     <script type="module" src="js/components/pop-up.js"></script>
     <script type="module" src="js/components/navbar.js"></script>
     <script type="module" src="js/components/footer.js"></script>
+    <script type="module" src="js/loginRevisorSolicitudesAd.js"></script>
     <script>
         document.querySelectorAll("login-form").forEach((form) => {
             form.addEventListener("login-form:success", () => {
