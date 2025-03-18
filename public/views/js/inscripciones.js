@@ -129,14 +129,11 @@ function submitForm(event){
     formData.append("email", email.value.trim())
     formData.append("gender", gender.value)
     formData.append("primaryMajor", mainCareerSelect.value)
-    formData.append("firstName", secondaryCareerSelect.value)
-    formData.append("comment", "")
+    formData.append("secondaryMajor", secondaryCareerSelect.value)
+    formData.append("comment", "Envío de inscripción")
     formData.append("certificate", certificateFile.files[0])
     fetch("/api/admissions/controllers/createAdmission.php", {
         method: "POST",
-        headers: {
-            "Content-Type": "multipart/form-data"
-        },
         body: formData
     })
     .then(response => response.json())
