@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rechazo de solicitud</title>
+</head>
+<body>
+  <div class="container">
+    <h1>Tu solicitud ha sido rechazada</h1>
+    <p>Estimado/a <strong>{{ name }}</strong>,</p>
+    <p>Lamentamos informarte que tu solicitud de admisión en la <strong>Universidad Nacional Autónoma de Honduras</strong> ha sido rechazada.</p>
+    <p><strong>Código de solicitud:</strong> <span>{{ application_code }}</span></p>
+    <p><strong>Razón del rechazo:</strong></p>
+    <p>"{{ commentary }}"</p>
+    <p>Si necesitas más información, contactar a la oficina de admisiones.</p>
+    <p>Atentamente,</p>
+    <p><strong>UNIVERSIDAD NACIONAL AUTÓNOMA DE HONDURAS</strong></p>
+    <div class="footer">
+      <p>&copy; 2025 UNAH. Todos los derechos reservados.</p>
+    </div>
+  </div>
+</body>
+</html>
