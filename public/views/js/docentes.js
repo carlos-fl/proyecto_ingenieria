@@ -77,7 +77,7 @@ function loadShowSectionData(event) {
       let studentTableBody = studentTable.querySelector("tbody");
       studentTableBody.innerHTML = "";
       let counter = 1;
-      for (let student in data.students) {
+      for (let student of data.students) {
         let row = document.createElement("tr");
         let rowCount = newTableData(counter);
         //TODO: Implement logic to add student's account number
@@ -112,7 +112,7 @@ function getTeacherSections() {
   )
     .then((response) => response.json())
     .then((data) => {
-      for (let classData in data) {
+      for (let classData of data) {
         let row = document.createElement("tr");
         let classCode = newTableData(classData.classCode, "class-code");
         let sectionCode = newTableData(classData.sectionCode, "section-code");
