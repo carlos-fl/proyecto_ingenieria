@@ -78,7 +78,7 @@ function renderRequest(request) {
           </div>
           <!-- Botón para mostrar el certificado -->
           <div class="text-center mb-4">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#certificateModal" data-certificate-url="${request.certificateUrl}">
+            <button type="button" id="certificate-btn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#certificateModal" data-certificate-url="${request.certificateUrl}">
               Mostrar Certificado
             </button>
           </div>
@@ -96,29 +96,38 @@ function renderRequest(request) {
 var certificateModal = document.getElementById("certificateModal");
 certificateModal.addEventListener("show.bs.modal", function (event) {
   var button = event.relatedTarget;
+  console.log(button)
   var certificateUrl = button.getAttribute("data-certificate-url");
   var modalObject = document.getElementById("modalCertificateObject");
   modalObject.setAttribute("data", certificateUrl);
   var fallbackLink = modalObject.querySelector("a");
   if (fallbackLink) {
-    fallbackLink.href = certificateUrl;
+    fallbackLink.href = "#";
   }
 });
 
 // Función para cargar la solicitud y actualizar el contador
 function loadRequest() {
-  const counterDiv = document.getElementById("counter");
-  const detailsDiv = document.getElementById("requestDetails");
-  if (currentIndex < requests.length) {
-    counterDiv.innerText = `Solicitud ${currentIndex + 1} de ${
-      requests.length
-    }`;
-    detailsDiv.innerHTML = renderRequest(requests[currentIndex]);
-  } else {
-    counterDiv.innerText = "";
-    detailsDiv.innerHTML =
-      '<p class="text-center">No hay más solicitudes asignadas.</p>';
-  }
+  const detailsDiv = document.getElementById("requestDetails");  // TODO: Update request to consider applicant's ID
+  fetch("/api/reviewers/controllers/getNextPendingApplication.php")
+  .then(response => response.json())
+  .then(data => {
+    let request = {
+      nombre: data.data["FIRST_NAME"],
+      apellido: data.data["LAST_NAME"],
+      identidad: data.data["IDENTIDAD"],
+      email: data.data["CORREO"],
+      // TODO: Update when endpoint returns regional Center
+      centroRegional: "CIUDAD UNIVERSITARIA",
+      carreraPrincipal: data.data["CARRERA_PRINCIPAL"],
+      carreraSecundaria: data.data["CARRERA_SECUNDARIA"]
+    }
+    detailsDiv.innerHTML = renderRequest(request)
+    let certifcateBtn = document.getElementById("certificate-btn");
+    certifcateBtn.setAttribute("data-certificate-url" ,data.data["CERTIFICATE_FILE"])
+
+  })
+  .catch(console.log("No se pudo traer una aplicación!"))
 }
 
 // Manejo de eventos para aprobar o rechazar
