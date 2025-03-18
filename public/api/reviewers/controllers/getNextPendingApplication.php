@@ -4,16 +4,14 @@ require_once __DIR__ . "/../../../../config/env/Environment.php";
 
 header("Content-Type: application/json");
 
-if ($_SERVER["REQUEST_METHOD"] !== "GET" || !isset($_GET["applicationCode"]) || empty($_GET["applicationCode"])) {
-    http_response_code(400);
+if ($_SERVER["REQUEST_METHOD"] !== "GET") {
+    http_response_code(405);
     echo json_encode([
         "status" => "failure",
-        "error" => ["errorCode" => "400", "errorMessage" => "Missing or invalid applicationCode"]
+        "error" => ["errorCode" => "405", "errorMessage" => "Method Not Allowed"]
     ]);
     exit;
 }
-
-$applicationCode = $_GET["applicationCode"];
 
 $env = Environment::getVariables();
 $db = new Database(
@@ -27,20 +25,16 @@ $db = new Database(
 $conn = $db->getConnection();
 
 try {
-    $stmt = $conn->prepare("CALL SP_GET_APPLICANT_BY_CODE(?)");
-    $stmt->bind_param("i", $applicationCode);
+    $stmt = $conn->prepare("CALL SP_GET_NEXT_PENDING_APPLICATION()");
     $stmt->execute();
-    
+
     $result = $stmt->get_result();
-    if ($result->num_rows > 0) {
-        $applicant = $result->fetch_assoc();
-        echo json_encode(["status" => "success", "data" => $applicant]);
+    $application = $result->fetch_assoc(); 
+
+    if (!$application) {
+        echo json_encode(["status" => "failure", "error" => ["errorCode" => "404", "errorMessage" => "No pending applications found"]]);
     } else {
-        http_response_code(404);
-        echo json_encode([
-            "status" => "failure",
-            "error" => ["errorCode" => "404", "errorMessage" => "Applicant not found"]
-        ]);
+        echo json_encode(["status" => "success", "data" => $application]);
     }
 
 } catch (Exception $e) {
