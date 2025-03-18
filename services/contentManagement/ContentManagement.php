@@ -89,7 +89,7 @@
     private static function generateFileName(string $filename, bool $isImage): string {
       $file = explode('.', $filename, 2);
       do {
-        $generatedName = $file[0] . "-" . uniqid() . $file[1];
+        $generatedName = $file[0] . "-" . uniqid() . "." . $file[1];
         $destiny = $isImage ? IMAGE_PATH . $generatedName : FILE_PATH . $generatedName;
       } while(file_exists($destiny)); 
       return $destiny;
