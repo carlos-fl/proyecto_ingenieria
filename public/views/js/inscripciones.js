@@ -121,25 +121,23 @@ function submitForm(event){
         showPopUp("Elija dos carreras distintas")
         return
     }
-    let body = JSON.stringify({
-        "firstName": firstName.value.trim(),
-        "lastName": lastName.value.trim(),
-        "dni": dni.value.trim(),
-        "phoneNumber": phone.value.trim(),
-        "email": email.value.trim(),
-        "gender": genderSelect.value,
-        "primaryMajor": mainCareerSelect.value,
-        "secondaryMajor": secondaryCareerSelect.value,
-        "comment": "",
-        "certificate": certificateFile[0]
-
-    })
+    let formData = new FormData()
+    formData.append("firstName", firstName.value.trim())
+    formData.append("lastName", lastName.value.trim())
+    formData.append("dni", dni.value.trim())
+    formData.append("phoneNumber", phone.value.trim())
+    formData.append("email", email.value.trim())
+    formData.append("gender", gender.value)
+    formData.append("primaryMajor", mainCareerSelect.value)
+    formData.append("firstName", secondaryCareerSelect.value)
+    formData.append("comment", "")
+    formData.append("certificate", certificateFile.files[0])
     fetch("/api/admissions/controllers/createAdmission.php", {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "multipart/form-data"
         },
-        body: body
+        body: formData
     })
     .then(response => response.json())
     .then(data => {

@@ -87,7 +87,7 @@
                 </div>
                 <div class="mb-3">
                   <label for="file-upload" class="form-label">Adjuntar Certificado de Secundaria<span class="text-danger">*</span></label>
-                  <input type="file" id="file-upload" name="file-upload" accept=".pdf,.png,.jpg,.jpeg" class="form-control" required />
+                  <input type="file" id="file-upload" name="file-upload" accept=".pdf" class="form-control" required />
                 </div>
                 <div class="mb-3">
                   <button  id="submit-button" class="btn btn-primary w-100">
