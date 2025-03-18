@@ -144,6 +144,8 @@ function main() {
   getTeacherSections();
 }
 
+main()
+
 editButton.addEventListener("click", function () {
   let nameSpan = document.getElementById("name");
   let phoneSpan = document.getElementById("phone");
