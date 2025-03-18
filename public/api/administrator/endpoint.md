@@ -4,14 +4,15 @@
 curl -i -X POST "http://localhost:8000/src/services/administrator/controllers/adminEmployees.php" \
      -H "Content-Type: application/json" \
      -d '{
-    "firstName": "Juan",
-    "lastName": "Pérez",
-    "id": 12345678,
-    "phoneNumber": 987654321,
-    "email": "juan.perez@example.com",
-    "centerCode": 1,
-    "gender": "M"
-}'
+           "dni": "123456789",
+           "firstName": "Juan",
+           "lastName": "Pérez",
+           "phoneNumber": "987654321",
+           "email": "juan.perez@example.com",
+           "centerCode": 1,
+           "gender": "M",
+           "salary": 2500.50
+         }'
 ```
 
 #### Objeto que responde con http status 200
