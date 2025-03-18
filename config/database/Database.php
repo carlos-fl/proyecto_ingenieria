@@ -39,7 +39,7 @@
 
       if ($mysqli->connect_error)
         throw new Error('unable to connect to database');
-
+      mysqli_set_charset( $mysqli, 'utf8');
       return $mysqli;
     } 
 
