@@ -3,26 +3,34 @@
 include_once __DIR__ . '/../../../../utils/classes/Request.php';
 include_once __DIR__ . '/../../../../utils/classes/Response.php';
 include_once __DIR__ . '/../../../../utils/classes/CSVHandler.php';
+include_once __DIR__ . '/../../../../services/contentManagement/ContentManagement.php';
 include_once __DIR__ . '/../../../../services/resources/services/Resources.php';
 
 header("Content-Type: application/json");
 
 Request::isWrongRequestMethod('POST');
 
-$inputData = json_decode(file_get_contents('php://input'), true);
-
-if (!isset($inputData['reviewerCode'], $inputData['csvPath'], $inputData['formatType'])) {
+if (!isset($_FILES['file'])) {
     http_response_code(400);
     echo json_encode(new GetResponse('failure', [
         'errorCode' => '400',
-        'errorMessage' => 'Missing required parameters: reviewerCode, csvPath, or formatType.'
+        'errorMessage' => 'Missing required file: CSV file must be uploaded.'
     ]));
     return;
 }
 
-$reviewerCode = $inputData['reviewerCode'];
-$csvPath = $inputData['csvPath'];
-$formatType = $inputData['formatType'];
+try {
+    $csvPath = ContentManagement::saveFile($_FILES['file']);
+} catch (Exception $e) {
+    http_response_code(400);
+    echo json_encode(new GetResponse('failure', [
+        'errorCode' => '400',
+        'errorMessage' => $e->getMessage()
+    ]));
+    return;
+}
+
+$formatType = $_POST['formatType'] ?? null;
 
 if ($formatType !== 'exams') {
     http_response_code(400);
@@ -42,19 +50,18 @@ if (!file_exists($csvPath) || !is_readable($csvPath)) {
     return;
 }
 
-$csvData = CSVHandler::readCSV($csvPath, ',');
+$csvData = CSVHandler::readCSV($csvPath, ['APPLICATION_CODE', 'EXAM_CODE', 'CALIFICATION']);
 
-if (!$csvData) {
+if ($csvData['status'] === 'failure') {
     http_response_code(400);
     echo json_encode(new GetResponse('failure', [
         'errorCode' => '400',
-        'errorMessage' => 'Failed to read CSV file or file is empty.'
+        'errorMessage' => $csvData['error']
     ]));
     return;
 }
 
-
-foreach ($csvData as $row) {
+foreach ($csvData['data'] as $row) {
     if (!isset($row['APPLICATION_CODE'], $row['EXAM_CODE'], $row['CALIFICATION'])) {
         continue;
     }
@@ -67,9 +74,9 @@ foreach ($csvData as $row) {
         continue;
     }
 
-    $query = "CALL SP_UPDATE_EXAM_SCORE(?, ?, ?, ?)";
-    $parameterType = 'iiis';
-    $parameters = [$applicationCode, $examCode, $calification, $reviewerCode];
+    $query = "CALL SP_UPDATE_EXAM_SCORE(?, ?, ?)";
+    $parameterType = 'iii';
+    $parameters = [$applicationCode, $examCode, $calification];
 
     $response = Resources::getRequiredResources($query, $parameterType, $parameters);
 

@@ -1,6 +1,7 @@
 <?php
-require_once __DIR__ . "/../../../../../config/database/Database.php";
-require_once __DIR__ . "/../../../../../config/env/Environment.php";
+require_once __DIR__ . "/../../../../config/database/Database.php";
+require_once __DIR__ . "/../../../../config/env/Environment.php";
+require_once __DIR__ . "/../../../../services/emailNotifications/EmailService.php"; 
 
 header("Content-Type: application/json");
 
@@ -39,7 +40,7 @@ $db = new Database(
 $conn = $db->getConnection();
 
 try {
-    $checkStmt = $conn->prepare("SELECT APPLICATION_CODE FROM TBL_APPLICATIONS WHERE APPLICATION_CODE = ?");
+    $checkStmt = $conn->prepare("SELECT EMAIL, FIRST_NAME, LAST_NAME FROM TBL_APPLICATIONS WHERE APPLICATION_CODE = ?");
     $checkStmt->bind_param("i", $applicationCode);
     $checkStmt->execute();
     $checkResult = $checkStmt->get_result();
@@ -51,10 +52,27 @@ try {
         ]);
         exit;
     }
+
+    $row = $checkResult->fetch_assoc();
+    $userEmail = $row["EMAIL"];
+    $userName = $row["FIRST_NAME"] . " " . $row["LAST_NAME"];
     $stmt = $conn->prepare("CALL SP_REJECT_APPLICATION(?, ?)");
     $stmt->bind_param("is", $applicationCode, $commentary);
 
     if ($stmt->execute()) {
+        $emailTemplatePath = __DIR__ . "/../../../../services/emailNotifications/emailsBlueprints/applicationReject.html";
+
+        EmailService::sendEmail(
+            $userEmail,
+            "Tu solicitud ha sido rechazada - UNAH",
+            [
+                "name" => $userName,
+                "application_code" => $applicationCode,
+                "commentary" => $commentary
+            ],
+            $emailTemplatePath
+        );
+
         echo json_encode(["status" => "success"]);
     } else {
         throw new Exception("Database error: " . $stmt->error);
