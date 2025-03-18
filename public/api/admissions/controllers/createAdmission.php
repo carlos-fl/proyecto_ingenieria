@@ -75,7 +75,7 @@ try {
     if ($stmt->execute()) {
         $result = $stmt->get_result()->fetch_assoc();
         $applicationCode = $result["APPLICATION_CODE"];
-        $emailTemplatePath = __DIR__ . "/../../../../services/emailNotifications/emailsBlueprints/admissionSent.html";
+        $emailTemplatePath = "admissionSent.html";
 
         EmailService::sendEmail(
             $data["email"],
