@@ -10,7 +10,7 @@
      * @param string $path
      * @return string
      */
-    public static function parse(string $filename, array $data = [], string $path = __DIR__ . '/../../src/services/emailNotifications/emailsBlueprints'): string {
+    public static function parse(string $filename, array $data = [], string $path = __DIR__ . '/../../services/emailNotifications/emailsBlueprints'): string {
       $HTML = file_get_contents($path . '/' . $filename);
       $replacedHTML = preg_replace_callback(self::PATTERN, function ($match) use ($data) {
         $key = $match[1];
