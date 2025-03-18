@@ -73,7 +73,7 @@ footer {
 }
 
 .pop-up{
-    position: absolute;
+    position: fixed;
     bottom: 0px;
     right: 10px;
     width: 300px;
@@ -99,7 +99,7 @@ footer {
 @keyframes showPopUp{
     25%{
         display: block;
-        bottom: 20px;
+        bottom: 10px;
         opacity: 1;
     }
 
