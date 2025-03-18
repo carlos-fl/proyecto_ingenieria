@@ -26,7 +26,6 @@ $db = new Database(
 $conn = $db->getConnection();
 
 $data = $_POST;
-echo json_encode($data);
 if (empty($data)) {
     $data = json_decode(file_get_contents("php://input"), true);
     file_put_contents("/tmp/debug_fixed_post.log", print_r($data, true));
