@@ -1,6 +1,8 @@
 <?php
 
   include_once __DIR__ . '/../../../../utils/classes/Request.php';
+  include_once __DIR__ . '/../../../../services/teachers/types/TeacherResponse.php';
+  
 
   session_start();
 
