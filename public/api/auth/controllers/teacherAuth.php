@@ -61,5 +61,3 @@
   $_SESSION['ROLES'] = $sessionData->roles;
   $_SESSION["TEACHER_NUMBER"] = $teacherNumber;
 
-  echo json_encode(session_id());
-
