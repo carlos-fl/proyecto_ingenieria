@@ -28,3 +28,12 @@ export function showFailPopUp(popUpId, content){
 export function changeBorder(domElement, borderWidth, color){
     domElement.style.border = borderWidth + 'solid ' + color
 }
+
+
+export function loginFailHandler(){
+    // Manejar el event login-form:fail junto con el popUp
+    let loginForm = document.querySelector("login-form")
+    loginForm.addEventListener("login-form:fail", event => {
+        showPopUp(event.detail.message)
+    })
+}

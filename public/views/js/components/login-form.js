@@ -126,7 +126,7 @@ class LoginForm extends HTMLElement{
                 this.emit("fail", {message: "Hubo un error con el servidor"});
                 return
             }
-            if (data.status == "failure"){
+            if (data.status === "failure"){
                 // No se pudo loggear correctamente
                 this.changeBorder(email,"var(--bs-border-width)", "red")
                 this.changeBorder(password,"var(--bs-border-width)", "red")
@@ -135,23 +135,24 @@ class LoginForm extends HTMLElement{
             }
             // Successful login
             // Load user data to sessionStorage
-            this.#loadUserData(data.user)
-            this.emit("success")
+            this.#loadUserData(data.sessionData.user)
+            this.emit("success", {roles: data.sessionData.roles})
         })
         .catch(error => {
             // Unsuccessful login
+            console.log("ERROR")
+            console.log(error.message)
             this.emit("fail", {message: "Hubo un error con el servidor"});
         })
     }
 
     #loadUserData(data){
-        window.localStorage.setItem("userId", data["user"]["USER_ID"])
-        window.localStorage.setItem("userFirstName", data["user"]["FIRST_NAME"]) 
-        window.localStorage.setItem("userLastName", data["user"]["LAST_NAME"])
-        window.localStorage.setItem("userPhoneNumber", data["user"]["PHONE_NUMBER"]) 
-        window.localStorage.setItem("userInstEmail", data["user"]["INST_EMAIL"]) 
-        window.localStorage.setIem("userRoles", data["roles"])
-
+        data = JSON.parse(data)
+        window.localStorage.setItem("userId", data["USER_ID"])
+        window.localStorage.setItem("userFirstName", data["FIRST_NAME"]) 
+        window.localStorage.setItem("userLastName", data["LAST_NAME"])
+        window.localStorage.setItem("userPhoneNumber", data["PHONE_NUMBER"]) 
+        window.localStorage.setItem("userInstEmail", data["INST_EMAIL"]) 
     }
 }
 
