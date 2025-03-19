@@ -135,8 +135,7 @@ class LoginForm extends HTMLElement{
             }
             // Successful login
             // Load user data to sessionStorage
-            this.#loadUserData(data.user)
-            // TODO: Revisar este evento
+            this.#loadUserData(data["sessionData"])
             this.emit("success")
         })
         .catch(error => {
@@ -145,12 +144,13 @@ class LoginForm extends HTMLElement{
         })
     }
 
-    #loadUserData(user){
-        window.sessionStorage.setItem("userId", user.USER_ID)
-        window.sessionStorage.setItem("userFirstName", user.FIRST_NAME) 
-        window.sessionStorage.setItem("userLastName", user.LAST_NAME)
-        window.sessionStorage.setItem("userPhoneNumber", user.PHONE_NUMBER) 
-        window.sessionStorage.setItem("userInstEmail", user.INST_EMAIL) 
+    #loadUserData(data){
+        window.localStorage.setItem("userId", data["user"]["USER_ID"])
+        window.localStorage.setItem("userFirstName", data["user"]["FIRST_NAME"]) 
+        window.localStorage.setItem("userLastName", data["user"]["LAST_NAME"])
+        window.localStorage.setItem("userPhoneNumber", data["user"]["PHONE_NUMBER"]) 
+        window.localStorage.setItem("userInstEmail", data["user"]["INST_EMAIL"]) 
+        window.localStorage.setIem("userRoles", data["roles"])
     }
 }
 
