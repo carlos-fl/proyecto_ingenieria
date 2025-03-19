@@ -66,7 +66,7 @@
                   <div class="info-row">
                     <span id="employeeNumber">123456</span>
                     <span id="name">Nombre de ejemplo</span>
-                    <span>ejemplo@correo.com</span>
+                    <span id="email">ejemplo@correo.com</span>
                     <span id="phone">00000000</span>
                   </div>
                 </div>
@@ -74,7 +74,7 @@
               <section>
                 <div class="container my-5">
                   <h1 class="text-center mb-4">Mis Clases</h1>
-                  <div class="table-responsive">
+                  <div id="tableContainer" class="table-responsive">
                     <table class="table table-dark table-striped">
                       <thead>
                         <tr>
@@ -84,31 +84,7 @@
                           <th scope="col">Acciones</th>
                         </tr>
                       </thead>
-                      <tbody>
-                        <tr>
-                          <td>MAT101</td>
-                          <td>1100</td>
-                          <td>Matemáticas Básicas</td>
-                          <td><button class="btn btn-primary btn-sm" onclick="openModal('MAT101')">Ver Alumnos</button>
-                            <button class="btn btn-primary btn-sm" onclick="openNotasModal('MAT101')">Subir Nota</button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>HIS202</td>
-                          <td>1400</td>
-                          <td>Historia Universal</td>
-                          <td><button class="btn btn-primary btn-sm" onclick="openModal('HIS202')">Ver Alumnos</button>
-                            <button class="btn btn-primary btn-sm" onclick="openNotasModal('HIS202')">Subir Nota</button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>CIE303</td>
-                          <td>1001</td>
-                          <td>Ciencias Naturales</td>
-                          <td><button class="btn btn-primary btn-sm" onclick="openModal('CIE303')">Ver Alumnos</button>
-                            <button class="btn btn-primary btn-sm" onclick="openNotasModal('CIE303')">Subir Nota</button>
-                          </td>
-                        </tr>
+                      <tbody id="teacher-sections">
                       </tbody>
                     </table>
                   </div>
@@ -128,7 +104,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="alumnosModalLabel">Lista de Alumnos - <span id="claseCodigo"></span></h5>
+          <h5 class="modal-title" id="alumnosModalLabel">Lista de Alumnos: <span id="titleSuffix"></span></h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
@@ -267,7 +243,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="notasModalLabel">Subir Notas</h5>
+          <h5 class="modal-title" id="notasModalLabel">Subir Notas <span id="titleSuffix"></span></h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
