@@ -9,12 +9,12 @@ let currentVideoUrl = "";
 let selectedVideoClass = "";
 
 // Abre la modal y muestra el código de la clase seleccionado
-function openModal(codigoClase) {
-  document.getElementById("claseCodigo").textContent = codigoClase;
+function openModal(modalTitleSuffix, modalId) {
+  let modal = document.getElementById(modalId)
+  modal.querySelector("#titleSuffix").textContent = modalTitleSuffix;
   // Aquí se podría actualizar la lista de alumnos según la clase.
-  let alumnosModal = new bootstrap.Modal(
-    document.getElementById("alumnosModal")
-  );
+  console.log(modalId)
+  let alumnosModal = new bootstrap.Modal(modal);
   alumnosModal.show();
 }
 
@@ -22,34 +22,20 @@ function openModal(codigoClase) {
 function loadTeacherProfile() {
   // Fetch and load the teacher's profile data
   let name = document.getElementById("name");
-  let mail = document.getElementById("mail");
+  let email = document.getElementById("email");
   let phone = document.getElementById("phone");
-  let employeeNumber = document.getElementById("employee-number");
+  let employeeNumber = document.getElementById("employeeNumber");
   let photo = document.getElementById("profile-photo");
-  fetch(
-    `/api/teachers/controllers/getTeacher.php?teacher-number=${teacherNumber}`,
-    { METHOD: "GET" }
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      name.innerText = data.firstName + " " + data.lastName;
-      mail.innerTex = data.email;
-      phone.innerText = data.phone;
-      employeeNumber.innerText = data.employeeNumber;
-      // TODO: Implement Image change
-    })
-    // TODO: Implementar pantalla de error de conexión
-    .catch(
-      console.log(
-        "Hubo un error de conexión con el servidor. No se pudieron conseguir los datos del perfil"
-      )
-    );
+  name.innerText = `${localStorage.getItem("userFirstName")} ${localStorage.getItem("userLastName")}`
+  email.innerText = `${localStorage.getItem("userInstEmail")}`
+  phone.innerText =`${localStorage.getItem("userPhoneNumber")}`
+  employeeNumber.innerText = `${localStorage.getItem("employeeNumber")}`
 }
 
 function newTableData(content, name = "") {
   let data = document.createElement("td");
-  data.name = name;
-  data.innerText = content;
+  data.className = name;
+  data.innerText = content ?? "Manolo";
   return data;
 }
 
@@ -57,87 +43,110 @@ function newPrimaryBtn(content) {
   // Create a new Primary button HTML Element
   let btn = document.createElement("button");
   btn.innerText = content;
-  viewStudentsBtn.className = "btn btn-primary btn-sm";
+  btn.className = "btn btn-primary btn-sm mx-2";
   return btn;
+}
+
+function sectionModalTitle(event){
+  // Retorna el título para el título de una modal de una sección
+  let parent = event.target.parentElement.parentElement;
+  let classCode = parent.querySelector(".classCode");
+  let sectionCode = parent.querySelector(".sectionCode");
+  let className = parent.querySelector(".className");
+  return `${classCode.innerText} ${className.innerText} - Sección ${sectionCode.innerText}` 
 }
 
 function loadShowSectionData(event) {
   // Load and show a section's data
   let studentTable = document.getElementById("tablaAlumnos");
-  let parent = event.target.parent;
-  let classCode = parent.getElementsByName("class-code")[0];
-  let section = parent.getElementsByName("section-code")[0];
-  let sectionId = section.dataset.sectionId;
-  //TODO: CHECK ENDPOINT PATH
-  fetch(`/api/teachers/controllers/sections.php?section-id=${sectionId}`, {
+  let modalTitle = sectionModalTitle(event) 
+  // Show the modal
+  openModal(modalTitle, "alumnosModal");
+  // TODO: SOLVE PROBLEM WITH PRIVATE SECTION IDS
+  let sectionId = 2;
+  fetch(`/api/teachers/controllers/section.php?section-id=${sectionId}`, {
     METHOD: "GET",
   })
-    .then((response) => response.json())
+    .then((response) => {
+      return response.json()
+    })
     .then((data) => {
-      let studentTableBody = studentTable.querySelector("tbody");
-      studentTableBody.innerHTML = "";
+      if (data.status === "failure"){
+        console.log("No se pudo traer la lista de estudiantes")
+        console.log(data.response)
+        return
+      }
+      let studentTableBody = studentTable.querySelector("tbody");;
       let counter = 1;
-      for (let student of data.students) {
+      for (let student of data.data.students) {
         let row = document.createElement("tr");
         let rowCount = newTableData(counter);
         //TODO: Implement logic to add student's account number
-        let studentFirstName = newTableData(
-          student.firstName,
-          "student-firstname"
-        );
-        let studentLastName = newTableData(
-          student.lastName,
-          "student-lastname"
-        );
-        let studentEmail = newTableData(student.email, "student-email");
+        let studentAccountNumber = newTableData(student["ACCOUNT_NUMBER"], "studentFirstName"); 
+        let studentFirstName = newTableData(student["FIRST_NAME"], "studentFirstName");
+        let studentLastName = newTableData(student["LAST_NAME"], "studentLastName");
+        let studentEmail = newTableData(student["INST_EMAIL"], "studentEmail");
         row.appendChild(rowCount);
+        row.appendChild(studentAccountNumber)
         row.appendChild(studentFirstName);
         row.appendChild(studentLastName);
         row.appendChild(studentEmail);
-        studentTable.appendChild(row);
+        studentTableBody.appendChild(row);
         counter++;
       }
-      // Show the modal
-      openModal(classCode);
     })
-    .catch();
+    .catch(error => {
+      // TODO: Hacer pantalla que muestre que hubo un error con el servidor
+      console.log("Hubo un error con el servidor")
+    });
+}
+
+function loadUploadGrades(event){
+  let modalSuffix = sectionModalTitle(event)
+  openModal(modalSuffix, "notasModal")
 }
 
 function getTeacherSections() {
   // Conseguir las secciones que imparte un docente
   let classesTableBody = document.getElementById("teacher-sections");
   fetch(
-    `/api/teachers/controllers/teacherSections.php?teacher-number=${teacherNumber}`,
+    `/api/teachers/controllers/teacherSections.php`,
     { METHOD: "GET" }
   )
     .then((response) => response.json())
     .then((data) => {
-      for (let classData of data) {
-        let row = document.createElement("tr");
-        let classCode = newTableData(classData.classCode, "class-code");
-        let sectionCode = newTableData(classData.sectionCode, "section-code");
-        sectionCode.dataset.sectionId = classData.sectionId;
-        let className = newTableData(classData.className, "class-name");
-        let actions = document.createElement("td");
-        let viewStudentsBtn = newPrimaryBtn("Ver Alumnos");
-        let uploadGradesBtn = newPrimaryBtn("Subir Notas");
-        viewStudentsBtn.onclick = loadShowSectionData;
-        // TODO: Implement logic to upload a class' results
-        actions.appendChild(viewStudentsBtn);
-        actions.appendChild(uploadGradesBtn);
-        row.appendChild(classCode);
-        row.appendChild(sectionCode);
-        row.appendChild(className);
-        row.appendChild(actions);
-        classesTableBody.appendChild(row);
+      if (data.data.length == 0){
+        let tableContainer = document.getElementById("tableContainer")
+        let noClassesDiv = document.createElement("div")
+        noClassesDiv.innerText = "No tienes clases asignadas en este momento"
+        noClassesDiv.classList.add("text-center", "text-muted")
+        tableContainer.appendChild(noClassesDiv)
+        return
+      }
+      for (let classData of data.data) {
+        let row = document.createElement("tr")
+        let classCode = newTableData(classData["CLASS_CODE"], "classCode")
+        let sectionCode = newTableData(classData["SECTION_CODE"], "sectionCode")
+        let className = newTableData(classData["CLASS_NAME"], "className")
+        let actions = document.createElement("td")
+        let viewStudentsBtn = newPrimaryBtn("Ver Alumnos")
+        let uploadGradesBtn = newPrimaryBtn("Subir Notas")
+        viewStudentsBtn.onclick = loadShowSectionData
+        uploadGradesBtn.onclick = loadUploadGrades
+        actions.appendChild(viewStudentsBtn)
+        actions.appendChild(uploadGradesBtn)
+        row.appendChild(classCode)
+        row.appendChild(sectionCode)
+        row.appendChild(className)
+        row.appendChild(actions)
+        classesTableBody.appendChild(row)
       }
     })
-    // TODO: Implementar pantalla de error de conexión
-    .catch(
-      console.log(
-        "Hubo un error de conexión con el servidor. No se pudieron conseguir las clases"
-      )
-    );
+    .catch((error) =>{
+      // TODO: Implementar pantalla de error de conexión
+      console.log("Hubo un error de conexión con el servidor. No se pudieron conseguir las clases")
+    }
+    )
 }
 function main() {
   loadTeacherProfile();
@@ -145,48 +154,6 @@ function main() {
 }
 
 main()
-
-editButton.addEventListener("click", function () {
-  let nameSpan = document.getElementById("name");
-  let phoneSpan = document.getElementById("phone");
-
-  // Guardar los valores actuales para cancelar si es necesario
-  let currentName = nameSpan.innerText;
-  let currentPhone = phoneSpan.innerText;
-
-  // Reemplazar los spans con inputs
-  nameSpan.innerHTML = `<input type="text" id="nameInput" value="${currentName}">`;
-  phoneSpan.innerHTML = `<input type="text" id="phoneInput" value="${currentPhone}">`;
-
-  // Mostrar botones de guardar y cancelar
-  saveButton.style.display = "block";
-  cancelButton.style.display = "block";
-
-  // Agregar evento para cancelar edición
-  cancelButton.onclick = function () {
-    nameSpan.innerText = currentName;
-    phoneSpan.innerText = currentPhone;
-    saveButton.style.display = "none";
-    cancelButton.style.display = "none";
-  };
-});
-
-saveButton.addEventListener("click", function () {
-  let nameInput = document.getElementById("nameInput");
-  let phoneInput = document.getElementById("phoneInput");
-
-  // Guardar los valores editados
-  let newName = nameInput.value;
-  let newPhone = phoneInput.value;
-
-  // Reemplazar los inputs con los nuevos valores
-  document.getElementById("name").innerText = newName;
-  document.getElementById("phone").innerText = newPhone;
-
-  // Ocultar botones de guardar y cancelar
-  saveButton.style.display = "none";
-  cancelButton.style.display = "none";
-});
 
 // Función para exportar la tabla de alumnos a CSV (simulación de descarga Excel)
 function exportTableToCSV(filename) {
@@ -213,15 +180,6 @@ function exportTableToCSV(filename) {
   document.body.removeChild(downloadLink);
 }
 
-// Abre la modal y muestra el código de la clase seleccionado
-function openModal(codigoClase) {
-  document.getElementById("claseCodigo").textContent = codigoClase;
-  // Aquí se podría actualizar la lista de alumnos según la clase.
-  var alumnosModal = new bootstrap.Modal(
-    document.getElementById("alumnosModal")
-  );
-  alumnosModal.show();
-}
 
 function openNotasModal(codigoClase) {
   // Actualiza el título del modal para indicar a qué clase se subirán las notas

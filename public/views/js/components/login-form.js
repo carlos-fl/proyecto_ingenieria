@@ -136,7 +136,7 @@ class LoginForm extends HTMLElement{
             // Successful login
             // Load user data to sessionStorage
             this.#loadUserData(data.sessionData.user)
-            this.emit("success", {roles: data.sessionData.roles})
+            this.emit("success", {data: data.sessionData})
         })
         .catch(error => {
             // Unsuccessful login
@@ -152,7 +152,7 @@ class LoginForm extends HTMLElement{
         window.localStorage.setItem("userFirstName", data["FIRST_NAME"]) 
         window.localStorage.setItem("userLastName", data["LAST_NAME"])
         window.localStorage.setItem("userPhoneNumber", data["PHONE_NUMBER"]) 
-        window.localStorage.setItem("userInstEmail", data["INST_EMAIL"]) 
+        window.localStorage.setItem("userInstEmail", data["INST_EMAIL"])
     }
 }
 
