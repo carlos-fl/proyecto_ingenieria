@@ -6,7 +6,9 @@ function loginSuccessHandler(){
     let loginForm = document.querySelector("login-form")
     loginForm.addEventListener("login-form:success", event => {
         // Datos del login
-        let roles = event.detail.roles
+        let data = event.detail.data
+        localStorage.setItem("employeeNumber", data.employeeNumber)
+        let roles = data.roles
         if (roles.includes("TEACHERS")){
             // Reenviar a la vista de docentes
             window.location.href ="docentes.php"

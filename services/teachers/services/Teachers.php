@@ -190,4 +190,16 @@
         return "";
       }
     }
+
+    public static function getEmployeeNumber($userId){
+      $db = Database::getDatabaseInstace();
+      $mysqli = $db->getConnection(); 
+      $query = "CALL SP_GET_EMPLOYEE_NUMBER(?)";
+      $employeeNumber = $db->callStoredProcedure($query, "i", [(int) $userId], $mysqli);
+      if ($employeeNumber->num_rows == 0){
+        return "";
+      }
+      $result = $employeeNumber->fetch_assoc();
+      return $result;
+    }
   }

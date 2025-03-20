@@ -39,7 +39,9 @@
   
   // set TEACHERNUMBER in session
   $DNI = $sessionData->user->DNI;
+  $userId = $sessionData->user->USER_ID;
   $teacherNumber = TeacherService::getTeacherNumber($DNI);
+  $employeeNumber = TeacherService::getEmployeeNumber($userId);
 
   http_response_code(200);
   echo json_encode([
@@ -48,7 +50,8 @@
     "sessionData" => [
       "user" => json_encode($sessionData->user),
       "roles" => json_encode($sessionData->roles),
-      "teacherNumber" => $teacherNumber
+      "teacherNumber" => $teacherNumber,
+      "employeeNumber" => $employeeNumber["EMPLOYEE_NUMBER"]
     ],
     "error" => null
   ]);
