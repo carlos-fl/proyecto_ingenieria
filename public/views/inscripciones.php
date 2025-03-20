@@ -1,3 +1,5 @@
+<?php
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -45,6 +47,7 @@
                 <div class="mb-3">
                   <label for="user-id" class="form-label">Identidad<span class="text-danger">*</span></label>
                   <input type="text" id="user-id" name="user-id" class="form-control" placeholder="0801-0000-00000" required />
+                  <span id="identity-info" style="color: green; font-size: 14px;"></span>
                 </div>
                 <div class="mb-3">
                   <label for="phone" class="form-label">Teléfono<span class="text-danger">*</span></label>
@@ -56,41 +59,38 @@
                 </div>
               </div>
               <div class="col-md-6">
-                  <div class="mb-3">
-                    <label for="gender" class="form-label">Género<span class="text-danger">*</span></label>
-                    <select id="gender" name="gender" class="form-select" required>
-                      <option value="">Seleccione un género</option>
-                      <option value="M">Masculino</option>
-                      <option value="F">Femenino</option>
-                    </select>
-                  </div>
+                <div class="mb-3">
+                  <label for="gender" class="form-label">Género<span class="text-danger">*</span></label>
+                  <select id="gender" name="gender" class="form-select" required>
+                    <option value="">Seleccione un género</option>
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                  </select>
+                </div>
                 <div class="mb-3">
                   <label for="regional-center" class="form-label">Centro Regional<span class="text-danger">*</span></label>
                   <select id="regional-center" name="regional-center" class="form-select" required>
                     <option value="">Seleccione un centro regional</option>
-                    <!-- fetch -->
                   </select>
                 </div>
                 <div class="mb-3">
                   <label for="main-career" class="form-label">Carrera Principal*</label>
                   <select id="main-career" name="main-career" class="form-select" required>
                     <option value="">Seleccione una carrera</option>
-                    <!-- fetch -->
                   </select>
                 </div>
                 <div class="mb-3">
                   <label for="secondary-career" class="form-label">Carrera Secundaria<span class="text-danger">*</span></label>
                   <select id="secondary-career" name="secondary-career" class="form-select" required>
                     <option value="">Seleccione una carrera secundaria</option>
-                    <!-- fetch -->
                   </select>
                 </div>
                 <div class="mb-3">
                   <label for="file-upload" class="form-label">Adjuntar Certificado de Secundaria<span class="text-danger">*</span></label>
-                  <input type="file" id="file-upload" name="file-upload" accept=".pdf" class="form-control" required />
+                  <input type="file" id="file-upload" name="file-upload" accept=".pdf, .doc, .docx, .jpg, .jpeg, .png" class="form-control" required />
                 </div>
                 <div class="mb-3">
-                  <button  id="submit-button" class="btn btn-primary w-100">
+                  <button id="submit-button" class="btn btn-primary w-100">
                     Enviar
                   </button>
                 </div>
@@ -105,6 +105,25 @@
     </div>
   </main>
   <footer-unah></footer-unah>
+
+  <!-- Modal de inscripción exitosa -->
+  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="successModalLabel">Inscripción Exitosa</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <p>Su inscripción se realizó correctamente. Su número de solicitud es:</p>
+          <h3 id="application-number" class="text-center"></h3>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Ventana modal -->
   <div class="modal fade" id="reviewerModal" tabindex="-1" aria-labelledby="reviewerModalLabel" aria-hidden="true">
