@@ -46,7 +46,6 @@ function fetchMajorsByRegionalCenter(event) {
     })
     .catch((error) => {
       console.log("No se pudieron obtener los datos de este centro", error);
-      // Aquí podrías mostrar una notificación de error al usuario
     });
 }
 
