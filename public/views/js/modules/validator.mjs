@@ -17,3 +17,9 @@ export function validPhoneNumber(phone){
     let re = new RegExp(pattern)
     return re.test(phone)
 }
+
+export function validApplicantCode(applicantCode) {
+    const PATTERN = /^\d{4}[a-zA-Z0-9_.-]{23}$/
+    const re = new RegExp(PATTERN)
+    return re.test(applicantCode)
+}

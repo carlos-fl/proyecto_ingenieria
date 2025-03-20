@@ -13,7 +13,7 @@
   Request::isWrongRequestMethod('POST'); 
 
   $request = getJsonData();
-  $applicantAuthData = new LogApplicant($request->applicantCode, $request->email);
+  $applicantAuthData = new LogApplicant($request->applicantCode);
 
   $authServiceResponse = Auth::logApplicant($applicantAuthData);
 
