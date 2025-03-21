@@ -29,4 +29,4 @@ logout "$URL/auth/controllers/logout.php" "Endpoint to logout"
 
 # test applicant
 echo "auth de aplicante cuando ingrese a revisar datos enviados"
-curl -s -X POST -d $(jo applicantCode=20221000001 email=carlos.mejia@unah.edu.hn) "$URL/auth/controllers/applicantAuth.php" | jq
+curl -s -X POST -d $(jo applicantCode=2025ABCDEFGHIJKLMNOPQRSTUV1) "$URL/auth/controllers/applicantAuth.php" | jq

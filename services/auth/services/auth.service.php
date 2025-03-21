@@ -95,16 +95,18 @@
 
       // check match with applicantCode
       $applicationData = $applicant->fetch_assoc();
-      if ($applicationData['APPLICATION_CODE'] !== $request->getApplicantCode()) {
+      /*if ($applicationData['APPLICATION_CODE'] !== $request->getApplicantCode()) {
+        echo json_encode(["ac" => $applicationData['APPLICATION_CODE'], "rc" => $request->getApplicantCode()]);
         return Response::returnPostResponse(true, 'failure', 401, 'Incorrect application code');
-      } 
+      } */ 
 
       // take results data
       $applicantResultsQuery = "CALL SP_GET_APPLICANT_CALIFICATIONS(?)";
       try {
-        $applicantExamsResults = $db->callStoredProcedure($applicantResultsQuery, 'i', [$applicationData['APPLICATION_CODE']], $mysqli);
+        $applicantExamsResults = $db->callStoredProcedure($applicantResultsQuery, 's', [$applicationData['APPLICATION_CODE']], $mysqli);
         if ($applicantExamsResults->num_rows == 0) {
-          return Response::returnPostResponse(false, status: 'success', data: []);
+          echo "4";
+          return Response::returnPostResponse(true, 'failure', 401, 'Incorrect application code');
         }
   
         $data = $applicantExamsResults->fetch_all(1);

@@ -1,6 +1,7 @@
 class Modal extends HTMLElement {
   constructor() {
     super()
+    this.dModalID = ''
     this.modalID = ''
     this.ariaLabelLedBy = ''
     this.arialLabel = ''
@@ -9,6 +10,7 @@ class Modal extends HTMLElement {
   }
 
  connectedCallback(){
+    this.dModalID = this.getAttribute('tag-id')
     this.modalID = this.getAttribute("modal-id")
     this.arialLabel = this.getAttribute("arial-label")
     this.ariaLabelLedBy = this.getAttribute("arial-label-led-by")
@@ -22,7 +24,11 @@ class Modal extends HTMLElement {
   }
 
   show() {
-    this.querySelector(`#${ this.modalID }`)
+    const modal = document.getElementById(this.modalID)
+    if (modal) {
+      const bootstrapModal = new bootstrap.Modal(modal)
+      bootstrapModal.show()
+    }
   }
 
   render() {
@@ -32,6 +38,7 @@ class Modal extends HTMLElement {
         return child.outerHTML
       }
     }).join('')
+    this.setAttribute('id', this.dModalID)
     this.innerHTML = `
     <div class="modal fade" id=${ this.modalID } tabindex="-1" aria-labelledby=${ this.ariaLabelLedBy } aria-hidden=${ this.hidden }>
         <div class="modal-dialog modal-dialog-centered modal-lg">

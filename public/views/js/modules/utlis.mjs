@@ -42,11 +42,21 @@ export function loginFailHandler(){
 /**
  * 
  * @param {string} modalErrorId 
+ * this is the id of the custom element with tag-id
  */
 export function showFailModal(modalErrorId) {
     const modal = document.getElementById(modalErrorId)
-    console.log(modal)
-    modal.style.display = 'block'
+    modal.show()
+}
+
+/**
+ * 
+ * @param {string} modalSuccessId 
+ * this is the id of the custom element with tag-id
+ */
+export function showSuccessModal(modalSuccessId) {
+    const modal = document.getElementById(modalSuccessId)
+    modal.show()
 }
 
 /**

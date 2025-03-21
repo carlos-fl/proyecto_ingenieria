@@ -2,22 +2,21 @@ class Table extends HTMLElement {
   constructor() {
     super()
     this.tableRow = [] // this is an array with the elements inside thead. Basically the column names
-    this.bodyID = ''// this is the id of tbody tag 
   }
 
   connectedCallback(){
     if (this.hasAttribute('table-row')) {
       this.tableRow = JSON.parse(this.getAttribute("table-row"))
     }
+
+    this.bodyID = 'table-body-results'// this is the id of tbody tag 
     this.render()
   }
 
   attributeChangedCallback(name, oldValue, newValue){
     if (name == "table-row") {
       this.tableRow = JSON.parse(newValue);
-    } else if (name == "bodyID") {
-      this.bodyID = newValue
-    }
+    } 
     this.connectedCallback()
   }
 

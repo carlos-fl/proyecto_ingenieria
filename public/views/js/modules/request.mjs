@@ -27,7 +27,7 @@ export class Request {
         throw new Error(data.error.errorMessage)
       }
 
-      return await response.json();
+      return data
       
     } catch (err) {
       throw new Error(err.message);
