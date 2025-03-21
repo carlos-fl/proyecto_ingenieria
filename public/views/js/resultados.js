@@ -1,5 +1,5 @@
 import { Request } from "./modules/request.mjs";
-import { disableBtn, showFailPopUp, changeBorder, showPopUp } from "./modules/utlis.mjs";
+import { disableBtn, showModal, showFailPopUp, changeBorder, showPopUp, showFailModal } from "./modules/utlis.mjs";
 import { validApplicantCode } from "./modules/validator.mjs";
 
 // Función para cargar y mostrar resultados; se utiliza el arreglo filtrado (si existe)
@@ -33,34 +33,25 @@ function loadResults(filteredResults) {
 
       if (!validApplicantCode(searchValue.value)) {
         changeBorder(searchValue, 'var(--bs-border-width)', "red")
-        showPopUp("algo")
-        console.log('no valido')
+        showPopUp("Ingrese un número de solicitud válido")
+        searchValue.value = ''
         return;
       }
 
-      const resultsTableBody = document.getElementById('tb');
-      // Si el campo está vacío, se limpia la tabla
-      if (searchValue.value.trim() === "") {
-        resultsTableBody.innerHTML = "";
-        return;
-      }
       try {
         const ENDPOINT = "/api/auth/controllers/applicantAuth.php"
         const body = { applicantCode: searchValue.value.trim() }
-        const examResults = JSON.parse(await Request.fetch(ENDPOINT, 'POST', JSON.stringify(body)));
-        if (examResults.success === "failure") {
-          console.log('error en fetch')
+        const examResults = JSON.parse(await Request.fetch(ENDPOINT, 'POST', body));
+        if (examResults.status === "failure") {
           showFailPopUp("fail-results-data", "Fallo al buscar datos")
+          return;
         }
 
         loadResults(examResults);
+        showModal('results')
 
-        console.log('llega aqui')
       } catch(err) {
-        const modalError = document.getElementById('fail-results')
-        console.log(modalError)
-        modalError.style.display = 'block'
-        console.log('llega aqui error')
+        showPopUp(err.message)
       }
 
       searchValue.value = ''

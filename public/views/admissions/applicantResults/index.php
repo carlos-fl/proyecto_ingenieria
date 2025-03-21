@@ -26,14 +26,15 @@
     </div>
   </header>
 
-<!-- modal to see exam results --> 
+<!-- modal to see exam results -->
   <d-modal modal-id="results" arial-label-led-by="resultsModal" header-title="Resultados de Admisión" arial-label="TEXT" hidden="false">
     <d-table id="tb" table-row='["Examen", "Fecha", "Calificación", "Numero de Solicitud"]'></d-table>
   </d-modal>
 
+<!-- pop up to show errors -->
   <pop-up
     id="popUp"
-    imgsource="assets/img/crossmark.png"
+    imgsource="./../../assets/img/crossmark.png"
     popupclass="fail-popup"
     message="">
   </pop-up>
@@ -49,7 +50,7 @@
         <input type="text" class="form-control" id="numSolicitud" placeholder="Número de Solicitud" />
       </div>
       <div class="col-auto">
-        <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#results" id="result-btn">Ver Resultados</button>
+        <button type="submit" class="btn btn-primary" id="result-btn">Ver Resultados</button>
       </div>
     </div>
     <div class="mt-4">
@@ -62,9 +63,13 @@
   <script src="../../js/components/navbar.js"></script>
   <script src="../../js/components/modal.js"></script>
   <script src="../../js/components/failModal.js"></script>
+  <script src="../../js/components/pop-up.js"></script>
   <script src="../../js/components/footer.js"></script>
   <script src="../../js/components/table.js"></script>
   <script type="module" src="../../js/resultados.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

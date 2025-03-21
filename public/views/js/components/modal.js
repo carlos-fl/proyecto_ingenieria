@@ -21,6 +21,10 @@ class Modal extends HTMLElement {
     this.connectedCallback()
   }
 
+  show() {
+    this.querySelector(`#${ this.modalID }`)
+  }
+
   render() {
     const children = this.childNodes
     let modalBody = Array.from(children).map((child) => {
