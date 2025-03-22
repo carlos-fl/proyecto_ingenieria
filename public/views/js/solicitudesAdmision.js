@@ -1,41 +1,29 @@
-// Datos estáticos de solicitudes
-const requests = [
-  {
-    id: 1,
-    nombre: "Juan",
-    apellido: "Pérez",
-    identidad: "0801199912345",
-    email: "juanperez@example.com",
-    centroRegional: "CU",
-    carreraPrincipal: "Ingeniería en Sistemas",
-    carreraSecundaria: "Informática Administrativa",
-    certificateUrl: "assets/img/certificado.webp",
-  },
-  {
-    id: 2,
-    nombre: "María",
-    apellido: "García",
-    identidad: "0802199923456",
-    email: "mariagarcia@example.com",
-    centroRegional: "TE",
-    carreraPrincipal: "Medicina",
-    carreraSecundaria: "Enfermería",
-    certificateUrl: "assets/img/certificado.webp",
-  },
-  {
-    id: 3,
-    nombre: "Carlos",
-    apellido: "López",
-    identidad: "0803199934567",
-    email: "carloslopez@example.com",
-    centroRegional: "OC",
-    carreraPrincipal: "Ingeniería Civil",
-    carreraSecundaria: "Arquitectura",
-    certificateUrl: "assets/img/certificado.webp",
-  },
-];
-
 let currentIndex = 0;
+let totalPending = 0;
+let currentApplicationCode = null; // Almacenará el APPLICATION_CODE de la solicitud actual
+
+// Función para actualizar el contador en la parte superior
+function updateCounter() {
+  const counterDiv = document.getElementById("counter");
+  counterDiv.innerHTML = `Solicitud ${currentIndex + 1} / ${totalPending}`;
+}
+
+// Función para obtener el total de solicitudes pendientes
+function loadPendingCount() {
+  return fetch("/api/reviewers/controllers/getPendingCount.php")
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === "success") {
+        totalPending = data.count;
+      } else {
+        totalPending = 0;
+      }
+    })
+    .catch(error => {
+      console.error("Error fetching pending count", error);
+      totalPending = 0;
+    });
+}
 
 // Función para renderizar la solicitud
 function renderRequest(request) {
@@ -96,7 +84,6 @@ function renderRequest(request) {
 var certificateModal = document.getElementById("certificateModal");
 certificateModal.addEventListener("show.bs.modal", function (event) {
   var button = event.relatedTarget;
-  console.log(button)
   var certificateUrl = button.getAttribute("data-certificate-url");
   var modalObject = document.getElementById("modalCertificateObject");
   modalObject.setAttribute("data", certificateUrl);
@@ -106,56 +93,106 @@ certificateModal.addEventListener("show.bs.modal", function (event) {
   }
 });
 
-// Función para cargar la solicitud y actualizar el contador
+// Función para cargar la siguiente solicitud pendiente y actualizar la interfaz
 function loadRequest() {
-  const detailsDiv = document.getElementById("requestDetails");  // TODO: Update request to consider applicant's ID
+  const detailsDiv = document.getElementById("requestDetails"); // Contenedor donde se mostrará la tarjeta
   fetch("/api/reviewers/controllers/getNextPendingApplication.php")
-  .then(response => response.json())
-  .then(data => {
-    let request = {
-      nombre: data.data["FIRST_NAME"],
-      apellido: data.data["LAST_NAME"],
-      identidad: data.data["IDENTIDAD"],
-      email: data.data["CORREO"],
-      // TODO: Update when endpoint returns regional Center
-      centroRegional: "CIUDAD UNIVERSITARIA",
-      carreraPrincipal: data.data["CARRERA_PRINCIPAL"],
-      carreraSecundaria: data.data["CARRERA_SECUNDARIA"]
-    }
-    detailsDiv.innerHTML = renderRequest(request)
-    let certifcateBtn = document.getElementById("certificate-btn");
-    certifcateBtn.setAttribute("data-certificate-url" ,data.data["CERTIFICATE_FILE"])
+    .then(response => response.json())
+    .then(data => {
+      // Si la respuesta indica error, mostramos mensaje 
+      if (data.status === "0") {
+        detailsDiv.innerHTML = `<p>${data.error.errorMessage || "No se encontró una aplicación pendiente."}</p>`;
+        return;
+      }
+      
+      // objeto request con los datos obtenidos
+      let request = {
+        id: data.data["APPLICATION_CODE"],
+        nombre: data.data["FIRST_NAME"],
+        apellido: data.data["LAST_NAME"],
+        identidad: data.data["IDENTIDAD"],
+        email: data.data["CORREO"],
+        centroRegional: data.data["CENTRO_REGIONAL"],
+        carreraPrincipal: data.data["CARRERA_PRINCIPAL"],
+        carreraSecundaria: data.data["CARRERA_SECUNDARIA"] || "",
+        certificateUrl: data.data["CERTIFICATE_FILE"]
+      };
 
-  })
-  .catch(console.log("No se pudo traer una aplicación!"))
+      // Guardamos el ID de la solicitud actual para actualizarla al aprobar/rechazar
+      currentApplicationCode = request.id;
+
+      // Renderizamos la tarjeta con los datos y la insertamos en el contenedor
+      detailsDiv.innerHTML = renderRequest(request);
+
+      // Se actualiza el atributo data del botón del certificado por si se requiere más adelante
+      let certificateBtn = document.getElementById("certificate-btn");
+      if (certificateBtn) {
+        certificateBtn.setAttribute("data-certificate-url", request.certificateUrl);
+      }
+    })
+    .catch(error => {
+      console.error("No se pudo traer una aplicación!", error);
+      detailsDiv.innerHTML = `<p>Error al cargar la aplicación.</p>`;
+    });
 }
 
-// Manejo de eventos para aprobar o rechazar
+// Función para actualizar el estado de la solicitud
+function updateApplicationStatus(applicationCode, status, reason = "") {
+  return fetch("/api/reviewers/controllers/updateApplicationStatus.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      APPLICATION_CODE: applicationCode,
+      STATUS: status,
+      REASON: reason
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status !== "success") {
+      throw new Error(data.error.errorMessage || "Error al actualizar la solicitud");
+    }
+    return data;
+  });
+}
+
+// Manejo de eventos para aprobar o rechazar la solicitud
 document.addEventListener("click", function (event) {
   if (event.target && event.target.id === "approveButton") {
-    alert("Solicitud aprobada");
-    currentIndex++;
-    loadRequest();
+    updateApplicationStatus(currentApplicationCode, 1)
+      .then(() => {
+        alert("Solicitud aprobada");
+        currentIndex++;
+        totalPending--;
+        updateCounter();
+        loadRequest();
+      })
+      .catch(error => {
+        console.error("Error al aprobar la solicitud:", error);
+      });
   }
   if (event.target && event.target.id === "rejectButton") {
     let reason = prompt("Ingrese el motivo de rechazo:");
     if (reason) {
-      alert("Solicitud rechazada: " + reason);
-      currentIndex++;
-      loadRequest();
+      updateApplicationStatus(currentApplicationCode, 2, reason)
+        .then(() => {
+          alert("Solicitud rechazada: " + reason);
+          currentIndex++;
+          totalPending--;
+          updateCounter();
+          loadRequest();
+        })
+        .catch(error => {
+          console.error("Error al rechazar la solicitud:", error);
+        });
     }
   }
 });
 
-document.addEventListener("click", function (event) {
-  if (
-    event.target &&
-    event.target.tagName === "IMG" &&
-    event.target.dataset.bsTarget === "#certificateModal"
-  ) {
-    document.getElementById("modalCertificateImage").src = event.target.src;
-  }
+// Inicializamos la carga del contador y la primera solicitud cuando el DOM esté listo
+document.addEventListener("DOMContentLoaded", function() {
+  loadPendingCount().then(() => {
+    updateCounter();
+    loadRequest();
+  });
 });
-
-// Inicializar la carga de la primera solicitud cuando el DOM esté listo
-document.addEventListener("DOMContentLoaded", loadRequest);
