@@ -35,7 +35,7 @@ class failModal extends HTMLElement {
   render() {
     this.setAttribute('id', this.modalErrorID)
     this.innerHTML = `
-      <d-modal modal-id=${ this.modalID } aria-label-led-by=${ this.ariaLabelLedBy } aria-label=${ this.arialLabel } hidden=${ this.hidden } header-title=${ this.headerTitle } style="z-index: 20;">
+      <d-modal modal-id=${ this.modalID } aria-label-led-by=${ this.ariaLabelLedBy } aria-label=${ this.arialLabel } hidden=${ this.hidden } header-title="${ this.headerTitle }" style="z-index: 20;">
         <i class="fa-solid fa-circle-xmark" style="color: #ff0033; font-size: 7rem"></i>
       </d-modal> 
     `

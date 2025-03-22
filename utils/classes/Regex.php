@@ -12,4 +12,9 @@
       $PATTERN = "/^\d{4}[a-zA-Z0-9_.-]{23}$/";
       return preg_match($PATTERN, $applicantCode);
     }
+
+    public static function isValidToken(string $token): bool {
+      $PATTERN = "/^[a-f0-9]{64}$/";
+      return preg_match($PATTERN, $token);
+    }
   }

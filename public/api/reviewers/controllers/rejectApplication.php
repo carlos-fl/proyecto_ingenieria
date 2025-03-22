@@ -2,6 +2,7 @@
 require_once __DIR__ . "/../../../../config/database/Database.php";
 require_once __DIR__ . "/../../../../config/env/Environment.php";
 require_once __DIR__ . "/../../../../services/emailNotifications/EmailService.php"; 
+require_once __DIR__ . "/../../../../services/applicants/AplicantService.php";
 
 header("Content-Type: application/json");
 
@@ -62,17 +63,11 @@ try {
     if ($stmt->execute()) {
         $emailTemplatePath = __DIR__ . "/../../../../services/emailNotifications/emailsBlueprints/applicationReject.html";
 
-        EmailService::sendEmail(
-            $userEmail,
-            "Tu solicitud ha sido rechazada - UNAH",
-            [
-                "name" => $userName,
-                "application_code" => $applicationCode,
-                "commentary" => $commentary
-            ],
-            $emailTemplatePath
-        );
-
+        $token = ApplicantService::generateResubmissionToken();
+        $link = $env['HOST'] . "/views/admissions/formCorrection/index.php?token=" . $token;
+        $emailData = ["name" => $userName, "application_code" => $applicationCode, "commentary" => $commentary, "link" => $link]; 
+        ApplicantService::sendResubmissionEmail($userEmail, $token, $emailData);
+        
         echo json_encode(["status" => "success"]);
     } else {
         throw new Exception("Database error: " . $stmt->error);

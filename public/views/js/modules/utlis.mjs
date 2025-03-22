@@ -67,3 +67,54 @@ export function showModal(modalID) {
     const modal = document.getElementById(modalID)
     modal.show()
 }
+
+/**
+ * 
+ * @param {string} URL 
+ * URL where user will be relocated
+ * @param {string} modalErrorId 
+ * modal id. the one with tag-id
+ */
+export function relocateWithErrorModal(URL, modalErrorId) {
+    setTimeout(() => {
+        showFailModal(modalErrorId) 
+    }, 3000)
+
+    setTimeout(() => {
+        window.location.replace(URL)
+    }, 5000)
+}
+
+/**
+ * 
+ * @param {string} URL 
+ * URL where user will be relocated
+ * @param {string} modalSuccessId 
+ * modal id. The one with tag-id
+ */
+export function relocateWithSuccessModal(URL, modalSuccessId) {
+    setTimeout(() => {
+        showSuccessModal(modalSuccessId)
+    }, 3000)
+    window.location.replace(URL)
+}
+
+/**
+ * 
+ * @param {string} loadingID 
+ * this is the id in tag-id
+ */
+export function showLoadingComponent(loadingID) {
+    const modal = document.getElementById(loadingID)
+    modal.show()
+}
+
+/**
+ * 
+ * @param {string} loadingID 
+ * this is the id in tag-id
+ */
+export function hideLoadingComponent(loadingID) {
+    const modal = document.getElementById(loadingID)
+    modal.hide()
+}

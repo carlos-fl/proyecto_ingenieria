@@ -9,11 +9,12 @@
   <div class="container">
     <h1>Tu solicitud ha sido rechazada</h1>
     <p>Estimado/a <strong>{{ name }}</strong>,</p>
-    <p>Lamentamos informarte que tu solicitud de admisión en la <strong>Universidad Nacional Autónoma de Honduras</strong> ha sido rechazada.</p>
+    <p>Lamentamos informarte que tu solicitud de admisión en la <strong>Universidad Nacional Autónoma de Honduras</strong> ha sido rechazada debido a inconsistencia en los datos.</p>
     <p><strong>Código de solicitud:</strong> <span>{{ application_code }}</span></p>
     <p><strong>Razón del rechazo:</strong></p>
     <p>"{{ commentary }}"</p>
-    <p>Si necesitas más información, contactar a la oficina de admisiones.</p>
+    <p>Por favor correge tus datos entrando al link:</p>
+    <a href="{{ link }}">Resubmit</a>
     <p>Atentamente,</p>
     <p><strong>UNIVERSIDAD NACIONAL AUTÓNOMA DE HONDURAS</strong></p>
     <div class="footer">
