@@ -74,15 +74,14 @@ export function showModal(modalID) {
  * URL where user will be relocated
  * @param {string} modalErrorId 
  * modal id. the one with tag-id
+ * @param {int} modalDuration
+ * this is for the error modal to show in milliseconds
  */
-export function relocateWithErrorModal(URL, modalErrorId) {
+export function relocateWithErrorModal(URL, modalErrorId, modalDuration) {
+    showFailModal(modalErrorId)
     setTimeout(() => {
-        showFailModal(modalErrorId) 
-    }, 3000)
-
-    setTimeout(() => {
-        window.location.replace(URL)
-    }, 5000)
+        window.location.replace('/')
+    }, modalDuration)
 }
 
 /**
@@ -91,12 +90,14 @@ export function relocateWithErrorModal(URL, modalErrorId) {
  * URL where user will be relocated
  * @param {string} modalSuccessId 
  * modal id. The one with tag-id
+ * @param {int} modalDuration
+ * in milliseconds
  */
-export function relocateWithSuccessModal(URL, modalSuccessId) {
+export function relocateWithSuccessModal(URL, modalSuccessId, modalDuration) {
+    showSuccessModal(modalSuccessId)
     setTimeout(() => {
-        showSuccessModal(modalSuccessId)
-    }, 3000)
-    window.location.replace(URL)
+        window.location.replace(URL)
+    }, modalDuration)
 }
 
 /**

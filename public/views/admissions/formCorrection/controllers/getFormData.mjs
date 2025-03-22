@@ -13,13 +13,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (!data || data == null) {
       hideLoadingComponent('loading')
-      relocateWithErrorModal('/', 'correction-fail')
+      relocateWithErrorModal('/', 'correction-fail', 2000)
     }
 
     hideLoadingComponent('loading')
 
   } catch (err) {
     hideLoadingComponent('loading')
-    relocateWithErrorModal('/', 'correction-fail')
+    relocateWithErrorModal('/', 'correction-fail', 2000)
   }
 })

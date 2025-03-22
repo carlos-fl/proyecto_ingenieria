@@ -3,6 +3,8 @@
   include_once __DIR__ . '/../../../../utils/classes/Request.php';  
   include_once __DIR__ . '/../../../../services/applicants/AplicantService.php';
 
+  session_start();
+
   header("Content-Type: application/json");
 
   Request::isWrongRequestMethod("GET");
@@ -25,3 +27,4 @@
   
   http_response_code($applicantServiceResponse->error->errorCode);
   echo json_encode($applicantServiceResponse);
+  $_SESSION['TOKEN'] = $token;
