@@ -38,18 +38,13 @@
     /**
      * check if a teacher has a section and if that section is active
      */
-    private static function hasSection(int $sectionID, string $DNI): bool {
+    private static function hasSection(int $sectionID, int $userId): bool {
       $db = Database::getDatabaseInstace();
       $mysqli = $db->getConnection();
 
-      if (!Regex::isValidDNI($DNI)) {
-        return false;
-      }
-
-
       $query = "CALL SP_GET_TEACHER_CURRENT_SECTIONS(?)";
       try {
-        $sections = $db->callStoredProcedure($query, "s", [$DNI], $mysqli);
+        $sections = $db->callStoredProcedure($query, "s", [$userId], $mysqli);
 
         if ($sections->num_rows == 0) {
           return false;
@@ -70,17 +65,18 @@
       
       $query = "CALL SP_GET_TEACHER_CURRENT_SECTIONS_DATA(?)";
       try {
-        $sections = $db->callStoredProcedure($query, "i", [$teacherNumber], $mysqli);
-        if ($sections->num_rows == 0) {
-          return new DataResponse("failure", error: new ErrorResponse(404, "Not Data Found"));
-        }
-
-        $sectionsData = $sections->fetch_all(1);
-        $mysqli->close();
-        return new DataResponse("success", $sectionsData);
-        
-      } catch(Throwable $err) {
-        return new DataResponse("failure", error: new ErrorResponse(500, $err->getMessage()));
+          $sections = $db->callStoredProcedure($query, "i", [$teacherNumber], $mysqli);
+          if ($sections->num_rows == 0) {
+              return new DataResponse("failure", error: new ErrorResponse(404, "Not Data Found"));
+          }
+  
+          $sectionsData = $sections->fetch_all(1);
+  
+          $mysqli->close();
+          return new DataResponse("success", $sectionsData);
+          
+      } catch (Throwable $err) {
+          return new DataResponse("failure", error: new ErrorResponse(500, $err->getMessage()));
       }
     }
 
@@ -145,12 +141,12 @@
       }
     }
 
-    public static function getSectionInfo(int $sectionID, string $DNI): SectionResponse {
+    public static function getSectionInfo(int $sectionID, string $userId): SectionResponse {
       $db = Database::getDatabaseInstace();
       $mysqli = $db->getConnection(); 
 
-      if (!self::hasSection($sectionID, $DNI)) {
-        return new SectionResponse("failure", error: new ErrorResponse(404, "helluou"));
+      if (!self::hasSection($sectionID, $userId)) {
+        return new SectionResponse("failure", error: new ErrorResponse(404, "No se encontró la sección" ));
       }
 
       $query = "CALL SP_GET_SECTION_INFO(?)";
@@ -173,13 +169,13 @@
       }
     }
 
-    public static function getTeacherNumber(string $DNI): string {
+    public static function getTeacherNumber(string $userId): string {
       $db = Database::getDatabaseInstace();
       $mysqli = $db->getConnection();
 
       $query = "CALL SP_GET_TEACHER_NUMBER(?)";
       try {
-        $result = $db->callStoredProcedure($query, "s", [$DNI], $mysqli);
+        $result = $db->callStoredProcedure($query, "s", [$userId], $mysqli);
         if ($result->num_rows == 0) {
           return "";
         }

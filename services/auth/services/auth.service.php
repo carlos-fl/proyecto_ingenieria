@@ -50,7 +50,7 @@
       }
       // if password match check if it is a admin[role] ROLE: ADMIN
       $query = "CALL SP_GET_ROLES_BY_USER(?)";
-      $roles = $db->callStoredProcedure($query, "s", [$userData["DNI"]], $mysqli);
+      $roles = $db->callStoredProcedure($query, "s", [$userData["USER_ID"]], $mysqli);
 
       if ($roles->num_rows == 0) {
         return Response::returnPostResponse(true, 'failure', 403, 'Access denied');
