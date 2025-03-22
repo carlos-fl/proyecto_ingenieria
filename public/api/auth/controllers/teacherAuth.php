@@ -38,9 +38,8 @@
   }
   
   // set TEACHERNUMBER in session
-  $DNI = $sessionData->user->DNI;
   $userId = $sessionData->user->USER_ID;
-  $teacherNumber = TeacherService::getTeacherNumber($DNI);
+  $teacherNumber = TeacherService::getTeacherNumber($userId);
   $employeeNumber = TeacherService::getEmployeeNumber($userId);
 
   http_response_code(200);
@@ -59,6 +58,7 @@
   $_SESSION['FIRST_NAME'] = $sessionData->user->FIRST_NAME; 
   $_SESSION['LAST_NAME'] = $sessionData->user->LAST_NAME; 
   $_SESSION['DNI'] = $sessionData->user->DNI; 
+  $_SESSION["USER_ID"] = $sessionData->user->USER_ID;
   $_SESSION['INST_EMAIL'] = $sessionData->user->INST_EMAIL; 
   $_SESSION['PERSONAL_EMAIL'] = $sessionData->user->PERSONAL_EMAIL; 
   $_SESSION['ROLES'] = $sessionData->roles;

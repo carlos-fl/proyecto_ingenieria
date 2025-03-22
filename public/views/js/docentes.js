@@ -1,3 +1,5 @@
+import { showPopUp } from "./modules/utlis.mjs";
+
 // Lógica para la carga y comportamiento de la vista docente.php
 const editButton = document.getElementById("editButton");
 const saveButton = document.getElementById("saveButton");
@@ -11,9 +13,8 @@ let selectedVideoClass = "";
 // Abre la modal y muestra el código de la clase seleccionado
 function openModal(modalTitleSuffix, modalId) {
   let modal = document.getElementById(modalId)
-  modal.querySelector("#titleSuffix").textContent = modalTitleSuffix;
+  modal.querySelector(".titleSuffix").textContent = modalTitleSuffix;
   // Aquí se podría actualizar la lista de alumnos según la clase.
-  console.log(modalId)
   let alumnosModal = new bootstrap.Modal(modal);
   alumnosModal.show();
 }
@@ -60,10 +61,11 @@ function loadShowSectionData(event) {
   // Load and show a section's data
   let studentTable = document.getElementById("tablaAlumnos");
   let modalTitle = sectionModalTitle(event) 
+  let section = event.target.parentElement.parentElement
   // Show the modal
   openModal(modalTitle, "alumnosModal");
   // TODO: SOLVE PROBLEM WITH PRIVATE SECTION IDS
-  let sectionId = 2;
+  let sectionId = section.dataset.sectionId;
   fetch(`/api/teachers/controllers/section.php?section-id=${sectionId}`, {
     METHOD: "GET",
   })
@@ -78,11 +80,11 @@ function loadShowSectionData(event) {
       }
       let studentTableBody = studentTable.querySelector("tbody");;
       let counter = 1;
+      studentTableBody.innerHTML = ""
       for (let student of data.data.students) {
         let row = document.createElement("tr");
         let rowCount = newTableData(counter);
-        //TODO: Implement logic to add student's account number
-        let studentAccountNumber = newTableData(student["ACCOUNT_NUMBER"], "studentFirstName"); 
+        let studentAccountNumber = newTableData(student["STUDENT_ACCOUNT_NUMBER"], "studentFirstName"); 
         let studentFirstName = newTableData(student["FIRST_NAME"], "studentFirstName");
         let studentLastName = newTableData(student["LAST_NAME"], "studentLastName");
         let studentEmail = newTableData(student["INST_EMAIL"], "studentEmail");
@@ -104,6 +106,34 @@ function loadShowSectionData(event) {
 function loadUploadGrades(event){
   let modalSuffix = sectionModalTitle(event)
   openModal(modalSuffix, "notasModal")
+}
+
+function fetchVideo(event){
+  let section = event.target.parentElement.parentElement;
+  let sectionId = section.dataset.sectionId;
+  let videoInput = document.getElementById("videoUrl")
+  let videoWrapper = document.getElementById("videoWrapper")
+  fetch(`/public/api/teachers/getSectionVideo.php?section=${sectionId}`, {method: "GET"})
+  .then(response => response.json())
+  .then((data) => {
+    if (data.status === "failure"){
+      showPopUp("No se pudo traer el video")
+    }
+    if (data.videoUrl){
+      videoInput.value = data.videoUrl;
+      let iframe = document.createElement("iframe")
+      iframe.src = data.videoUrl
+      video
+    }
+
+  })
+  .catch((error) => {showPopUp("Hubo un error con el servidor")})
+}
+
+function showVideoModal(event){
+  let modalTitle = sectionModalTitle(event) 
+  openModal(modalTitle, "videoModal")
+  fetchVideo(event)
 }
 
 function getTeacherSections() {
@@ -128,18 +158,24 @@ function getTeacherSections() {
         let classCode = newTableData(classData["CLASS_CODE"], "classCode")
         let sectionCode = newTableData(classData["SECTION_CODE"], "sectionCode")
         let className = newTableData(classData["CLASS_NAME"], "className")
+        let sectionId = classData["ID_SECTION"]
         let actions = document.createElement("td")
         let viewStudentsBtn = newPrimaryBtn("Ver Alumnos")
         let uploadGradesBtn = newPrimaryBtn("Subir Notas")
+        let uploadVideoBtn = newPrimaryBtn("Subir Video")
         viewStudentsBtn.onclick = loadShowSectionData
         uploadGradesBtn.onclick = loadUploadGrades
+        uploadVideoBtn.onclick = showVideoModal
         actions.appendChild(viewStudentsBtn)
         actions.appendChild(uploadGradesBtn)
+        actions.appendChild(uploadVideoBtn)
         row.appendChild(classCode)
         row.appendChild(sectionCode)
         row.appendChild(className)
         row.appendChild(actions)
+        row.dataset.sectionId = sectionId
         classesTableBody.appendChild(row)
+
       }
     })
     .catch((error) =>{
