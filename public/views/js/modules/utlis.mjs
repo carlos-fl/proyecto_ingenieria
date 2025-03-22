@@ -37,3 +37,23 @@ export function loginFailHandler(){
         showPopUp(event.detail.message)
     })
 }
+
+
+/**
+ * 
+ * @param {string} modalErrorId 
+ */
+export function showFailModal(modalErrorId) {
+    const modal = document.getElementById(modalErrorId)
+    console.log(modal)
+    modal.style.display = 'block'
+}
+
+/**
+ * 
+ * @param {string} modalID 
+ */
+export function showModal(modalID) {
+    const modal = document.getElementById(modalID)
+    modal.show()
+}

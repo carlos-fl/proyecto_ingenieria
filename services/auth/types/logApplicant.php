@@ -1,19 +1,13 @@
 <?php
 
   class LogApplicant {
-    private int $applicantCode;
-    private string $email;
+    private string $applicantCode;
 
-    public function __construct(int $applicantCode, string $email) {
+    public function __construct(string $applicantCode) {
       $this->applicantCode = $applicantCode;
-      $this->email = $email;
     }
 
-    public function getApplicantCode(): int {
+    public function getApplicantCode(): string {
       return $this->applicantCode;
-    }
-
-    public function getApplicantEmail(): string {
-      return $this->email;
     }
   }

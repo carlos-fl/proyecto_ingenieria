@@ -50,7 +50,7 @@
                         </a>
                     </div>
                     <div class="col">
-                        <a href="resultados.php">
+                        <a href="./admissions/applicantResults/">
                             <div class="custom-box">Resultados</div>
                         </a>
                     </div>

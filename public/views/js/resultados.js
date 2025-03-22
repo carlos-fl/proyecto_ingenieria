@@ -1,3 +1,7 @@
+import { Request } from "./modules/request.mjs";
+import { disableBtn, showModal, showFailPopUp, changeBorder, showPopUp, showFailModal } from "./modules/utlis.mjs";
+import { validApplicantCode } from "./modules/validator.mjs";
+
 // Función para cargar y mostrar resultados; se utiliza el arreglo filtrado (si existe)
 function loadResults(filteredResults) {
     const resultsTableBody = document.getElementById('resultsTableBody');
@@ -20,16 +24,38 @@ function loadResults(filteredResults) {
   }
   
   // Manejo del formulario de búsqueda por número de solicitud
-  document.getElementById('searchForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const searchValue = document.getElementById('numSolicitud').value.trim();
-    const resultsTableBody = document.getElementById('resultsTableBody');
-    // Si el campo está vacío, se limpia la tabla
-    if (searchValue === "") {
-      resultsTableBody.innerHTML = "";
-      return;
-    }
-    const examResults = JSON.parse(localStorage.getItem('examResults')) || [];
-    const filteredResults = examResults.filter(result => result.numSolicitud === searchValue);
-    loadResults(filteredResults);
-  });
+  async function searchForm() {
+    const btn = document.getElementById('result-btn')
+    btn.addEventListener('click', async function(e) {
+      e.preventDefault();
+      disableBtn(btn, 1800)
+      const searchValue = document.getElementById('numSolicitud');
+
+      if (!validApplicantCode(searchValue.value)) {
+        changeBorder(searchValue, 'var(--bs-border-width)', "red")
+        showPopUp("Ingrese un número de solicitud válido")
+        searchValue.value = ''
+        return;
+      }
+
+      try {
+        const ENDPOINT = "/api/auth/controllers/applicantAuth.php"
+        const body = { applicantCode: searchValue.value.trim() }
+        const examResults = JSON.parse(await Request.fetch(ENDPOINT, 'POST', body));
+        if (examResults.status === "failure") {
+          showFailPopUp("fail-results-data", "Fallo al buscar datos")
+          return;
+        }
+
+        loadResults(examResults);
+        showModal('results')
+
+      } catch(err) {
+        showPopUp(err.message)
+      }
+
+      searchValue.value = ''
+    });
+  }
+
+await searchForm()
