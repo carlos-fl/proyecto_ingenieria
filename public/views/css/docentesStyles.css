@@ -11,9 +11,26 @@
   width: 72.5em;
 }
 
+.sidebar{
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas: "hd" "mn" "ft";
+}
+
+.sidebar-hd{
+  grid-area: hd
+}
+
+.sidebar-mn{
+  grid-area: mn;
+}
+
+.sidebar-ft{
+  grid-area: ft
+}
+
 .col-sm-3 {
   width: 10em !important;
-  height: 50.2em;
   border-right: 1px solid !important;
 }
 
@@ -27,10 +44,6 @@
   border-bottom: 1px solid;
   width: 100% !important;
   margin-bottom: 10%;
-}
-
-.btn-danger {
-  margin-top: 34.5em !important;
 }
 
 #profile-bar-h {
@@ -160,4 +173,14 @@ table th{
 
 .table-light {
   --bs-table-hover-bg: #000000!important;
+}
+
+#tableContainer{
+  max-height: 10em;
+  overflow-y: auto;
+}
+
+#tableContainer thead{
+  position: sticky;
+  top: 0;
 }

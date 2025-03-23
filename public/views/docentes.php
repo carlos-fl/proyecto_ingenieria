@@ -13,7 +13,6 @@
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
   <script src="https://kit.fontawesome.com/6130fb0810.js" crossorigin="anonymous"></script>
 </head>
-
 <body>
   <header>
     <navbar-unah></navbar-unah>
@@ -30,14 +29,20 @@
   <main>
     <div class="container text-center" style="background-color: white">
       <div class="row">
-        <div class="col-sm-3">
-          <header id="left-bar-h">
-            <h1>UNAH</h1>
-          </header>
-          <button type="button" class="btn btn-primary mb-2" onclick="openVideoClassModal()">
-            Subir Video
-          </button>
-          <log-out></log-out>
+        <div class="col-sm-3 sidebar pb-4">
+          <div class="sidebar-hd">
+            <header id="left-bar-h">
+              <h1>UNAH</h1>
+            </header>
+          </div>
+          <div class="sidebar-mn">
+            <button type="button" class="btn btn-primary mb-2" onclick="openVideoClassModal()">
+              Subir Video
+            </button>
+          </div>
+          <div class="sidebar-ft">
+            <log-out></log-out>
+          </div>
         </div>
         <div class="col-sm-9">
           <div class="row">
@@ -104,7 +109,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="alumnosModalLabel">Lista de Alumnos: <span id="titleSuffix"></span></h5>
+          <h5 class="modal-title" id="alumnosModalLabel">Lista de Alumnos: <span class="titleSuffix"></span></h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
@@ -213,7 +218,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <!-- Se actualiza el título para mostrar la clase seleccionada -->
-          <h5 class="modal-title" id="videoModalLabel">Subir Video a Clase: <span id="videoClassCode"></span></h5>
+          <h5 class="modal-title" id="videoModalLabel">Subir Video a Clase: <span class="titleSuffix"></span></h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
@@ -221,18 +226,14 @@
             <label for="videoUrl" class="form-label">URL del Video:</label>
             <input type="text" class="form-control" id="videoUrl" placeholder="Ingresa la URL del video" />
           </div>
-          <div id="videoPreview" class="mb-3" style="display: none;">
-            <label class="form-label">Preview:</label>
-            <div class="ratio ratio-16x9">
-              <iframe id="videoIframe" src="#" title="Video preview" allowfullscreen></iframe>
+          <div id="videoPreview" class="mb-3">
+            <div id="videoWrapper"class="ratio ratio-16x9 bg-light d-flex justify-content-center align-items-center text-secondary">
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" onclick="deleteVideo()">Borrar Video</button>
-          <button type="button" class="btn btn-secondary" onclick="updateVideo()">Actualizar Video</button>
-          <button type="button" class="btn btn-primary" onclick="uploadVideo()">Subir Video</button>
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button id="deleteVideoBtn" type="button" class="btn btn-danger">Borrar Video</button>
+          <button id="uploadVideoBtn" type="button" class="btn btn-primary">Subir Video</button>
         </div>
       </div>
     </div>
@@ -243,7 +244,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="notasModalLabel">Subir Notas <span id="titleSuffix"></span></h5>
+          <h5 class="modal-title" id="notasModalLabel">Subir Notas <span class="titleSuffix"></span></h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
@@ -263,6 +264,40 @@
       </div>
     </div>
   </div>
+
+
+    <!-- Modal para Subir Videos -->
+    <div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="notasModalLabel">Subir Video<span class="titleSuffix"></span></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="csvFile" class="form-label">Selecciona archivo CSV:</label>
+            <input type="file" class="form-control" id="csvFile" accept=".csv" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" onclick="uploadCSV()">
+            Subir CSV
+          </button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <pop-up
+        id="popUp"
+        imgsource="assets/img/crossmark.png"
+        popupclass="fail-popup"
+        message="">
+    </pop-up>
 
   <!-- Ventana modal -->
   <div class="modal fade" id="reviewerModal" tabindex="-1" aria-labelledby="reviewerModalLabel" aria-hidden="true">
@@ -289,9 +324,11 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
     integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
     crossorigin="anonymous"></script>
-  <script src="js/docentes.js"></script>
+  <script type="module" src="js/docentes.js"></script>
   <script src="js/components/navbar.js"></script>
   <script src="js/components/footer.js"></script>
+  <script src="js/components/video-frame.js"></script>
+  <script src="js/components/pop-up.js"></script>
   <script src="js/components/log-out.js"></script>
 
 </body>

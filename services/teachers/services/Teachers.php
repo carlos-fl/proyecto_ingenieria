@@ -16,7 +16,7 @@
 
       $query = "CALL SP_GET_TEACHER(?)";
       try {
-        $teacher = $db->callStoredProcedure($query, "i", [$teacherNumber], $mysqli);
+        $teacher = (object) $db->callStoredProcedure($query, "i", [$teacherNumber], $mysqli);
         if ($teacher->num_rows == 0) {
           return new TeacherResponse("failure", error: new ErrorResponse(404, "NOT FOUND"));
         }
@@ -25,7 +25,7 @@
         $teacherData = $teacher->fetch_assoc();
         // get teacher roles
         $query = "CALL SP_GET_ROLES_BY_USER(?)";
-        $roles = $db->callStoredProcedure($query, "s", [$teacherData['DNI']], $mysqli);
+        $roles = (object) $db->callStoredProcedure($query, "s", [$teacherData['DNI']], $mysqli);
 
         $mysqli->close();
         return new TeacherResponse("success", TeacherData::setPropertiesWithArray($teacherData), $roles->fetch_all(1));
@@ -44,7 +44,7 @@
 
       $query = "CALL SP_GET_TEACHER_CURRENT_SECTIONS(?)";
       try {
-        $sections = $db->callStoredProcedure($query, "s", [$userId], $mysqli);
+        $sections = (object) $db->callStoredProcedure($query, "s", [$userId], $mysqli);
 
         if ($sections->num_rows == 0) {
           return false;
@@ -65,7 +65,7 @@
       
       $query = "CALL SP_GET_TEACHER_CURRENT_SECTIONS_DATA(?)";
       try {
-          $sections = $db->callStoredProcedure($query, "i", [$teacherNumber], $mysqli);
+          $sections = (object) $db->callStoredProcedure($query, "i", [$teacherNumber], $mysqli);
           if ($sections->num_rows == 0) {
               return new DataResponse("failure", error: new ErrorResponse(404, "Not Data Found"));
           }
@@ -84,7 +84,7 @@
       $db = Database::getDatabaseInstace();
       $mysqli = $db->getConnection();
 
-      $query = "CALL SP_GET_ACTIVE_SECTION_VIDEO(?)";
+      $query = "CALL SP_GET_SECTION_CURRENT_VIDEO(?)";
       $sectionVideos = $db->callStoredProcedure($query, "i", [$sectionID], $mysqli);
 
       if ($sectionVideos->num_rows > 0) {
@@ -118,8 +118,8 @@
       }
     }
 
-    public static function deleteVideo(int $sectionID, string $DNI): DataResponse {
-      if (!self::hasSection($sectionID, $DNI)) {
+    public static function deleteVideo(int $sectionID, string $userId): DataResponse {
+      if (!self::hasSection($sectionID, $userId)) {
         return new DataResponse("failure", error: new ErrorResponse(403, "forbidden"));
       }
 
@@ -197,5 +197,19 @@
       }
       $result = $employeeNumber->fetch_assoc();
       return $result;
+    }
+
+    public static function getSectionCurrentVideo(int $sectionId): array | false{
+      /**Retorna el  vidoe actual de una sección. Retorna False si no hay conexión con BD*/
+      try{
+        $db = Database::getDatabaseInstace();
+        $mysqli = $db->getConnection();
+        $query = "CALL SP_GET_SECTION_CURRENT_VIDEO(?)";
+        $result = (object) $db->callStoredProcedure($query, "i", [$sectionId], $mysqli);
+        $mysqli->close();
+        return $result->fetch_assoc() ?? ["videoUrl" => ""];
+      }catch (Throwable $error){
+        return false;
+      }
     }
   }
