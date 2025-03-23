@@ -85,6 +85,7 @@ footer {
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
     font-weight: 600;
+    z-index: 9999999;
 }
 
 .pop-up>img{
