@@ -34,7 +34,7 @@ class successModal extends HTMLElement {
   render() {
     this.setAttribute('id', this.modalSuccessID)
     this.innerHTML = `
-      <d-modal modal-id=${ this.modalID } arial-label-led-by=${ this.ariaLabelLedBy } arial-label=${ this.arialLabel } hidden=${ this.hidden } header-title=${ this.headerTitle }>
+      <d-modal modal-id=${ this.modalID } arial-label-led-by=${ this.ariaLabelLedBy } arial-label=${ this.arialLabel } hidden=${ this.hidden } header-title="${ this.headerTitle }">
         <i class="fa-solid fa-circle-check" style="color: #4BB543; font-size: 7rem"></i> 
       </d-modal> 
     `

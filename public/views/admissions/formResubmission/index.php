@@ -121,6 +121,7 @@
   <script src="../../js/components/modal.js"></script>
   <script src="../../js/components/loading.js"></script>
   <script type="module" src="./controllers/setInputsData.js"></script>
+  <script type="module" src="./controllers/sendResubmission.js"></script>
   <script type="module" src="../../js/inscripciones.js"></script>
 
 </body>

@@ -50,7 +50,7 @@ if (!file_exists($csvPath) || !is_readable($csvPath)) {
     return;
 }
 
-$csvData = CSVHandler::readCSV($csvPath, ['APPLICATION_CODE', 'EXAM_CODE', 'CALIFICATION']);
+$csvData = CSVHandler::readCSV($csvPath, ['dni', 'tipo examen', 'calificacion']);
 
 if ($csvData['status'] === 'failure') {
     http_response_code(400);
@@ -62,13 +62,13 @@ if ($csvData['status'] === 'failure') {
 }
 
 foreach ($csvData['data'] as $row) {
-    if (!isset($row['APPLICATION_CODE'], $row['EXAM_CODE'], $row['CALIFICATION'])) {
+    if (!isset($row['dni'], $row['tipo examen'], $row['calificacion'])) {
         continue;
     }
 
-    $applicationCode = $row['APPLICATION_CODE'];
-    $examCode = $row['EXAM_CODE'];
-    $calification = $row['CALIFICATION'];
+    $applicationCode = $row['dni'];
+    $examCode = $row['tipo examen'];
+    $calification = $row['calificacion'];
 
     if (!is_numeric($applicationCode) || !is_numeric($examCode) || !is_numeric($calification)) {
         continue;

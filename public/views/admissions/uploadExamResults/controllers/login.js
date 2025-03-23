@@ -1,5 +1,5 @@
-// Lógica de control par loginRevisorExamenesAd.php
-import { loginFailHandler} from "./modules/utlis.mjs"
+// Lógica de control par loginRevisorSolicitudesAd.php
+import { loginFailHandler} from "../../../js/modules/utlis.mjs"
 
 function loginSuccessHandler(){
     // Manejar el evento login-form:success
@@ -8,7 +8,10 @@ function loginSuccessHandler(){
         const data = event.detail.data
         const roles = data.roles
         if (roles.includes('ADMINISTRATOR')) {
-            window.location.href = "../../admissions/uploadExamResults/index.php"
+          if (!window.localStorage.getItem('upload-info')) {
+            window.localStorage.setItem("upload-info", JSON.stringify(data))
+          }
+            window.location.href = "index.php"
         }
     })
 }

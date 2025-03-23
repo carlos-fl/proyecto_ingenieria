@@ -126,22 +126,7 @@
   </div>
 
   <!-- Ventana modal -->
-  <div class="modal fade" id="reviewerModal" tabindex="-1" aria-labelledby="reviewerModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="reviewerModalLabel">Revisores</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body d-flex justify-content-center align-items-center">
-          <div class="btn-group" role="group" aria-label="Select reviewer type">
-            <a href="loginRevisorSolicitudesAd.php"><button type="button" class="btn btn-warning mx-3" id="admissionReviewer">Revisor de Solicitud de Admision</button></a>
-            <a href="loginRevisorExamenes.php"><button type="button" class="btn btn-warning mx-3" id="examReviewer">Revisor de Examen de Admision</button></a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <reviewer-modal tag-id="reviewer" application="loginRevisorSolicitudesAd.php" exam="./admissions/uploadExamResults/login.php"></reviewer-modal>
 
   <!--Pop Up-->
   <pop-up
@@ -157,6 +142,7 @@
   <script src="js/components/navbar.js"></script>
   <script src="js/components/footer.js"></script>
   <script src="js/components/pop-up.js"></script>
+  <script src="js/components/reviewerModal.js"></script>
   <script type="module" src="js/inscripciones.js"></script>
 
 </body>

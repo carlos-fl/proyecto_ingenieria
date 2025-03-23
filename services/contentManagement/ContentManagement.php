@@ -52,7 +52,7 @@
         throw new Error("Errors found in file");
       }
 
-      if (!in_array(mime_content_type($file["tmp_name"]), ALLOWED_FILE_TYPES)) {
+      if (!in_array($file["type"], ALLOWED_FILE_TYPES)) {
         throw new Error("Not allowed file type");
       }
 

@@ -116,6 +116,8 @@ export function showLoadingComponent(loadingID) {
  * this is the id in tag-id
  */
 export function hideLoadingComponent(loadingID) {
-    const modal = document.getElementById(loadingID)
-    modal.hide()
+    setTimeout(() => {
+        const modal = document.getElementById(loadingID)
+        modal.hide()
+    }, 500)
 }
