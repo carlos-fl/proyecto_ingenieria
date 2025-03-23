@@ -37,3 +37,85 @@ export function loginFailHandler(){
         showPopUp(event.detail.message)
     })
 }
+
+
+/**
+ * 
+ * @param {string} modalErrorId 
+ * this is the id of the custom element with tag-id
+ */
+export function showFailModal(modalErrorId) {
+    const modal = document.getElementById(modalErrorId)
+    modal.show()
+}
+
+/**
+ * 
+ * @param {string} modalSuccessId 
+ * this is the id of the custom element with tag-id
+ */
+export function showSuccessModal(modalSuccessId) {
+    const modal = document.getElementById(modalSuccessId)
+    modal.show()
+}
+
+/**
+ * 
+ * @param {string} modalID 
+ */
+export function showModal(modalID) {
+    const modal = document.getElementById(modalID)
+    modal.show()
+}
+
+/**
+ * 
+ * @param {string} URL 
+ * URL where user will be relocated
+ * @param {string} modalErrorId 
+ * modal id. the one with tag-id
+ * @param {int} modalDuration
+ * this is for the error modal to show in milliseconds
+ */
+export function relocateWithErrorModal(URL, modalErrorId, modalDuration) {
+    showFailModal(modalErrorId)
+    setTimeout(() => {
+        window.location.replace('/')
+    }, modalDuration)
+}
+
+/**
+ * 
+ * @param {string} URL 
+ * URL where user will be relocated
+ * @param {string} modalSuccessId 
+ * modal id. The one with tag-id
+ * @param {int} modalDuration
+ * in milliseconds
+ */
+export function relocateWithSuccessModal(URL, modalSuccessId, modalDuration) {
+    showSuccessModal(modalSuccessId)
+    setTimeout(() => {
+        window.location.replace(URL)
+    }, modalDuration)
+}
+
+/**
+ * 
+ * @param {string} loadingID 
+ * this is the id in tag-id
+ */
+export function showLoadingComponent(loadingID) {
+    const modal = document.getElementById(loadingID)
+    modal.show()
+}
+
+/**
+ * 
+ * @param {string} loadingID 
+ * this is the id in tag-id
+ */
+export function hideLoadingComponent(loadingID) {
+    const modal = document.getElementById(loadingID)
+    modal.hide()
+}

@@ -7,6 +7,7 @@
   include_once __DIR__ . '/../types/logApplicant.php';
   include_once __DIR__ . '/../../../utils/classes/EmailValidator.php';
   include_once __DIR__ . '/../../../utils/classes/PasswordValidator.php';
+  include_once __DIR__ . '/../../../utils/classes/Regex.php';
 
 
   $env = Environment::getVariables();
@@ -79,29 +80,33 @@
 
       $db = $GLOBALS['db'];
 
-      if (!EmailValidator::validate($request->getApplicantEmail())) {
-        return Response::returnPostResponse(true, 'failure', 401, 'Incorrect email or password');
+      // check if applicantCode is correct
+      if (!Regex::isValidApplicantCode($request->getApplicantCode())) {
+        return Response::returnPostResponse(true, 'failure', 401, "Incorrect applicant code");
       }
+
       // check if applicant exists
-      $query = "CALL SP_GET_APPLICANT_BY_EMAIL(?)";
+      $query = "CALL SP_GET_APPLICANT_BY_APPLICANT_CODE(?)";
       $mysqli = $db->getConnection();
-      $applicant = $db->callStoredProcedure($query, 's', [$request->getApplicantEmail()], $mysqli);
+      $applicant = $db->callStoredProcedure($query, 's', [$request->getApplicantCode()], $mysqli);
       if ($applicant->num_rows == 0) {
-        return Response::returnPostResponse(true, 'failure', 401, 'Incorrect email or application code');
+        return Response::returnPostResponse(true, 'failure', 401, 'Incorrect application code');
       }
 
       // check match with applicantCode
       $applicationData = $applicant->fetch_assoc();
-      if ($applicationData['APPLICATION_CODE'] !== $request->getApplicantCode()) {
-        return Response::returnPostResponse(true, 'failure', 401, 'Incorrect email or application code');
-      } 
+      /*if ($applicationData['APPLICATION_CODE'] !== $request->getApplicantCode()) {
+        echo json_encode(["ac" => $applicationData['APPLICATION_CODE'], "rc" => $request->getApplicantCode()]);
+        return Response::returnPostResponse(true, 'failure', 401, 'Incorrect application code');
+      } */ 
 
       // take results data
       $applicantResultsQuery = "CALL SP_GET_APPLICANT_CALIFICATIONS(?)";
       try {
-        $applicantExamsResults = $db->callStoredProcedure($applicantResultsQuery, 'i', [$applicationData['APPLICATION_CODE']], $mysqli);
+        $applicantExamsResults = $db->callStoredProcedure($applicantResultsQuery, 's', [$applicationData['APPLICATION_CODE']], $mysqli);
         if ($applicantExamsResults->num_rows == 0) {
-          return Response::returnPostResponse(false, status: 'success', data: []);
+          echo "4";
+          return Response::returnPostResponse(true, 'failure', 401, 'Incorrect application code');
         }
   
         $data = $applicantExamsResults->fetch_all(1);

@@ -1,16 +1,20 @@
+import { Request } from "./modules/request.mjs";
+import { disableBtn, showModal, changeBorder, showPopUp } from "./modules/utlis.mjs";
+import { validApplicantCode } from "./modules/validator.mjs";
+
 // Función para cargar y mostrar resultados; se utiliza el arreglo filtrado (si existe)
 function loadResults(filteredResults) {
-    const resultsTableBody = document.getElementById('resultsTableBody');
+    const resultsTableBody = document.getElementById('table-body-results');
     resultsTableBody.innerHTML = "";
     let resultsToShow = filteredResults || [];
-    if (resultsToShow.length > 0) {
-      resultsToShow.forEach(result => {
+    if (resultsToShow.data.length > 0) {
+      resultsToShow.data.forEach(result => {
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td>${result.examTitle}</td>
-          <td>${result.examDate}</td>
-          <td>${result.nota}</td>
-          <td>${result.numSolicitud}</td>
+          <td>${result.EXAM_NAME}</td>
+          <td>${result.CREATED_AT}</td>
+          <td>${result.CALIFICATION}</td>
+          <td>${result.APPLICATION_CODE}</td>
         `;
         resultsTableBody.appendChild(row);
       });
@@ -20,16 +24,38 @@ function loadResults(filteredResults) {
   }
   
   // Manejo del formulario de búsqueda por número de solicitud
-  document.getElementById('searchForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const searchValue = document.getElementById('numSolicitud').value.trim();
-    const resultsTableBody = document.getElementById('resultsTableBody');
-    // Si el campo está vacío, se limpia la tabla
-    if (searchValue === "") {
-      resultsTableBody.innerHTML = "";
-      return;
-    }
-    const examResults = JSON.parse(localStorage.getItem('examResults')) || [];
-    const filteredResults = examResults.filter(result => result.numSolicitud === searchValue);
-    loadResults(filteredResults);
-  });
+  async function searchForm() {
+    const btn = document.getElementById('result-btn')
+    btn.addEventListener('click', async function(e) {
+      e.preventDefault();
+      disableBtn(btn, 1800)
+      const searchValue = document.getElementById('numSolicitud');
+
+      if (!validApplicantCode(searchValue.value)) {
+        changeBorder(searchValue, 'var(--bs-border-width)', "red")
+        showPopUp("Ingrese un número de solicitud válido")
+        searchValue.value = ''
+        return;
+      }
+
+      try {
+        const ENDPOINT = "/api/auth/controllers/applicantAuth.php"
+        const body = { applicantCode: searchValue.value.trim() }
+        const examResults = await Request.fetch(ENDPOINT, 'POST', body);
+        if (examResults.status === "failure") {
+          showPopUp("No se encontraron Resultados")
+          return;
+        }
+
+        loadResults(examResults);
+        showModal('d-modal')
+
+      } catch(err) {
+        showPopUp("No se encontraron Resultados")
+      }
+
+      searchValue.value = ''
+    });
+  }
+
+await searchForm()
