@@ -109,30 +109,48 @@ function loadUploadGrades(event){
 }
 
 function fetchVideo(event){
+  // Init all variables
   let section = event.target.parentElement.parentElement;
   let sectionId = section.dataset.sectionId;
   let videoInput = document.getElementById("videoUrl")
   let videoWrapper = document.getElementById("videoWrapper")
-  fetch(`/public/api/teachers/getSectionVideo.php?section=${sectionId}`, {method: "GET"})
+  let deleteVideoBtn = document.getElementById("deleteVideoBtn")
+  let uploadVideoBtn = document.getElementById("uploadVideoBtn")
+  deleteVideoBtn.setAttribute("disabled", "disabled")
+  uploadVideoBtn.setAttribute("disabled", "disabled")
+  videoWrapper.innerHTML = ""
+  fetch(`/api/teachers/controllers/getSectionVideo.php?section=${sectionId}`, {method: "GET"})
   .then(response => response.json())
   .then((data) => {
     if (data.status === "failure"){
       showPopUp("No se pudo traer el video")
     }
-    if (data.videoUrl){
-      videoInput.value = data.videoUrl;
-      let iframe = document.createElement("iframe")
-      iframe.src = data.videoUrl
-      video
+    if (!data.videoUrl){
+      videoWrapper.classList.add("text-center")
+      videoWrapper.innerText = "Aún no hay video para esta sección"
+      return
     }
-
+    deleteVideoBtn.removeAttribute("disabled")
+    videoInput.value = data.videoUrl;
+    let iframe = `<video-frame video-source="${"https://www.youtube.com/embed/AqHbYZjKsXw"}" width="466" height="262"></video-frame>` 
+    videoWrapper.innerHTML =iframe;
   })
-  .catch((error) => {showPopUp("Hubo un error con el servidor")})
+  .catch((error) => {
+    showPopUp("Hubo un error con el servidor ")
+    console.log(error.message)
+  })
 }
 
 function showVideoModal(event){
-  let modalTitle = sectionModalTitle(event) 
-  openModal(modalTitle, "videoModal")
+  // TODO: CONSIDER STOPPING THE VIDEO WHEN THE MODAL IS CLOSED
+  let section = event.target.parentElement.parentElement
+  let sectionId = section.dataset.sectionId
+  let videoModalId = "videoModal"
+  let modalTitle = sectionModalTitle(event)
+  let videoModal = document.getElementById(videoModalId)
+  videoModal.dataset.currentSection = sectionId 
+  openModal(modalTitle, videoModalId)
+  
   fetchVideo(event)
 }
 
@@ -184,9 +202,34 @@ function getTeacherSections() {
     }
     )
 }
+
+function deleteVideo(event){
+  let videoModal = document.getElementById("videoModal")
+  let currentVideoSection = videoModal.dataset.currentSection
+  let body = JSON.stringify({"sectionId": currentVideoSection})
+  fetch(`/api/teachers/controllers/deleteVideo.php?`, 
+    {
+      method: "DELETE",
+      body: body
+    })
+  .then((response) => response.json())
+  .then((data) => {
+    // TODO: Show Success Modal
+  let videoInput = document.getElementById("videoUrl")
+  videoInput.value = ""
+  
+     
+  })
+  .catch((error) => {
+    
+  })
+}
+
 function main() {
+  let deleteVideoBtn = document.getElementById("deleteVideoBtn")
   loadTeacherProfile();
   getTeacherSections();
+  deleteVideoBtn.addEventListener("click", deleteVideo);
 }
 
 main()
@@ -226,31 +269,6 @@ function openNotasModal(codigoClase) {
   notasModal.show();
 }
 
-// Función para exportar la tabla de alumnos a CSV (simulación de descarga Excel)
-function exportTableToCSV(filename) {
-  var csv = [];
-  var rows = document.querySelectorAll("#tablaAlumnos tr");
-
-  for (var i = 0; i < rows.length; i++) {
-    var row = [],
-      cols = rows[i].querySelectorAll("td, th");
-    for (var j = 0; j < cols.length; j++) {
-      row.push('"' + cols[j].innerText + '"');
-    }
-    csv.push(row.join(","));
-  }
-
-  // Crea un Blob y genera el enlace de descarga
-  var csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
-  var downloadLink = document.createElement("a");
-  downloadLink.download = filename;
-  downloadLink.href = window.URL.createObjectURL(csvFile);
-  downloadLink.style.display = "none";
-  document.body.appendChild(downloadLink);
-  downloadLink.click();
-  document.body.removeChild(downloadLink);
-}
-
 // Funciones para manejo del video
 function openVideoClassModal() {
   var videoClassModal = new bootstrap.Modal(
@@ -269,45 +287,6 @@ function selectVideoClass(classCode) {
   // Abrir la modal de video
   var videoModal = new bootstrap.Modal(document.getElementById("videoModal"));
   videoModal.show();
-}
-
-function uploadVideo() {
-  const url = document.getElementById("videoUrl").value.trim();
-  if (url) {
-    currentVideoUrl = url;
-    document.getElementById("videoIframe").src = currentVideoUrl;
-    document.getElementById("videoPreview").style.display = "block";
-    alert("Video subido exitosamente para la clase " + selectedVideoClass);
-  } else {
-    alert("Por favor ingresa una URL válida");
-  }
-}
-
-function updateVideo() {
-  if (!currentVideoUrl) {
-    alert("No hay un video subido para actualizar. Usa 'Subir Video' primero.");
-    return;
-  }
-  const url = document.getElementById("videoUrl").value.trim();
-  if (url) {
-    currentVideoUrl = url;
-    document.getElementById("videoIframe").src = currentVideoUrl;
-    alert("Video actualizado exitosamente para la clase " + selectedVideoClass);
-  } else {
-    alert("Por favor ingresa una URL válida para actualizar");
-  }
-}
-
-function deleteVideo() {
-  if (!currentVideoUrl) {
-    alert("No hay video para borrar");
-    return;
-  }
-  currentVideoUrl = "";
-  document.getElementById("videoUrl").value = "";
-  document.getElementById("videoIframe").src = "";
-  document.getElementById("videoPreview").style.display = "none";
-  alert("Video borrado exitosamente para la clase " + selectedVideoClass);
 }
 
 function uploadCSV() {
