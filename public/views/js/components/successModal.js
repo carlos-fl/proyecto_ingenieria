@@ -1,6 +1,7 @@
 class successModal extends HTMLElement {
   constructor() {
     super()
+    this.modalSuccessID
     this.modalID = ''
     this.ariaLabelLedBy = ''
     this.arialLabel = ''
@@ -9,6 +10,7 @@ class successModal extends HTMLElement {
   }
 
  connectedCallback(){
+    this.modalSuccessID = this.getAttribute('tag-id')
     this.modalID = this.getAttribute("modal-id")
     this.arialLabel = this.getAttribute("arial-label")
     this.ariaLabelLedBy = this.getAttribute("arial-label-led-by")
@@ -21,10 +23,19 @@ class successModal extends HTMLElement {
     this.connectedCallback()
   }
 
+  show() {
+    const modalElement = document.getElementById(this.modalID);
+    if (modalElement) {
+      const modalInstance = new bootstrap.Modal(modalElement);
+      modalInstance.show();
+    }
+  }
+
   render() {
+    this.setAttribute('id', this.modalSuccessID)
     this.innerHTML = `
       <d-modal modal-id=${ this.modalID } arial-label-led-by=${ this.ariaLabelLedBy } arial-label=${ this.arialLabel } hidden=${ this.hidden } header-title=${ this.headerTitle }>
-        <i class="fa-solid fa-circle-check" style="color: #4BB543;"></i> 
+        <i class="fa-solid fa-circle-check" style="color: #4BB543; font-size: 7rem"></i> 
       </d-modal> 
     `
   }

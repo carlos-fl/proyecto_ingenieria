@@ -1,20 +1,20 @@
 import { Request } from "./modules/request.mjs";
-import { disableBtn, showModal, showFailPopUp, changeBorder, showPopUp, showFailModal } from "./modules/utlis.mjs";
+import { disableBtn, showModal, changeBorder, showPopUp } from "./modules/utlis.mjs";
 import { validApplicantCode } from "./modules/validator.mjs";
 
 // Función para cargar y mostrar resultados; se utiliza el arreglo filtrado (si existe)
 function loadResults(filteredResults) {
-    const resultsTableBody = document.getElementById('resultsTableBody');
+    const resultsTableBody = document.getElementById('table-body-results');
     resultsTableBody.innerHTML = "";
     let resultsToShow = filteredResults || [];
-    if (resultsToShow.length > 0) {
-      resultsToShow.forEach(result => {
+    if (resultsToShow.data.length > 0) {
+      resultsToShow.data.forEach(result => {
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td>${result.examTitle}</td>
-          <td>${result.examDate}</td>
-          <td>${result.nota}</td>
-          <td>${result.numSolicitud}</td>
+          <td>${result.EXAM_NAME}</td>
+          <td>${result.CREATED_AT}</td>
+          <td>${result.CALIFICATION}</td>
+          <td>${result.APPLICATION_CODE}</td>
         `;
         resultsTableBody.appendChild(row);
       });
@@ -41,17 +41,17 @@ function loadResults(filteredResults) {
       try {
         const ENDPOINT = "/api/auth/controllers/applicantAuth.php"
         const body = { applicantCode: searchValue.value.trim() }
-        const examResults = JSON.parse(await Request.fetch(ENDPOINT, 'POST', body));
+        const examResults = await Request.fetch(ENDPOINT, 'POST', body);
         if (examResults.status === "failure") {
-          showFailPopUp("fail-results-data", "Fallo al buscar datos")
+          showPopUp("No se encontraron Resultados")
           return;
         }
 
         loadResults(examResults);
-        showModal('results')
+        showModal('d-modal')
 
       } catch(err) {
-        showPopUp(err.message)
+        showPopUp("No se encontraron Resultados")
       }
 
       searchValue.value = ''
