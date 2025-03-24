@@ -44,12 +44,14 @@
   <modal-error tag-id="csv-upload" modal-id="file-upload" arial-label-led-by="fileErrorModal" header-title="No se pudo procesar el archivo" arial-label="TEXT" hidden="false"></modal-error>
 
   <modal-success tag-id="csv-upload-s" modal-id="file-upload-s" arial-label-led-by="fileSuccessModal" header-title="Archivo subido Correctamente" arial-label="sucess" hidden="false"></modal-success>
+  <reviewer-modal tag-id="reviewer" application="../../loginRevisorSolicitudesAd.php" exam="./login.php"></reviewer-modal>
 
   <footer-unah></footer-unah>
 
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../../js/components/userProfile.js"></script>
+  <script type="module" src="../../js/components/reviewerModal.js"></script>
   <script src="../../js/components/footer.js"></script>
   <script src="../../js/components/navbar.js"></script>
   <script src="../../js/components/modal.js"></script>

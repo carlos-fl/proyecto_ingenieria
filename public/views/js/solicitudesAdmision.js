@@ -9,7 +9,7 @@ function updateCounter() {
 }
 
 // Función para obtener el total de solicitudes pendientes
-function loadPendingCount() {
+async function loadPendingCount() {
   return fetch("/api/reviewers/controllers/getPendingCount.php")
     .then(response => response.json())
     .then(data => {

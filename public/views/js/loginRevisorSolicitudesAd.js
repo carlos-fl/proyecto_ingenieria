@@ -11,6 +11,9 @@ function loginSuccessHandler(){
             window.location.href = "solicitudesAdmision.php"
         }
        //TODO add href for add reviewer for admin 
+       if (roles.includes('ADMINISTRATOR')) {
+            window.location.href = "assignReviewers.php"
+       }
     })
 }
 
