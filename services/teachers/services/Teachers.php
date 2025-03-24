@@ -85,31 +85,34 @@
       $mysqli = $db->getConnection();
 
       $query = "CALL SP_GET_SECTION_CURRENT_VIDEO(?)";
-      $sectionVideos = $db->callStoredProcedure($query, "i", [$sectionID], $mysqli);
+      $sectionVideos = (object) $db->callStoredProcedure($query, "i", [$sectionID], $mysqli);
 
       if ($sectionVideos->num_rows > 0) {
         return true;
       }
+      return false;
 
     }    
 
     // TODO CHECK IF VIDEO ALREADY EXISTS
-    public static function addVideo(AddVideoRequest $request, string $DNI): DataResponse {
+    public static function addVideo(AddVideoRequest $request, string $userId): DataResponse {
       $sectionID = $request->getSectionID();
-      if (!self::hasSection($sectionID, $DNI)) {
+      $URL = $request->getURL();
+      if (!self::hasSection($sectionID, $userId)) {
         return new DataResponse("failure", error: new ErrorResponse(404, "Not Data Found"));
       }
 
-      if (self::hasVideoOnSection($sectionID)) {
-        return new DataResponse("failure", error: new ErrorResponse(400, "Section Already Has a Video"));
+      if (self::isSameVideo($sectionID, $URL)) {
+        // No se puede actualizar el video por el mismo video
+        return new DataResponse("failure", error: new ErrorResponse(400, "Section Already Has that Video"));
       }
 
       $db = Database::getDatabaseInstace();
       $mysqli = $db->getConnection();
       $query = "CALL SP_ADD_VIDEO_TO_SECTION(?, ?)";
-      $URL = $request->getURL();
+
       try {
-        $db->callStoredProcedure($query, "is", [$sectionID, $URL], $mysqli);
+        $result = $db->callStoredProcedure($query, "is", [$sectionID, $URL], $mysqli);
         $mysqli->close();
         return new DataResponse("success");
 
@@ -117,6 +120,22 @@
         return new DataResponse("failure", error: new ErrorResponse(500, $err->getMessage()));
       }
     }
+
+    public static function isSameVideo($sectionId, $videoUrl){
+      $db = Database::getDatabaseInstace();
+      $mysqli = $db->getConnection();
+
+      $query = "CALL SP_GET_SECTION_CURRENT_VIDEO(?)";
+      $sectionVideo = $db->callStoredProcedure($query, "i", [$sectionId], $mysqli);
+      
+      if ($sectionVideo->num_rows > 0) {
+        $sectionVideoUrl = $sectionVideo->fetch_assoc()["SECTION_VIDEO_URL"];
+        return $videoUrl == $sectionVideoUrl;
+      }
+      return false;
+
+    }
+
 
     public static function deleteVideo(int $sectionID, string $userId): DataResponse {
       if (!self::hasSection($sectionID, $userId)) {

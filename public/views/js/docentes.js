@@ -1,4 +1,5 @@
-import { showPopUp } from "./modules/utlis.mjs";
+import { showPopUp, changeBorder, disableBtn} from "./modules/utlis.mjs";
+import { isValidYoutubeUrl } from "./modules/validator.mjs";
 
 // Lógica para la carga y comportamiento de la vista docente.php
 const editButton = document.getElementById("editButton");
@@ -6,9 +7,23 @@ const saveButton = document.getElementById("saveButton");
 const cancelButton = document.getElementById("cancelButton");
 const teacherNumber = localStorage.getItem("teacherNumber");
 
-// Variable global para almacenar la URL actual del video
-let currentVideoUrl = "";
-let selectedVideoClass = "";
+function createVideoIframe(videoId){
+  let videoWrapper = document.getElementById("videoWrapper")
+  let iframe = `<video-frame video-id="${videoId}" width="466" height="262"></video-frame>` 
+  videoWrapper.innerHTML =iframe;
+}
+
+function setCurrentVideoUrl(videoUrl){
+  localStorage.setItem("currentVideoUrl", videoUrl)
+}
+
+function getCurrentVideoUrl(){
+  return localStorage.getItem("currentVideoUrl")
+}
+
+function removeCurrentVideoUrl(){
+  localStorage.removeItem("currentVideoUrl")
+}
 
 // Abre la modal y muestra el código de la clase seleccionado
 function openModal(modalTitleSuffix, modalId) {
@@ -108,14 +123,21 @@ function loadUploadGrades(event){
   openModal(modalSuffix, "notasModal")
 }
 
+function getYoutubeVideoId(youtubeVideoUrl){
+  let queryString = `?${youtubeVideoUrl.split("?")[1]}`
+  console.log(queryString)
+  let urlParams = new URLSearchParams(queryString)
+  return urlParams.get("v")
+}
+
 function fetchVideo(event){
   // Init all variables
   let section = event.target.parentElement.parentElement;
   let sectionId = section.dataset.sectionId;
   let videoInput = document.getElementById("videoUrl")
-  let videoWrapper = document.getElementById("videoWrapper")
   let deleteVideoBtn = document.getElementById("deleteVideoBtn")
   let uploadVideoBtn = document.getElementById("uploadVideoBtn")
+  let youtubeVideoId
   deleteVideoBtn.setAttribute("disabled", "disabled")
   uploadVideoBtn.setAttribute("disabled", "disabled")
   videoWrapper.innerHTML = ""
@@ -132,8 +154,9 @@ function fetchVideo(event){
     }
     deleteVideoBtn.removeAttribute("disabled")
     videoInput.value = data.videoUrl;
-    let iframe = `<video-frame video-source="${"https://www.youtube.com/embed/AqHbYZjKsXw"}" width="466" height="262"></video-frame>` 
-    videoWrapper.innerHTML =iframe;
+    youtubeVideoId = getYoutubeVideoId(data.videoUrl)
+    createVideoIframe(youtubeVideoId) 
+    setCurrentVideoUrl(data.videoUrl)
   })
   .catch((error) => {
     showPopUp("Hubo un error con el servidor ")
@@ -150,7 +173,6 @@ function showVideoModal(event){
   let videoModal = document.getElementById(videoModalId)
   videoModal.dataset.currentSection = sectionId 
   openModal(modalTitle, videoModalId)
-  
   fetchVideo(event)
 }
 
@@ -207,6 +229,8 @@ function deleteVideo(event){
   let videoModal = document.getElementById("videoModal")
   let currentVideoSection = videoModal.dataset.currentSection
   let body = JSON.stringify({"sectionId": currentVideoSection})
+  let videoWrapper = document.getElementById("videoWrapper")
+  event.target.setAttribute("disabled", "disabled")
   fetch(`/api/teachers/controllers/deleteVideo.php?`, 
     {
       method: "DELETE",
@@ -214,25 +238,126 @@ function deleteVideo(event){
     })
   .then((response) => response.json())
   .then((data) => {
-    // TODO: Show Success Modal
-  let videoInput = document.getElementById("videoUrl")
-  videoInput.value = ""
-  
-     
+    if (data.status == "failure"){
+      showPopUp("No se encontró el video en esta clase")
+      return
+    }
+    let videoInput = document.getElementById("videoUrl")
+    let videoFrame = document.querySelector("video-frame")
+    videoFrame.remove()
+    videoInput.value = ""
+    // Deshabilitar el botón de borrar
+    event.target.setAttribute("disabled", "disabled")
+    removeCurrentVideoUrl()
+    videoWrapper.innerText = "Aún no hay video para esta sección"
+    showPopUp("Se borró el video exitosamente!", "success-popup", "/views/assets/img/checkmark.png")
   })
   .catch((error) => {
-    
+    event.target.removeAttribute("disabled")
+    showPopUp("No se pudo borrar el video")
+  })
+}
+
+function sameVideoUrl(url){
+  // Validar que la URL ingresada no es igual a la URL del video
+  let currentVideoUrl = getCurrentVideoUrl("currentVideoUrl")
+  return url == currentVideoUrl
+}
+
+function validateUrl(event){
+  // Valida que la url escrita pueda ser almacenada
+  let url = event.target.value
+  let videoUrlInfo = document.getElementById("videoUrlInfo")
+  let submitBtn = document.getElementById("uploadVideoBtn")
+  if (!isValidYoutubeUrl(url)){
+    videoUrlInfo.textContent = "Solamente se aceptan videos de youtube.com"
+    videoUrlInfo.className = "text-danger mt-1 p-1"
+    submitBtn.setAttribute("disabled", "disabled")
+    return
+  }
+  if (sameVideoUrl(url)){
+    videoUrlInfo.textContent = "No puede subir la misma URL"
+    videoUrlInfo.className = "text-danger mt-1 p-1"
+    submitBtn.setAttribute("disabled", "disabled")
+    return
+  }
+  videoUrlInfo.textContent = "Video válido! (Antes de subir su video, siempre verifique que la url sea la correcta)"
+  videoUrlInfo.className ="text-success mt-1 p-1"
+  let uploadVideoBtn = document.getElementById("uploadVideoBtn")
+  uploadVideoBtn.removeAttribute("disabled")
+}
+
+function cleanVideoModal(event){
+  let videoUrlInfo = document.getElementById("videoUrlInfo")
+  let iframe = event.target.querySelector("video-frame")
+  let videoInput = document.getElementById("videoUrl")
+  let submitBtn = document.getElementById("uploadVideoBtn")
+  videoUrlInfo.innerText = ""
+  videoUrlInfo.className = ""
+  if (iframe){
+    iframe.remove()
+  }
+  videoInput.value = ""
+  changeBorder(videoInput, "var(--bs-border-width)", "var(--bs-border-color)")
+  submitBtn.setAttribute("disabled", "disabled")
+}
+
+function uploadVideo(event){
+  let videoModal = document.getElementById("videoModal")
+  let videoInput = document.getElementById("videoUrl")
+  let videoUrl = videoInput.value
+  let currentVideoSection = videoModal.dataset.currentSection
+  let videoFrame = videoModal.querySelector("video-frame")
+  let videoUrlInfo = document.getElementById("videoUrlInfo")
+  event.target.setAttribute("disabled", "disabled")
+  let deleteVideoBtn = document.getElementById("deleteVideoBtn")
+  let body = JSON.stringify({
+    "sectionId": currentVideoSection,
+    "URL": videoUrl
+  })
+  fetch("/api/teachers/controllers/addVideo.php", {
+    method: "POST",
+    body: body
+  })
+  .then(response => response.json())
+  .then(data => {
+    videoUrlInfo.innerText = ""
+    if (data.status == "failure"){
+      showPopUp("No puede guardar el mismo video activo")
+    }
+    let videoId = getYoutubeVideoId(videoUrl)
+    if (videoFrame){
+      videoFrame.remove()
+    }
+    createVideoIframe(videoId)
+    setCurrentVideoUrl(videoUrl)
+    deleteVideoBtn.removeAttribute("disabled")
+    showPopUp("Se guardó el video exitosamente!", "success-popup", "/views/assets/img/checkmark.png")
+  })
+  .catch((error) =>{
+    showPopUp("No se pudo guardar el video")
+    event.target.removeAttribute("disabled")
+    console.log(error)
   })
 }
 
 function main() {
   let deleteVideoBtn = document.getElementById("deleteVideoBtn")
+  let videoInput = document.getElementById("videoUrl")
+  let videoModal = document.getElementById("videoModal")
+  let submitBtn = document.getElementById("uploadVideoBtn")
   loadTeacherProfile();
   getTeacherSections();
+  // Eventos a elementos de la página
   deleteVideoBtn.addEventListener("click", deleteVideo);
+  videoInput.addEventListener("change", validateUrl)
+  videoModal.addEventListener("hide.bs.modal", cleanVideoModal)
+  uploadVideoBtn.addEventListener("click", uploadVideo)
+  
 }
 
 main()
+
 
 // Función para exportar la tabla de alumnos a CSV (simulación de descarga Excel)
 function exportTableToCSV(filename) {

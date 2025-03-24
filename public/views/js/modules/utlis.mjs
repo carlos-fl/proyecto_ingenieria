@@ -9,10 +9,13 @@ export function disableBtn(btn, time){
 }
 
 
-export function showPopUp(message){
+export function showPopUp(message, popUpClass="fail-popup", imgSource="/views/assets/img/crossmark.png"){
     let popUp = document.getElementById("popUp")
     popUp.setAttribute("message", message)
+    popUp.setAttribute("imgSource", imgSource)
+    popUp.setAttribute("pop-up-class", popUpClass)
     popUp.show()
+    
 }
 
 export function showFailPopUp(popUpId, content){

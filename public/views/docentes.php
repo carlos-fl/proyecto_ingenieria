@@ -36,9 +36,6 @@
             </header>
           </div>
           <div class="sidebar-mn">
-            <button type="button" class="btn btn-primary mb-2" onclick="openVideoClassModal()">
-              Subir Video
-            </button>
           </div>
           <div class="sidebar-ft">
             <log-out></log-out>
@@ -222,9 +219,10 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
-          <div class="mb-3">
+          <div id="videoUrlContainer" class="mb-3">
             <label for="videoUrl" class="form-label">URL del Video:</label>
             <input type="text" class="form-control" id="videoUrl" placeholder="Ingresa la URL del video" />
+            <div id="videoUrlInfo"></div>
           </div>
           <div id="videoPreview" class="mb-3">
             <div id="videoWrapper"class="ratio ratio-16x9 bg-light d-flex justify-content-center align-items-center text-secondary">
@@ -295,7 +293,7 @@
   <pop-up
         id="popUp"
         imgsource="assets/img/crossmark.png"
-        popupclass="fail-popup"
+        popupclass=""
         message="">
     </pop-up>
 
@@ -330,6 +328,9 @@
   <script src="js/components/video-frame.js"></script>
   <script src="js/components/pop-up.js"></script>
   <script src="js/components/log-out.js"></script>
+  <script src="js/components/modal.js"></script>
+  <script src="js/components/successModal.js"></script>
+
 
 </body>
 

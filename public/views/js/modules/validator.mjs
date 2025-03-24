@@ -23,3 +23,10 @@ export function validApplicantCode(applicantCode) {
     const re = new RegExp(PATTERN)
     return re.test(applicantCode)
 }
+
+export function isValidYoutubeUrl(url){
+    const PATTERN = /^https:\/\/www\.youtube.com\/watch\?v=\w+/
+    const re = new RegExp(PATTERN)
+    return re.test(url)
+
+}
