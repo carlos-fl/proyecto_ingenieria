@@ -55,6 +55,7 @@ export function showFailModal(modalErrorId) {
  * this is the id of the custom element with tag-id
  */
 export function showSuccessModal(modalSuccessId) {
+
     const modal = document.getElementById(modalSuccessId)
     modal.show()
 }
@@ -91,9 +92,9 @@ export function relocateWithErrorModal(URL, modalErrorId, modalDuration) {
  * @param {string} modalSuccessId 
  * modal id. The one with tag-id
  * @param {int} modalDuration
- * in milliseconds
+ * in milliseconds default 3200
  */
-export function relocateWithSuccessModal(URL, modalSuccessId, modalDuration) {
+export function relocateWithSuccessModal(URL, modalSuccessId, modalDuration = 2400) {
     showSuccessModal(modalSuccessId)
     setTimeout(() => {
         window.location.replace(URL)

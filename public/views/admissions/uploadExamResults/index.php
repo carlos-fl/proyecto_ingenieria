@@ -29,7 +29,7 @@
     welcome-msg="Bienvenido a Sistema Admisión"
     user-number="123456"
     user-name="<?php echo $_SESSION['FIRST_NAME'] . $_SESSION['LAST_NAME'] ?>"
-    user-phone="<?php echo $_SESSION['USER'] ?>"
+    user-phone="<?php echo $_SESSION['PHONE'] ?>"
     user-email="<?php echo $_SESSION['INST_EMAIL'] ?>"
     >
     </user-profile>

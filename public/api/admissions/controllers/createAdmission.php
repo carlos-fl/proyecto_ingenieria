@@ -3,6 +3,8 @@ require_once __DIR__ . "/../../../../config/database/Database.php";
 require_once __DIR__ . "/../../../../config/env/Environment.php";
 require_once __DIR__ . "/../../../../services/contentManagement/ContentManagement.php";
 require_once __DIR__ . "/../../../../services/emailNotifications/EmailService.php";
+require_once __DIR__ . '/../../../../utils/classes/Regex.php';
+require_once __DIR__ . '/../../../../services/admissions/AdmissionService.php';
 
 header("Content-Type: application/json");
 
@@ -31,7 +33,7 @@ if (empty($data)) {
     file_put_contents("/tmp/debug_fixed_post.log", print_r($data, true));
 }
 
-$required_fields = ["firstName", "lastName", "dni", "phoneNumber", "email", "gender", "primaryMajor", "secondaryMajor", "comment"];
+$required_fields = ["firstName", "lastName", "dni", "phoneNumber", "email", "gender", "primaryMajor", "secondaryMajor", "comment", "centerId"];
 foreach ($required_fields as $field) {
     if (!isset($data[$field]) || empty(trim($data[$field]))) {
         http_response_code(400);
@@ -57,19 +59,40 @@ try {
 
     $certificatePath = str_replace(__DIR__ . "/../../..", "", $certificatePath);
 
-    $stmt = $conn->prepare("CALL SP_CREATE_ADMISSION(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    if (!Regex::isValidIdentification($data['dni'])) {
+        http_response_code(400);
+        echo json_encode([
+            "status" => "failure",
+            "error" => [
+                "errorCode" => 400,
+                "errorMessage" => "Invalid identification"
+            ]
+        ]);
+        return;
+    }
+
+    $identification = Regex::isValidDNI($data['dni']) ? 1 : 2; 
+    $cleanDNI = explode('-', $data["dni"], 3);
+    $dni = $cleanDNI[0] . $cleanDNI[1] . $cleanDNI[2];
+    $applicationCode = uniqid(date("Y"), true);
+    $reviewerID = AdmissionService::getReviewerWithLeastApplicationsAssign();
+    $stmt = $conn->prepare("CALL SP_CREATE_ADMISSION(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param(
-        "sssssssiis",
+        "sssssssiissiii",
         $data["firstName"],      
         $data["lastName"],       
-        $data["dni"],           
+        $dni,           
         $data["phoneNumber"],   
         $data["email"],          
         $data["gender"],        
         $data["primaryMajor"],   
         $data["secondaryMajor"], 
         $data["comment"],        
-        $certificatePath  
+        $certificatePath,
+        $applicationCode,
+        $identification,
+        $data['centerId'],
+        $reviewerID 
     );
 
     if ($stmt->execute()) {

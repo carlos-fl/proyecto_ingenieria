@@ -1,5 +1,5 @@
 // Lógica para la carga de la vista inscripciones.php
-import { changeBorder, showPopUp } from "./modules/utlis.mjs";
+import { changeBorder, hideLoadingComponent, relocateWithErrorModal, relocateWithSuccessModal, showLoadingComponent, showPopUp } from "./modules/utlis.mjs";
 import {
   validDNI,
   validEmail,
@@ -175,26 +175,26 @@ function submitForm(event) {
   formData.append("gender", genderSelect.value);
   formData.append("primaryMajor", mainCareerSelect.value);
   formData.append("secondaryMajor", secondaryCareerSelect.value);
+  formData.append("centerId", regionalCentersSelect.value)
   formData.append("comment", "Envio inscripcion");
   formData.append("certificate", certificateFile.files[0]);
 
+  showLoadingComponent("loading")
   fetch("/api/admissions/controllers/createAdmission.php", {
     method: "POST",
     body: formData,
   })
     .then((response) => response.json())
     .then((data) => {
-      // Número de solicitud aleatorio
-      let applicationNumber = generateApplicationNumber();
-      document.getElementById("application-number").innerText =
-        applicationNumber;
       // Mostrar modal de éxito
-      let successModal = new bootstrap.Modal(
-        document.getElementById("successModal")
-      );
-      successModal.show();
+      hideLoadingComponent('loading')
+      if (data.status == 'success')
+        relocateWithSuccessModal('/', 'submission-success') 
+      else
+        relocateWithErrorModal('/', 'error-modal', 3100)
     })
     .catch((error) => {
+      hideLoadingComponent("loading")
       console.log("No se pudo guardar la solicitud", error);
       showPopUp("Error al enviar la solicitud, intente más tarde");
     });

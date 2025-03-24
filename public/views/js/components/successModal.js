@@ -9,6 +9,8 @@ class successModal extends HTMLElement {
     this.headerTitle = ''
   }
 
+  static modalInstance = null
+
  connectedCallback(){
     this.modalSuccessID = this.getAttribute('tag-id')
     this.modalID = this.getAttribute("modal-id")
@@ -24,10 +26,15 @@ class successModal extends HTMLElement {
   }
 
   show() {
-    const modalElement = document.getElementById(this.modalID);
-    if (modalElement) {
-      const modalInstance = new bootstrap.Modal(modalElement);
-      modalInstance.show();
+    if (this.modalInstance) {
+      this.modalInstance.show()
+    } else {
+      const modalElement = document.getElementById(this.modalID);
+      if (modalElement) {
+        const modalInstance = new bootstrap.Modal(modalElement);
+        this.modalInstance = modalInstance
+        modalInstance.show();
+      }
     }
   }
 

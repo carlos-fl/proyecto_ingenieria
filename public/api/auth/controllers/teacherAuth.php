@@ -47,8 +47,8 @@
     "status" => "success",
     "data" => [],
     "sessionData" => [
-      "user" => json_encode($sessionData->user),
-      "roles" => json_encode($sessionData->roles),
+      "user" => $sessionData->user,
+      "roles" => $sessionData->roles,
       "teacherNumber" => $teacherNumber,
       "employeeNumber" => $employeeNumber["EMPLOYEE_NUMBER"]
     ],
