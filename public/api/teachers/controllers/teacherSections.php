@@ -12,13 +12,13 @@
   Request::isWrongRequestMethod('GET');
   
   if (empty($_SESSION)) {
-    echo json_encode(new DataResponse("failure", error: new ErrorResponse(401, "Unathorized")));
+    echo json_encode(new DataResponse("failure", error: new ErrorResponse(401, "Unathorized, NSN")));
     return;
   }
 
-  $teacherNumber = $_GET['teacher-number'] ?? $_SESSION["TEACHER_NUMBER"];
+  $teacherNumber = $_SESSION["TEACHER_NUMBER"];
   if (!$teacherNumber){
-    echo json_encode(new DataResponse("failure", error: new ErrorResponse(401, "Unathorized")));
+    echo json_encode(new DataResponse("failure", error: new ErrorResponse(401, "Unathorized, NTN")));
     return;
   }
   $teacherResponse = TeacherService::getCurrentSections((int) $teacherNumber);
