@@ -1,4 +1,4 @@
-import { showPopUp, changeBorder, disableBtn} from "./modules/utlis.mjs";
+import { showPopUp, changeBorder, exportTableToCSV, readFileAsText, parseCsvToTable, cleanTableBody} from "./modules/utlis.mjs";
 import { isValidYoutubeUrl } from "./modules/validator.mjs";
 
 // Lógica para la carga y comportamiento de la vista docente.php
@@ -118,9 +118,14 @@ function loadShowSectionData(event) {
     });
 }
 
-function loadUploadGrades(event){
+function showUploadGradesModal(event){
   let modalSuffix = sectionModalTitle(event)
-  openModal(modalSuffix, "notasModal")
+  let section = event.target.parentElement.parentElement
+  let sectionId = section.dataset.sectionId
+  let gradesModalId = "notasModal"
+  let gradesModal = document.getElementById(gradesModalId)
+  gradesModal.dataset.currentSection = sectionId
+  openModal(modalSuffix, gradesModalId)
 }
 
 function getYoutubeVideoId(youtubeVideoUrl){
@@ -165,7 +170,6 @@ function fetchVideo(event){
 }
 
 function showVideoModal(event){
-  // TODO: CONSIDER STOPPING THE VIDEO WHEN THE MODAL IS CLOSED
   let section = event.target.parentElement.parentElement
   let sectionId = section.dataset.sectionId
   let videoModalId = "videoModal"
@@ -204,7 +208,7 @@ function getTeacherSections() {
         let uploadGradesBtn = newPrimaryBtn("Subir Notas")
         let uploadVideoBtn = newPrimaryBtn("Subir Video")
         viewStudentsBtn.onclick = loadShowSectionData
-        uploadGradesBtn.onclick = loadUploadGrades
+        uploadGradesBtn.onclick = showUploadGradesModal
         uploadVideoBtn.onclick = showVideoModal
         actions.appendChild(viewStudentsBtn)
         actions.appendChild(uploadGradesBtn)
@@ -260,7 +264,7 @@ function deleteVideo(event){
 
 function sameVideoUrl(url){
   // Validar que la URL ingresada no es igual a la URL del video
-  let currentVideoUrl = getCurrentVideoUrl("currentVideoUrl")
+  let currentVideoUrl = getCurrentVideoUrl()
   return url == currentVideoUrl
 }
 
@@ -341,11 +345,141 @@ function uploadVideo(event){
   })
 }
 
+function downloadStudents(event){
+  let tableId = "tablaAlumnos"
+  let filename = "alumnos.csv"
+  exportTableToCSV(tableId, filename)
+}
+
+function downloadGradesFormat(event){
+  let tableId = "gradesFormat"
+  let filename = "formatoNotas.csv"
+  exportTableToCSV(tableId, filename)
+} 
+
+function hasGradeFormat(file){
+  // Validar si un archivo csv tiene el formato adecuado
+  return readFileAsText(file).
+  then((result) => {
+    let response = {status: false, message: ""}
+    let fileRows = result.split("\n")
+    let header
+    let content
+    let count 
+    let incorrect_rows = []
+    if (fileRows.length == 0){
+      response.message = "El archivo no puede estar vacío"
+      return response
+    }
+
+    header = fileRows[0].split(",")
+    if (header[0].trim().toLowerCase() != "numero de cuenta" || header[1].trim().toLowerCase() != "puntaje"){
+      response.message = "El archivo debe de incluir el encabezado del formato"
+      return response
+    }
+    
+    content = fileRows.slice(1)
+    if (content.length == 0){
+      response.message = "El archivo debe incluir los datos de su sección. Llene los datos por favor"
+      return response
+    }
+    if (content[content.length -1] == ""){
+      content = content.slice(0, -1)
+    }
+    
+    count = 1
+    incorrect_rows = []
+    for (let row of content){
+      let rowContents = row.split(",")
+      if (isNaN(rowContents[0].trim()) || isNaN(rowContents[1].trim()) || rowContents[1] < 0 || rowContents[1] > 100){
+        incorrect_rows.push(count)
+      }
+      count++
+    }
+    if (incorrect_rows.length > 0){
+      response.message = `Las filas ${incorrect_rows.join(", ")} no cumplen con el formato. Por favor, verifique los valores en estas filas. Recuerde, los números de cuenta deben ser válidos y las notas deben ser del 0 al 100`
+      return response
+    }
+    response.message = "Archivo válido"
+    response.status = true
+    return response
+  })
+  .catch(false)
+}
+
+function permitGradeUpload(event){
+  // Habilitar la subida de las por clase si el archivo subido es el correcto
+    let uploadGradesInput =event.target
+    let file = uploadGradesInput.files[0]
+    let uploadGradesTable = document.getElementById("uploadedGradesTable")
+    hasGradeFormat(file)
+    .then((result) => {
+      if (!result.status){
+        let uploadGradesInputInfo = document.getElementById("uploadGradesInputInfo")
+        uploadGradesInputInfo.innerHTML = `<p>El archivo subido no cumple con el formato solicitado.</p><p>Motivo: ${result.message}   </p><span class="text-dark">Puede descargar el formato apretando el botón <b>Descargar Formato</b><span>`
+        uploadGradesInputInfo.className = "text-danger p-1 mt-1"
+        cleanTableBody(uploadGradesTable)
+        uploadGradesTable.classList.add("d-none")
+        return
+      }
+      uploadGradesInputInfo.innerHTML = `Formato aceptado! Siempre verifique los valores antes de enviar los resultados`
+      uploadGradesInputInfo.className = "text-success p-1 mt-1"
+      let uploadGradesBtn = document.getElementById("uploadGradesBtn")
+      uploadGradesBtn.removeAttribute("disabled")
+      uploadGradesTable.classList.remove("d-none")
+      uploadGradesTable.classList.add("table-overflow")
+      parseCsvToTable("uploadedGradesTable", file)
+    })
+}
+
+
+function uploadGrades(event){
+  let fileInput = document.getElementById("uploadGradesInput")
+  let body = new FormData()
+  let tableRows = document.getElementById("uploadedGradesTable").querySelectorAll("tbody tr")
+  let grades = {grades: []}
+  let gradesModal = document.getElementById("notasModal")
+  let sectionId = gradesModal.dataset.currentSection
+  fileInput.setAttribute("disabled", "disabled")
+  event.target.setAttribute("disabled", "disabled")
+  for (let row of tableRows){
+    let cols = row.querySelectorAll("td")
+    let grade =  {accountNumber: cols[0].innerText.trim(), result: cols[1].innerText.trim()}
+    grades.grades.push(grade)
+  }
+  body.append("sectionId", sectionId)
+  body.append("grades", JSON.stringify(grades))
+  body.append("csv", fileInput.files[0])
+  console.log(body)
+  console.log("Notas subidas con éxito")
+  fileInput.removeAttribute("disabled")
+  event.target.removeAttribute("disabled")
+}
+
+function cleanUploadGradesModal(event){
+  let uploadGradesInput = document.getElementById("uploadGradesInput")
+  let uploadGradesBtn = document.getElementById("uploadGradesBtn")
+  let uploadGradesInputInfo = document.getElementById("uploadGradesInputInfo")
+  let uploadTable = document.getElementById("uploadedGradesTable")
+  uploadGradesInput.value = ""
+  uploadGradesBtn.setAttribute("disabled", "disabled")
+  uploadGradesInputInfo.innerText = ""
+  uploadGradesInputInfo.classList = ""
+  cleanTableBody(uploadTable)
+  uploadTable.classList.add("d-none")
+}
+
+
 function main() {
   let deleteVideoBtn = document.getElementById("deleteVideoBtn")
   let videoInput = document.getElementById("videoUrl")
   let videoModal = document.getElementById("videoModal")
-  let submitBtn = document.getElementById("uploadVideoBtn")
+  let uploadGradesModal = document.getElementById("notasModal")
+  let uploadVideoBtn = document.getElementById("uploadVideoBtn")
+  let downloadStudentTableBtn = document.getElementById("downloadStudentTableBtn")
+  let downloadGradesFormatBtn = document.getElementById("downloadGradesFormatBtn")
+  let uploadGradesInput = document.getElementById("uploadGradesInput")
+  let uploadGradesBtn = document.getElementById("uploadGradesBtn")
   loadTeacherProfile();
   getTeacherSections();
   // Eventos a elementos de la página
@@ -353,74 +487,12 @@ function main() {
   videoInput.addEventListener("change", validateUrl)
   videoModal.addEventListener("hide.bs.modal", cleanVideoModal)
   uploadVideoBtn.addEventListener("click", uploadVideo)
+  downloadStudentTableBtn.addEventListener("click", downloadStudents)
+  downloadGradesFormatBtn.addEventListener("click", downloadGradesFormat)
+  uploadGradesInput.addEventListener("change", permitGradeUpload)
+  uploadGradesBtn.addEventListener("click", uploadGrades)
+  uploadGradesModal.addEventListener("hide.bs.modal", cleanUploadGradesModal)
   
 }
 
 main()
-
-
-// Función para exportar la tabla de alumnos a CSV (simulación de descarga Excel)
-function exportTableToCSV(filename) {
-  let csv = [];
-  let rows = document.querySelectorAll("#tablaAlumnos tr");
-
-  for (let i = 0; i < rows.length; i++) {
-    let row = [],
-      cols = rows[i].querySelectorAll("td, th");
-    for (let j = 0; j < cols.length; j++) {
-      row.push('"' + cols[j].innerText + '"');
-    }
-    csv.push(row.join(","));
-  }
-
-  // Crea un Blob y genera el enlace de descarga
-  let csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
-  let downloadLink = document.createElement("a");
-  downloadLink.download = filename;
-  downloadLink.href = window.URL.createObjectURL(csvFile);
-  downloadLink.style.display = "none";
-  document.body.appendChild(downloadLink);
-  downloadLink.click();
-  document.body.removeChild(downloadLink);
-}
-
-
-function openNotasModal(codigoClase) {
-  // Actualiza el título del modal para indicar a qué clase se subirán las notas
-  document.getElementById("notasModalLabel").textContent =
-    "Subir Notas - " + codigoClase;
-  //
-  var notasModal = new bootstrap.Modal(document.getElementById("notasModal"));
-  notasModal.show();
-}
-
-// Funciones para manejo del video
-function openVideoClassModal() {
-  var videoClassModal = new bootstrap.Modal(
-    document.getElementById("videoClassModal")
-  );
-  videoClassModal.show();
-}
-
-function selectVideoClass(classCode) {
-  selectedVideoClass = classCode;
-  document.getElementById("videoClassCode").textContent = classCode;
-  // Cerrar la modal de selección de clase
-  var videoClassModalEl = document.getElementById("videoClassModal");
-  var videoClassModal = bootstrap.Modal.getInstance(videoClassModalEl);
-  videoClassModal.hide();
-  // Abrir la modal de video
-  var videoModal = new bootstrap.Modal(document.getElementById("videoModal"));
-  videoModal.show();
-}
-
-function uploadCSV() {
-  const fileInput = document.getElementById("csvFile");
-  if (fileInput.files.length === 0) {
-    alert("Por favor selecciona un archivo CSV");
-    return;
-  }
-  // Simulación de subida de CSV
-  alert("Archivo CSV subido exitosamente");
-  fileInput.value = "";
-}

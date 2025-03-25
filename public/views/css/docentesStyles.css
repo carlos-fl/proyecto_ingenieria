@@ -183,3 +183,14 @@ table th{
   position: sticky;
   top: 0;
 }
+
+.table-overflow{
+  max-height: 15em;
+  overflow-y: auto;
+}
+
+
+.table-overflow thead{
+  position: sticky;
+  top: 0;
+}
