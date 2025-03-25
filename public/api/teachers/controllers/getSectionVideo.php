@@ -26,13 +26,11 @@ $encryptionIv = $_SESSION[$sectionId];
 $sectionId = $encryption->decrypt($sectionId, $encryptionIv);
 
 $response = TeacherService::getSectionCurrentVideo((int) $sectionId);
-echo json_encode(["response" => $response]);
-return;
 if (!$response){
     http_response_code(500);
     echo json_encode(["status" => "failure", "message" => "No connection with database"]);
     return;
 }
-$response = ["status" => "success", "videoUrl" => $response["SECTION_VIDEO_URL"]];
+$response = ["status" => "success", "videoUrl" => $response["SECTION_VIDEO_URL"] ?? ""];
 http_response_code(200);
 echo json_encode($response);

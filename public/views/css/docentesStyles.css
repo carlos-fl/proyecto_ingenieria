@@ -61,7 +61,6 @@
 }
 
 #welcome-msg {
-  width: 75% !important;
   text-align: right;
   margin-top: 1%;
   margin-bottom: 5%;
@@ -181,6 +180,17 @@ table th{
 }
 
 #tableContainer thead{
+  position: sticky;
+  top: 0;
+}
+
+.table-overflow{
+  max-height: 15em;
+  overflow-y: auto;
+}
+
+
+.table-overflow thead{
   position: sticky;
   top: 0;
 }

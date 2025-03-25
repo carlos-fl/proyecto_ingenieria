@@ -57,3 +57,10 @@ export function isValidCalification(calification) {
     const re = new RegExp(PATTERN)
     return re.test(calification)
 }
+
+export function isValidYoutubeUrl(url){
+    const PATTERN = /^https:\/\/www\.youtube.com\/watch\?v=\w+/
+    const re = new RegExp(PATTERN)
+    return re.test(url)
+
+}

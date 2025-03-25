@@ -7,12 +7,12 @@ class PopUp extends HTMLElement{
         this.duration = ""
     }
 
-    static observedAttributes = ["message", "imgSource", "popUpClass"]
+    static observedAttributes = ["message", "imgSource", "pop-up-class"]
 
     connectedCallback(){
         this.message = this.getAttribute("message")
         this.imgSource = this.getAttribute("imgSource")
-        this.popUpClass = this.getAttribute("popUpClass") ?? "fail-popup"
+        this.popUpClass = this.getAttribute("pop-up-class") ?? "fail-popup"
         // Default pop Up duration time is 4s
         this.duration = this.getAttribute("duration") ?? 4000
         this.render()

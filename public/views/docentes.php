@@ -36,9 +36,6 @@
             </header>
           </div>
           <div class="sidebar-mn">
-            <button type="button" class="btn btn-primary mb-2" onclick="openVideoClassModal()">
-              Subir Video
-            </button>
           </div>
           <div class="sidebar-ft">
             <log-out></log-out>
@@ -124,88 +121,12 @@
                   <th scope="col">Email</th>
                 </tr>
               </thead>
-              <tbody>
-                <!-- Datos estáticos de ejemplo -->
-                <tr>
-                  <td>1</td>
-                  <td>20241002513</td>
-                  <td>Juan</td>
-                  <td>Pérez</td>
-                  <td>juan.perez@example.com</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>20221012614</td>
-                  <td>María</td>
-                  <td>López</td>
-                  <td>maria.lopez@example.com</td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>20200121614</td>
-                  <td>Carlos</td>
-                  <td>Gómez</td>
-                  <td>carlos.gomez@example.com</td>
-                </tr>
-              </tbody>
+              <tbody></tbody>
             </table>
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-success" onclick="exportTableToCSV('alumnos.csv')">Descargar Excel</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-   <!-- Modal de Selección de Clase para Video -->
-   <div class="modal fade" id="videoClassModal" tabindex="-1" aria-labelledby="videoClassModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="videoClassModalLabel">Selecciona la Clase para Subir Video</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body">
-          <table class="table table-dark table-striped">
-            <thead>
-              <tr>
-                <th scope="col">Código Clase</th>
-                <th scope="col">Sección</th>
-                <th scope="col">Nombre de Clase</th>
-                <th scope="col">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>MAT101</td>
-                <td>1100</td>
-                <td>Matemáticas Básicas</td>
-                <td>
-                  <button class="btn btn-primary btn-sm" onclick="selectVideoClass('MAT101')">Seleccionar</button>
-                </td>
-              </tr>
-              <tr>
-                <td>HIS202</td>
-                <td>1400</td>
-                <td>Historia Universal</td>
-                <td>
-                  <button class="btn btn-primary btn-sm" onclick="selectVideoClass('HIS202')">Seleccionar</button>
-                </td>
-              </tr>
-              <tr>
-                <td>CIE303</td>
-                <td>1001</td>
-                <td>Ciencias Naturales</td>
-                <td>
-                  <button class="btn btn-primary btn-sm" onclick="selectVideoClass('CIE303')">Seleccionar</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="modal-footer">
+          <button id="downloadStudentTableBtn" class="btn btn-success">Descargar Excel</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
         </div>
       </div>
@@ -222,9 +143,10 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
-          <div class="mb-3">
+          <div id="videoUrlContainer" class="mb-3">
             <label for="videoUrl" class="form-label">URL del Video:</label>
             <input type="text" class="form-control" id="videoUrl" placeholder="Ingresa la URL del video" />
+            <div id="videoUrlInfo"></div>
           </div>
           <div id="videoPreview" class="mb-3">
             <div id="videoWrapper"class="ratio ratio-16x9 bg-light d-flex justify-content-center align-items-center text-secondary">
@@ -250,42 +172,37 @@
         <div class="modal-body">
           <div class="mb-3">
             <label for="csvFile" class="form-label">Selecciona archivo CSV:</label>
-            <input type="file" class="form-control" id="csvFile" accept=".csv" />
+            <input id="uploadGradesInput"type="file" class="form-control" id="csvFile" accept=".csv" />
+            <div id="uploadGradesInputInfo">
+            </div>
+          </div>
+          <div>
+            <table id="gradesFormat" class="d-none">
+              <thead>
+                <tr>
+                  <th>Numero de cuenta</td>
+                  <th>Puntaje</td>
+                </tr>
+              </thead>
+            </table>
+          </div>
+          <div class="table-overflow table-responsive">
+            <table id="uploadedGradesTable" class="table table-dark table-striped table-hover d-none">
+              <thead>
+                <tr>
+                  <th>Número de Cuenta</th>
+                  <th>Puntuación</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" onclick="uploadCSV()">
+          <button class="btn btn-success" id="downloadGradesFormatBtn">Descargar Formato</button>
+          <button id="uploadGradesBtn"type="button" class="btn btn-primary" disabled>
             Subir CSV
-          </button>
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-            Cerrar
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-    <!-- Modal para Subir Videos -->
-    <div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="notasModalLabel">Subir Video<span class="titleSuffix"></span></h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body">
-          <div class="mb-3">
-            <label for="csvFile" class="form-label">Selecciona archivo CSV:</label>
-            <input type="file" class="form-control" id="csvFile" accept=".csv" />
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" onclick="uploadCSV()">
-            Subir CSV
-          </button>
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-            Cerrar
           </button>
         </div>
       </div>
@@ -295,7 +212,7 @@
   <pop-up
         id="popUp"
         imgsource="assets/img/crossmark.png"
-        popupclass="fail-popup"
+        popupclass=""
         message="">
     </pop-up>
 

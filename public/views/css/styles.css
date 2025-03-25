@@ -80,7 +80,6 @@ footer {
     right: 10px;
     width: 300px;
     height: 50px;
-    border: 0.01em solid black;
     opacity: 0;
     z-index: 1;
     -webkit-user-select: none; /* Safari */
@@ -98,6 +97,11 @@ footer {
 .fail-popup{
     background-color: var(--warning-color);
     color: white;
+}
+
+.success-popup{
+    background-color: #28a745;
+    color: white
 }
 
 @keyframes showPopUp{

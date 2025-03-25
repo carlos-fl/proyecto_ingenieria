@@ -9,10 +9,13 @@ export function disableBtn(btn, time){
 }
 
 
-export function showPopUp(message){
+export function showPopUp(message, popUpClass="fail-popup", imgSource="/views/assets/img/crossmark.png"){
     let popUp = document.getElementById("popUp")
     popUp.setAttribute("message", message)
+    popUp.setAttribute("imgSource", imgSource)
+    popUp.setAttribute("pop-up-class", popUpClass)
     popUp.show()
+    
 }
 
 export function showFailPopUp(popUpId, content){
@@ -122,3 +125,73 @@ export function hideLoadingComponent(loadingID) {
         modal.hide()
     }, 500)
 }
+
+function parseToCsv(tableId){
+    let csv = []
+    let rows = document.querySelectorAll(`#${tableId} tr`)
+    let currentRow
+    for (let row of rows){    
+        let cols = row.querySelectorAll("td,th")
+        cols = Array.from(cols)
+        currentRow = cols.map((col) => {return col.innerText.trim()})
+        csv.push(currentRow.join(","))
+    }
+    console.log(csv)
+    return csv
+  }
+  
+  
+  // Función para exportar la tabla de alumnos a CSV (simulación de descarga Excel)
+export function exportTableToCSV(tableId, filename) {
+    // export a table to CSV format
+    let csv = parseToCsv(tableId)
+    // Crea un Blob y genera el enlace de descarga
+    let csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+    let downloadLink = document.createElement("a");
+    downloadLink.download = filename;
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+}
+
+export function readFileAsText(file){
+    // Returns the contents of a file as text
+    return new Promise((resolve) => {
+        let fileReader = new FileReader()
+        fileReader.onload = (e) => resolve(fileReader.result)
+        fileReader.readAsText(file)
+    })
+}
+
+export function parseCsvToTable(tableId, file, hasHeader=true){
+    readFileAsText(file)
+    .then((textFile) => {
+        let rows = textFile.split("\n")
+        let table = document.getElementById(tableId)
+        let tableBody = table.querySelector("tbody")
+        if (hasHeader){
+            rows = rows.slice(1)
+        }
+        rows = rows.slice(0,-1)
+        for (let row of rows){
+            let tblRow = document.createElement("tr")
+            let cols = row.split(",")
+            for (let col of cols){
+                let tblCol = document.createElement("td")
+                tblCol.innerText = col
+                tblRow.appendChild(tblCol)
+            }
+            tableBody.appendChild(tblRow)
+        }
+    })
+}
+
+export function cleanTableBody(table){
+    let tableBody = table.querySelector("tbody")
+    tableBody.innerHTML = ""
+}
+
+
+  
