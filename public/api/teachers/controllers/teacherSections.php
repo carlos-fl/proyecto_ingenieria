@@ -3,7 +3,7 @@
   include_once __DIR__ . '/../../../../utils/classes/Request.php';
   include_once __DIR__ . '/../../../../services/teachers/types/DataResponse.php';
   include_once __DIR__ . '/../../../../services/teachers/services/Teachers.php';
-  include_once __DIR__ . '/../.././../../config/env/Environment.php';
+  include_once __DIR__ . '/../../../../config/env/Environment.php';
   include_once __DIR__ . '/../../../../utils/classes/Encrypt.php';
 
 
