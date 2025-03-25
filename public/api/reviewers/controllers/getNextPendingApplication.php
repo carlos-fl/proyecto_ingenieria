@@ -4,14 +4,16 @@ require_once __DIR__ . "/../../../../config/env/Environment.php";
 
 header("Content-Type: application/json");
 
-if ($_SERVER["REQUEST_METHOD"] !== "GET") {
-    http_response_code(405);
+if ($_SERVER["REQUEST_METHOD"] !== "GET" || !isset($_GET["reviewer_id"])) {
+    http_response_code(400);
     echo json_encode([
         "status" => "failure",
-        "error" => ["errorCode" => "405", "errorMessage" => "Method Not Allowed"]
+        "error" => ["errorCode" => "400", "errorMessage" => "Missing or invalid reviewer_id"]
     ]);
     exit;
 }
+
+$reviewer_id = $_GET["reviewer_id"];
 
 $env = Environment::getVariables();
 $db = new Database(
@@ -25,16 +27,23 @@ $db = new Database(
 $conn = $db->getConnection();
 
 try {
-    $stmt = $conn->prepare("CALL SP_GET_NEXT_PENDING_APPLICATION()");
+    $stmt = $conn->prepare("CALL SP_GET_NEXT_PENDING_APPLICATION(?)");
+    $stmt->bind_param("i", $reviewer_id);
     $stmt->execute();
-
+    
     $result = $stmt->get_result();
-    $application = $result->fetch_assoc(); 
-
-    if (!$application) {
-        echo json_encode(["status" => "failure", "error" => ["errorCode" => "404", "errorMessage" => "No pending applications found"]]);
+    if ($result->num_rows > 0) {
+        $applications = [];
+        while ($row = $result->fetch_assoc()) {
+            $applications[] = $row;
+        }
+        echo json_encode(["status" => "success", "data" => $applications]);
     } else {
-        echo json_encode(["status" => "success", "data" => $application]);
+        http_response_code(404);
+        echo json_encode([
+            "status" => "failure",
+            "error" => ["errorCode" => "404", "errorMessage" => "No pending applications found"]
+        ]);
     }
 
 } catch (Exception $e) {
