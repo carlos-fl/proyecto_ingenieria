@@ -2,6 +2,14 @@ let currentIndex = 0;
 let totalPending = 0;
 let currentApplicationCode = null; // Almacenará el APPLICATION_CODE de la solicitud actual
 
+document.addEventListener("DOMContentLoaded", function () {
+  localStorage.removeItem("pendingApplications"); // Limpia el localStorage
+  loadPendingCount().then(() => {
+    updateCounter();
+    loadRequest();
+  });
+});
+
 // Función para actualizar el contador en la parte superior
 function updateCounter() {
   const counterDiv = document.getElementById("counter");
@@ -11,15 +19,15 @@ function updateCounter() {
 // Función para obtener el total de solicitudes pendientes
 function loadPendingCount() {
   return fetch("/api/reviewers/controllers/getPendingCount.php")
-    .then(response => response.json())
-    .then(data => {
+    .then((response) => response.json())
+    .then((data) => {
       if (data.status === "success") {
         totalPending = data.count;
       } else {
         totalPending = 0;
       }
     })
-    .catch(error => {
+    .catch((error) => {
       console.error("Error fetching pending count", error);
       totalPending = 0;
     });
@@ -96,15 +104,46 @@ certificateModal.addEventListener("show.bs.modal", function (event) {
 // Función para cargar la siguiente solicitud pendiente y actualizar la interfaz
 function loadRequest() {
   const detailsDiv = document.getElementById("requestDetails"); // Contenedor donde se mostrará la tarjeta
+
+  // Mostrar spinner y mensaje mientras se carga la solicitud
+  detailsDiv.innerHTML = `
+    <div class="d-flex flex-column justify-content-center align-items-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-3">Cargando Solicitudes…</p>
+    </div>
+  `;
+
   fetch("/api/reviewers/controllers/getNextPendingApplication.php")
-    .then(response => response.json())
-    .then(data => {
-      // Si la respuesta indica error, mostramos mensaje 
+    .then((response) => response.json())
+    .then((data) => {
+      // Si la respuesta indica error, mostramos mensaje
       if (data.status === "0") {
-        detailsDiv.innerHTML = `<p>${data.error.errorMessage || "No se encontró una aplicación pendiente."}</p>`;
+        detailsDiv.innerHTML = `<p>${
+          data.error.errorMessage || "No se encontró una aplicación pendiente."
+        }</p>`;
         return;
       }
-      
+
+      let newApplications = Array.isArray(data.data) ? data.data : [data.data];
+
+      // Obtener las solicitudes guardadas en localStorage
+      let storedData =
+        JSON.parse(localStorage.getItem("pendingApplications")) || [];
+
+     // Filtrar para evitar duplicados
+     newApplications = newApplications.filter(newApp =>
+      !storedData.some(storedApp => storedApp.APPLICATION_CODE === newApp.APPLICATION_CODE)
+    );
+
+    // Si no hay nuevas solicitudes después del filtrado, salimos
+    if (newApplications.length === 0) return;
+
+    // Guardar en localStorage sin duplicar
+    let updatedData = [...storedData, ...newApplications];
+    localStorage.setItem("pendingApplications", JSON.stringify(updatedData));
+
       // objeto request con los datos obtenidos
       let request = {
         id: data.data["APPLICATION_CODE"],
@@ -115,7 +154,7 @@ function loadRequest() {
         centroRegional: data.data["CENTRO_REGIONAL"],
         carreraPrincipal: data.data["CARRERA_PRINCIPAL"],
         carreraSecundaria: data.data["CARRERA_SECUNDARIA"] || "",
-        certificateUrl: data.data["CERTIFICATE_FILE"]
+        certificateUrl: data.data["CERTIFICATE_FILE"],
       };
 
       // Guardamos el ID de la solicitud actual para actualizarla al aprobar/rechazar
@@ -127,10 +166,13 @@ function loadRequest() {
       // Se actualiza el atributo data del botón del certificado por si se requiere más adelante
       let certificateBtn = document.getElementById("certificate-btn");
       if (certificateBtn) {
-        certificateBtn.setAttribute("data-certificate-url", request.certificateUrl);
+        certificateBtn.setAttribute(
+          "data-certificate-url",
+          request.certificateUrl
+        );
       }
     })
-    .catch(error => {
+    .catch((error) => {
       console.error("No se pudo traer una aplicación!", error);
       detailsDiv.innerHTML = `<p>Error al cargar la aplicación.</p>`;
     });
@@ -144,16 +186,18 @@ function updateApplicationStatus(applicationCode, status, reason = "") {
     body: JSON.stringify({
       APPLICATION_CODE: applicationCode,
       STATUS: status,
-      REASON: reason
-    })
+      REASON: reason,
+    }),
   })
-  .then(response => response.json())
-  .then(data => {
-    if (data.status !== "success") {
-      throw new Error(data.error.errorMessage || "Error al actualizar la solicitud");
-    }
-    return data;
-  });
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status !== "success") {
+        throw new Error(
+          data.error.errorMessage || "Error al actualizar la solicitud"
+        );
+      }
+      return data;
+    });
 }
 
 // Manejo de eventos para aprobar o rechazar la solicitud
@@ -167,7 +211,7 @@ document.addEventListener("click", function (event) {
         updateCounter();
         loadRequest();
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error al aprobar la solicitud:", error);
       });
   }
@@ -182,7 +226,7 @@ document.addEventListener("click", function (event) {
           updateCounter();
           loadRequest();
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error al rechazar la solicitud:", error);
         });
     }
@@ -190,7 +234,7 @@ document.addEventListener("click", function (event) {
 });
 
 // Inicializamos la carga del contador y la primera solicitud cuando el DOM esté listo
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   loadPendingCount().then(() => {
     updateCounter();
     loadRequest();
