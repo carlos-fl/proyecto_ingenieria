@@ -16,7 +16,7 @@
     return;
   }
 
-  $teacherNumber = $_SESSION["TEACHER_NUMBER"];
+  $teacherNumber = _GET["teacher-number"] ?? $_SESSION["TEACHER_NUMBER"];
   if (!$teacherNumber){
     echo json_encode(new DataResponse("failure", error: new ErrorResponse(401, "Unathorized, NTN")));
     return;
