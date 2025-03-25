@@ -42,7 +42,7 @@ $conn = $db->getConnection();
 
 try {
     $checkStmt = $conn->prepare("SELECT EMAIL, FIRST_NAME, LAST_NAME FROM TBL_APPLICATIONS WHERE APPLICATION_CODE = ?");
-    $checkStmt->bind_param("i", $applicationCode);
+    $checkStmt->bind_param("s", $applicationCode);
     $checkStmt->execute();
     $checkResult = $checkStmt->get_result();
 
@@ -58,13 +58,14 @@ try {
     $userEmail = $row["EMAIL"];
     $userName = $row["FIRST_NAME"] . " " . $row["LAST_NAME"];
     $stmt = $conn->prepare("CALL SP_REJECT_APPLICATION(?, ?)");
-    $stmt->bind_param("is", $applicationCode, $commentary);
+    $stmt->bind_param("ss", $applicationCode, $commentary);
 
     if ($stmt->execute()) {
         $emailTemplatePath = __DIR__ . "/../../../../services/emailNotifications/emailsBlueprints/applicationReject.html";
 
         $token = ApplicantService::generateResubmissionToken();
-        $link = $env['HOST'] . "/views/admissions/formCorrection/index.php?token=" . $token;
+        //TODO change this to $env[HOST] for production
+        $link = $env['HOST'] . "/views/admissions/formResubmission/index.php?token=" . $token;
         $emailData = ["name" => $userName, "application_code" => $applicationCode, "commentary" => $commentary, "link" => $link]; 
         ApplicantService::sendResubmissionEmail($userEmail, $token, $emailData);
         

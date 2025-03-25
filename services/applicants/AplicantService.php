@@ -27,8 +27,8 @@
         $application = $application->fetch_assoc();
         $mysqli->close();
         return new ApplicantResponse("success", $application);
-      } catch (Throwable) {
-        return new ApplicantResponse("failure", error: new ErrorResponse(500, "Server error"));
+      } catch (Throwable $err) {
+        return new ApplicantResponse("failure", error: new ErrorResponse(500, $err->getMessage()));
       }
     }
 

@@ -110,7 +110,7 @@
   <!-- Ventana modal -->
   <reviewer-modal tag-id="reviewer" application="loginRevisorSolicitudesAd.php" exam="./admissions/uploadExamResults/login.php"></reviewer-modal>
   
-  <modal-success tag-id="submission-success" modal-id="submission" arial-label-led-by="fileSuccessModal" header-title="Solicitud Enviada Correctamente" arial-label="sucess" hidden="false"></modal-success>
+  <modal-success tag-id="submission-success" modal-id="submission" arial-label-led-by="fileSuccessModal" header-title="Solicitud Enviada Correctamente. Revisa tu correo para confirmación" arial-label="sucess" hidden="false"></modal-success>
 
   <loading-modal tag-id="loading" modal-id="loading-modal"></loading-modal>
   <modal-error tag-id="error-modal" modal-id="submission-error" arial-label-led-by="fileFailModal" header-title="No se pudo Enviar la Solicitud" arial-label="failure" hidden="false"></modal-error>

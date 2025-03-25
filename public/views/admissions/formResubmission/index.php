@@ -1,10 +1,3 @@
-<?php
-  session_start();
-  if (empty($_SESSION)) {
-    header('Location: /');
-  }
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -78,19 +71,19 @@
                 </div>
                 <div class="mb-3">
                   <label for="regional-center" class="form-label">Centro Regional<span class="text-danger">*</span></label>
-                  <select id="regional-center" name="regional-center" class="form-select" readonly>
+                  <select id="regional-center" name="regional-center" class="form-select" disabled>
                     <option value="">Seleccione un centro regional</option>
                   </select>
                 </div>
                 <div class="mb-3">
                   <label for="main-career" class="form-label">Carrera Principal*</label>
-                  <select id="main-career" name="main-career" class="form-select" readonly>
+                  <select id="main-career" name="main-career" class="form-select" disabled>
                     <option value="">Seleccione una carrera</option>
                   </select>
                 </div>
                 <div class="mb-3">
                   <label for="secondary-career" class="form-label">Carrera Secundaria<span class="text-danger">*</span></label>
-                  <select id="secondary-career" name="secondary-career" class="form-select" readonly>
+                  <select id="secondary-career" name="secondary-career" class="form-select" disabled>
                     <option value="">Seleccione una carrera secundaria</option>
                   </select>
                 </div>
@@ -116,20 +109,28 @@
   <footer-unah></footer-unah>
 
   <!-- Modal de inscripción exitosa -->
-   <modal-success tag-id="correction-success" modal-id="resubmission" arial-label-led-by="resubmissionModal" header-title="Datos Enviados Correctamente" arial-label="Resubmission" hidden="false"></modal-success>
+   <modal-success tag-id="correction-success" modal-id="resubmission" arial-label-led-by="resubmissionModal" header-title="Datos Enviados Correctamente. Revisa tu correo para confirmación" arial-label="Resubmission" hidden="false"></modal-success>
 
   <!-- modal error -->
   <modal-error tag-id="correction-fail" modal-id="resubmission-fail" arial-label-led-by="resubmissionModalError" header-title="Un error Ha Sucedido. Intente de Nuevo" arial-label="error" hidden="false"></modal-error>
 
+  <pop-up
+   id="popUp"
+    imgsource="./../../assets/img/crossmark.png"
+    popupclass="fail-popup"
+    message="">
+  ></pop-up>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <script src="../../js/components/navbar.js"></script>
   <script src="../../js/components/footer.js"></script>
+  <script src="../../js/components/successModal.js"></script>
   <script src="../../js/components/failModal.js"></script>
   <script src="../../js/components/modal.js"></script>
   <script src="../../js/components/loading.js"></script>
+  <script src="../../js/components/pop-up.js"></script>
   <script type="module" src="./controllers/setInputsData.js"></script>
   <script type="module" src="./controllers/sendResubmission.js"></script>
-  <script type="module" src="../../js/inscripciones.js"></script>
 
 </body>
 

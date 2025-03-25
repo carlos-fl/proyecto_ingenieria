@@ -5,10 +5,10 @@
 
   class ApplicantResponse {
     public string $status;
-    public ?ApplicantFormData $applicant;
+    public ?array $applicant;
     public ?ErrorResponse $error;
 
-    public function __construct(string $status, ?ApplicantFormData $applicant = null, ?ErrorResponse $error = null) {
+    public function __construct(string $status, ?array $applicant = null, ?ErrorResponse $error = null) {
       $this->status = $status;
       $this->applicant = $applicant;
       $this->error = $error; 
