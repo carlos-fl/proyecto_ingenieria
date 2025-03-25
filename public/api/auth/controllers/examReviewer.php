@@ -10,4 +10,4 @@
 
   Request::isWrongRequestMethod('POST'); 
 
-  Logger::loginAuth('APPLICANT_REVIEWER');
+  Logger::loginAuth('ADMINISTRATOR');

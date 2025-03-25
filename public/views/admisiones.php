@@ -93,32 +93,17 @@
     <footer-unah></footer-unah>
 
     <!-- Ventana modal -->
-    <div class="modal fade" id="reviewerModal" tabindex="-1" aria-labelledby="reviewerModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="reviewerModalLabel">Revisores</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body d-flex justify-content-center align-items-center">
-                    <div class="btn-group" role="group" aria-label="Select reviewer type">
-                        <a href="loginRevisorSolicitudesAd.php"><button type="button" class="btn btn-warning mx-3" id="admissionReviewer">Revisor de Solicitud de Admision</button></a>
-                        <a href="loginRevisorExamenes.php"><button type="button" class="btn btn-warning mx-3" id="examReviewer">Revisor de Examen de Admision</button></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+     <modal-success tag-id="submission-success" modal-id="submission" arial-label-led-by="fileSuccessModal" header-title="Solicitud Enviada Correctamente" arial-label="sucess" hidden="false"></modal-success>
+     <reviewer-modal tag-id="reviewer" application="loginRevisorSolicitudesAd.php" exam="./admissions/uploadExamResults/login.php"></reviewer-modal>
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script>
-        document.getElementById('reviewersBox').addEventListener('click', function() {
-            var myModal = new bootstrap.Modal(document.getElementById('reviewerModal'));
-            myModal.show();
-        });
-    </script>
+    <script src="js/components/successModal.js"></script>
+    <script src="js/components/modal.js"></script>
     <script src="js/components/navbar.js"></script>
     <script src="js/components/footer.js"></script>
+    <script src="js/components/reviewerModal.js"></script>
 </body>
 
 </html>

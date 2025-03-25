@@ -1,4 +1,10 @@
-<?php ?>
+<?php
+    session_start();
+    if (empty($_SESSION)) {
+        header('Location: loginRevisorSolicitudesAd.php');
+    }
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -40,10 +46,10 @@
                 profile-title="Asignacion de Revisores"
                 profile-img="assets/img/default-profile.png"
                 welcome-msg="Bienvenido Administrador"
-                user-number=""
-                user-name=""
-                user-phone=""
-                user-email="">
+                user-number="<?php echo $_SESSION['DNI'] ?>"
+                user-name="<?php echo $_SESSION['FIRST_NAME'] . " " . $_SESSION["LAST_NAME"] ?>"
+                user-phone="<?php echo $_SESSION['PHONE'] ?>"
+                user-email="<?php echo $_SESSION['INST_EMAIL'] ?>">
             </user-profile>
             <div class="container center-container">
                 <div class="upload-wrapper">

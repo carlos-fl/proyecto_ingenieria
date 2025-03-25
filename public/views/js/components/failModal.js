@@ -28,6 +28,7 @@ class failModal extends HTMLElement {
     }
   }
 
+
   attributeChangedCallback(name, oldValue, newValue){
     this.connectedCallback()
   }

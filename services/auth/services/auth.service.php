@@ -51,7 +51,7 @@
       }
       // if password match check if it is a admin[role] ROLE: ADMIN
       $query = "CALL SP_GET_ROLES_BY_USER(?)";
-      $roles = $db->callStoredProcedure($query, "s", [$userData["USER_ID"]], $mysqli);
+      $roles = $db->callStoredProcedure($query, "i", [$userData["USER_ID"]], $mysqli);
 
       if ($roles->num_rows == 0) {
         return Response::returnPostResponse(true, 'failure', 403, 'Access denied');
@@ -93,20 +93,17 @@
         return Response::returnPostResponse(true, 'failure', 401, 'Incorrect application code');
       }
 
-      // check match with applicantCode
       $applicationData = $applicant->fetch_assoc();
-      /*if ($applicationData['APPLICATION_CODE'] !== $request->getApplicantCode()) {
-        echo json_encode(["ac" => $applicationData['APPLICATION_CODE'], "rc" => $request->getApplicantCode()]);
+      if ($applicationData['APPLICATION_CODE'] !== $request->getApplicantCode()) {
         return Response::returnPostResponse(true, 'failure', 401, 'Incorrect application code');
-      } */ 
+      }  
 
       // take results data
       $applicantResultsQuery = "CALL SP_GET_APPLICANT_CALIFICATIONS(?)";
       try {
         $applicantExamsResults = $db->callStoredProcedure($applicantResultsQuery, 's', [$applicationData['APPLICATION_CODE']], $mysqli);
         if ($applicantExamsResults->num_rows == 0) {
-          echo "4";
-          return Response::returnPostResponse(true, 'failure', 401, 'Incorrect application code');
+          return Response::returnPostResponse(true, 'failure', 400, 'Incorrect application code');
         }
   
         $data = $applicantExamsResults->fetch_all(1);

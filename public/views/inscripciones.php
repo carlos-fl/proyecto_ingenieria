@@ -9,6 +9,7 @@
   <title>Admisiones UNAH</title>
   <link rel="icon" type="image/png" href="assets/img/UNAH-escudo.png">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/loader.css">
   <link rel="stylesheet" href="css/admisionesStyles.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <script src="https://kit.fontawesome.com/6130fb0810.js" crossorigin="anonymous"></script>
@@ -106,42 +107,13 @@
   </main>
   <footer-unah></footer-unah>
 
-  <!-- Modal de inscripción exitosa -->
-  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="successModalLabel">Inscripción Exitosa</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body">
-          <p>Su inscripción se realizó correctamente. Su número de solicitud es:</p>
-          <h3 id="application-number" class="text-center"></h3>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Ventana modal -->
-  <div class="modal fade" id="reviewerModal" tabindex="-1" aria-labelledby="reviewerModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="reviewerModalLabel">Revisores</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body d-flex justify-content-center align-items-center">
-          <div class="btn-group" role="group" aria-label="Select reviewer type">
-            <a href="loginRevisorSolicitudesAd.php"><button type="button" class="btn btn-warning mx-3" id="admissionReviewer">Revisor de Solicitud de Admision</button></a>
-            <a href="loginRevisorExamenes.php"><button type="button" class="btn btn-warning mx-3" id="examReviewer">Revisor de Examen de Admision</button></a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <reviewer-modal tag-id="reviewer" application="loginRevisorSolicitudesAd.php" exam="./admissions/uploadExamResults/login.php"></reviewer-modal>
+  
+  <modal-success tag-id="submission-success" modal-id="submission" arial-label-led-by="fileSuccessModal" header-title="Solicitud Enviada Correctamente" arial-label="sucess" hidden="false"></modal-success>
+
+  <loading-modal tag-id="loading" modal-id="loading-modal"></loading-modal>
+  <modal-error tag-id="error-modal" modal-id="submission-error" arial-label-led-by="fileFailModal" header-title="No se pudo Enviar la Solicitud" arial-label="failure" hidden="false"></modal-error>
 
   <!--Pop Up-->
   <pop-up
@@ -152,11 +124,14 @@
   </pop-up>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  <script>
-  </script>
   <script src="js/components/navbar.js"></script>
   <script src="js/components/footer.js"></script>
   <script src="js/components/pop-up.js"></script>
+  <script src="js/components/modal.js"></script>
+  <script src="js/components/successModal.js"></script>
+  <script src="js/components/failModal.js"></script>
+  <script src="js/components/loading.js"></script>
+  <script src="js/components/reviewerModal.js"></script>
   <script type="module" src="js/inscripciones.js"></script>
 
 </body>

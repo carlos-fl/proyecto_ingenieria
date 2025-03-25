@@ -31,7 +31,15 @@
       }
 
       http_response_code(200);
-      echo json_encode($userAuthServiceResponse);
+      echo json_encode([
+        "status" => "success",
+        "data" => [],
+        "sessionData" => [
+          "user" => $sessionData->user,
+          "roles" => $sessionData->roles
+        ],
+        "error" => null
+      ]);
 
       $_SESSION['FIRST_NAME'] = $sessionData->user->FIRST_NAME; 
       $_SESSION['LAST_NAME'] = $sessionData->user->LAST_NAME; 
@@ -39,5 +47,8 @@
       $_SESSION['INST_EMAIL'] = $sessionData->user->INST_EMAIL; 
       $_SESSION['PERSONAL_EMAIL'] = $sessionData->user->PERSONAL_EMAIL; 
       $_SESSION['ROLES'] = $sessionData->roles; 
+      $_SESSION['PHOTO'] = $sessionData->user->PHOTO;
+      $_SESSION['PHONE'] = $sessionData->user->PHONE_NUMBER;
+      $_SESSION['USER'] = $sessionData->user;
     }
   }

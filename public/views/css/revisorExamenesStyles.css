@@ -15,8 +15,8 @@
   font-family: "Helvetica Neue", sans-serif;
   font-weight: 600;
   font-size: 1.25rem;
-  color: var(--secondary-color);
-  background: var(--primary-color);
+  color: var(--white);
+  background: var(--deep-blue-color);
   padding: 15px 40px;
   border: none;
   border-radius: 12px;
