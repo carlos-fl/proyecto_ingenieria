@@ -13,8 +13,8 @@
 
   Request::isWrongRequestMethod('POST');
   
-  if (empty($_SESSION)) {
-    echo json_encode(new DataResponse("failure", error: new ErrorResponse(401, "Unauthorized")));
+  if (empty($_SESSION || !in_array("TEACHER", $_SESSION['ROLES']))) {
+    echo json_encode(new DataResponse("failure", error: new ErrorResponse(401, "Unathorized")));
     return;
   }
 

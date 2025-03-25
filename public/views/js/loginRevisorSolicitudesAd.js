@@ -5,14 +5,22 @@ function loginSuccessHandler(){
     // Manejar el evento login-form:success
     let loginForm = document.getElementById("login-form")
     loginForm.addEventListener("login-form:success", event => {
-        window.location.href = "solicitudesAdmision.php"
+        const data = event.detail.data
+        const roles = data.roles
+        if (roles.includes('REVIEWER')) {
+            window.location.href = "solicitudesAdmision.php"
+        }
+       //TODO add href for add reviewer for admin 
+       if (roles.includes('ADMINISTRATOR')) {
+            window.location.href = "assignReviewers.php"
+       }
     })
-    
 }
 
 function main(){
-    loginFailHandler()
     loginSuccessHandler()
+    loginFailHandler()
 }
+
 
 main()

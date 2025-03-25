@@ -6,18 +6,18 @@ export class Request {
    * @param {object|null} body - Request payload (if method is not GET)
    * @returns {Promise<JSON>} - Parsed response from the server
    */
-  static async fetch(URL, method = "GET", body = null) {
+  static async fetch(URL, method = "GET", body = null, stringify=true) {
     try {
       const options = {
         method,
-        headers: {
-          "Content-Type": "application/json"
-        },
       };
 
       // Only add body for methods that support it
-      if (body && method !== "GET") {
+      if (body && method !== "GET" && stringify) {
         options.body = JSON.stringify(body);
+      }
+      else if(body && method !== "GET" && !stringify) {
+        options.body = body;
       }
 
       const response = await fetch(URL, options);

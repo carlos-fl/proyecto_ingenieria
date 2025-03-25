@@ -122,6 +122,7 @@ class LoginForm extends HTMLElement{
         })
         .then(res => res.json())
         .then(data => {
+            console.log('l-data ', data)
             if (!data){
                 this.emit("fail", {message: "Hubo un error con el servidor"});
                 return
@@ -142,12 +143,12 @@ class LoginForm extends HTMLElement{
             // Unsuccessful login
             console.log("ERROR")
             console.log(error.message)
+            console.log(error)
             this.emit("fail", {message: "Hubo un error con el servidor"});
         })
     }
 
     #loadUserData(data){
-        data = JSON.parse(data)
         window.localStorage.setItem("userId", data["USER_ID"])
         window.localStorage.setItem("userFirstName", data["FIRST_NAME"]) 
         window.localStorage.setItem("userLastName", data["LAST_NAME"])

@@ -58,10 +58,12 @@
     </div>
   </main>
   <footer-unah></footer-unah>
+  <reviewer-modal exam="../uploadExamResults/login.php" application="../../loginRevisorSolicitudesAd.php"></reviewer-modal>
   
 
   <script src="../../js/components/navbar.js"></script>
   <script src="../../js/components/modal.js"></script>
+  <script src="../../js/components/reviewerModal.js"></script>
   <script src="../../js/components/failModal.js"></script>
   <script src="../../js/components/pop-up.js"></script>
   <script src="../../js/components/footer.js"></script>

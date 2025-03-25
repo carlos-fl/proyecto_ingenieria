@@ -9,6 +9,8 @@ class successModal extends HTMLElement {
     this.headerTitle = ''
   }
 
+  static modalInstance = null
+
  connectedCallback(){
     this.modalSuccessID = this.getAttribute('tag-id')
     this.modalID = this.getAttribute("modal-id")
@@ -24,17 +26,22 @@ class successModal extends HTMLElement {
   }
 
   show() {
-    const modalElement = document.getElementById(this.modalID);
-    if (modalElement) {
-      const modalInstance = new bootstrap.Modal(modalElement);
-      modalInstance.show();
+    if (this.modalInstance) {
+      this.modalInstance.show()
+    } else {
+      const modalElement = document.getElementById(this.modalID);
+      if (modalElement) {
+        const modalInstance = new bootstrap.Modal(modalElement);
+        this.modalInstance = modalInstance
+        modalInstance.show();
+      }
     }
   }
 
   render() {
     this.setAttribute('id', this.modalSuccessID)
     this.innerHTML = `
-      <d-modal modal-id=${ this.modalID } arial-label-led-by=${ this.ariaLabelLedBy } arial-label=${ this.arialLabel } hidden=${ this.hidden } header-title=${ this.headerTitle }>
+      <d-modal modal-id=${ this.modalID } arial-label-led-by=${ this.ariaLabelLedBy } arial-label=${ this.arialLabel } hidden=${ this.hidden } header-title="${ this.headerTitle }">
         <i class="fa-solid fa-circle-check" style="color: #4BB543; font-size: 7rem"></i> 
       </d-modal> 
     `

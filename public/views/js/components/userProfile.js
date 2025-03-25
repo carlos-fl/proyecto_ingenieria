@@ -23,7 +23,7 @@ class UserProfile extends HTMLElement {
 
   render() {
     this.innerHTML = `
-                  <div class="container bg-white w-75 p-5">
+                  <div class="container bg-white p-5">
                     <div class="profile-container-title">
                       <div class="profile-bar-h mb-5">
                         <h3>${ this.profileTitle }</h3>

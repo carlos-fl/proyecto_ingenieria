@@ -5,6 +5,8 @@ class Loading extends HTMLElement {
     this.loadingID = ''
   }
 
+  static modalInstance = null
+
   connectedCallback() {
     this.loadingID = this.getAttribute('tag-id')
     this.modalID = this.getAttribute('modal-id')
@@ -12,19 +14,20 @@ class Loading extends HTMLElement {
   }
 
   show() {
-    const modalElement = document.getElementById(this.modalID);
-    if (modalElement) {
-      const modalInstance = new bootstrap.Modal(modalElement);
-      modalInstance.show();
+    if (this.modalInstance) {
+      this.modalInstance.show()
+    }else {
+      const modalElement = document.getElementById(this.modalID);
+      if (modalElement) {
+        const modalInstance = new bootstrap.Modal(modalElement);
+        this.modalInstance = modalInstance
+        modalInstance.show();
+      }
     }
   }
 
   hide() {
-    const modalElement = document.getElementById(this.modalID)
-    if (modalElement) {
-      const modalInstance = new bootstrap.Modal(modalElement);
-      modalInstance.hide();
-    }
+    this.modalInstance.hide() 
   }
 
   attributeChangedCallback(name, oldValue, newValue){

@@ -31,6 +31,14 @@ class Modal extends HTMLElement {
     }
   }
 
+  hide() {
+    const modal = document.getElementById(this.modalID)
+    if (modal) {
+      const bootstrapModal = new bootstrap.Modal(modal)
+      bootstrapModal.hide()
+    }
+  }
+
   render() {
     const children = this.childNodes
     let modalBody = Array.from(children).map((child) => {

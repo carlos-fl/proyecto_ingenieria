@@ -2,24 +2,44 @@ let currentIndex = 0;
 let totalPending = 0;
 let currentApplicationCode = null; // Almacenará el APPLICATION_CODE de la solicitud actual
 
+// Limpiar el localStorage al cargar la página
+document.addEventListener("DOMContentLoaded", function () {
+  localStorage.removeItem("pendingApplications");
+  loadPendingCount().then(() => {
+    updateCounter();
+    if (totalPending > 0) {
+      loadRequest();
+    } else {
+      document.getElementById("requestDetails").innerHTML =
+        "<p>No hay solicitudes pendientes.</p>";
+    }
+  });
+});
+
 // Función para actualizar el contador en la parte superior
 function updateCounter() {
   const counterDiv = document.getElementById("counter");
-  counterDiv.innerHTML = `Solicitud ${currentIndex + 1} / ${totalPending}`;
+  if (totalPending === 0) {
+    counterDiv.innerHTML = "No hay solicitudes pendientes";
+  } else {
+    counterDiv.innerHTML = `Solicitudes pendientes: ${totalPending}`;
+  }
 }
 
 // Función para obtener el total de solicitudes pendientes
 function loadPendingCount() {
-  return fetch("/api/reviewers/controllers/getPendingCount.php")
-    .then(response => response.json())
-    .then(data => {
+  return fetch(
+    `/api/reviewers/controllers/getPendingCount.php?reviewer_id=${reviewerId}`
+  )
+    .then((response) => response.json())
+    .then((data) => {
       if (data.status === "success") {
         totalPending = data.count;
       } else {
         totalPending = 0;
       }
     })
-    .catch(error => {
+    .catch((error) => {
       console.error("Error fetching pending count", error);
       totalPending = 0;
     });
@@ -83,54 +103,97 @@ function renderRequest(request) {
 // Listener para actualizar el certificado en la modal al abrirla
 var certificateModal = document.getElementById("certificateModal");
 certificateModal.addEventListener("show.bs.modal", function (event) {
+  certificateModal.removeAttribute("aria-hidden");
+
   var button = event.relatedTarget;
   var certificateUrl = button.getAttribute("data-certificate-url");
   var modalObject = document.getElementById("modalCertificateObject");
   modalObject.setAttribute("data", certificateUrl);
+
   var fallbackLink = modalObject.querySelector("a");
   if (fallbackLink) {
-    fallbackLink.href = "#";
+    fallbackLink.href = certificateUrl;
   }
 });
 
-// Función para cargar la siguiente solicitud pendiente y actualizar la interfaz
+// Función para almacenar una solicitud en el localStorage
+function storeRequestInLocalStorage(request) {
+  let storedRequests =
+    JSON.parse(localStorage.getItem("pendingApplications")) || [];
+  if (!storedRequests.some((item) => item.id === request.id)) {
+    storedRequests.push(request);
+    localStorage.setItem("pendingApplications", JSON.stringify(storedRequests));
+  }
+}
+
+// Función para eliminar una solicitud del localStorage
+function removeFromLocalStorage(applicationCode) {
+  let storedRequests =
+    JSON.parse(localStorage.getItem("pendingApplications")) || [];
+  storedRequests = storedRequests.filter((item) => item.id !== applicationCode);
+  localStorage.setItem("pendingApplications", JSON.stringify(storedRequests));
+}
+
+// Función para cargar la solicitud pendiente
 function loadRequest() {
   const detailsDiv = document.getElementById("requestDetails"); // Contenedor donde se mostrará la tarjeta
-  fetch("/api/reviewers/controllers/getNextPendingApplication.php")
-    .then(response => response.json())
-    .then(data => {
-      // Si la respuesta indica error, mostramos mensaje 
-      if (data.status === "0") {
-        detailsDiv.innerHTML = `<p>${data.error.errorMessage || "No se encontró una aplicación pendiente."}</p>`;
+
+  // Mostrar spinner y mensaje mientras se carga la solicitud
+  detailsDiv.innerHTML = `
+    <div class="d-flex flex-column justify-content-center align-items-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-3">Cargando Solicitudes…</p>
+    </div>
+  `;
+
+  fetch(
+    `/api/reviewers/controllers/getNextPendingApplication.php?reviewer_id=${reviewerId}`
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === "failure") {
+        console.error("La respuesta no contiene data:", data);
+        detailsDiv.innerHTML = `<p>${data.error.errorMessage}</p>`;
         return;
       }
-      
-      // objeto request con los datos obtenidos
+
+      if (!data.data) {
+        console.error("La respuesta no contiene data:", data);
+        detailsDiv.innerHTML = "<p>Error al cargar la aplicación.</p>";
+        return;
+      }
+
+      const application = data.data;
       let request = {
-        id: data.data["APPLICATION_CODE"],
-        nombre: data.data["FIRST_NAME"],
-        apellido: data.data["LAST_NAME"],
-        identidad: data.data["IDENTIDAD"],
-        email: data.data["CORREO"],
-        centroRegional: data.data["CENTRO_REGIONAL"],
-        carreraPrincipal: data.data["CARRERA_PRINCIPAL"],
-        carreraSecundaria: data.data["CARRERA_SECUNDARIA"] || "",
-        certificateUrl: data.data["CERTIFICATE_FILE"]
+        id: application.APPLICATION_CODE,
+        nombre: application.FIRST_NAME,
+        apellido: application.LAST_NAME,
+        identidad: application.DNI,
+        email: application.EMAIL,
+        centroRegional: application.CENTER_NAME,
+        carreraPrincipal: application.MAJOR_NAME,
+        carreraSecundaria: application.SECOND_MAJOR_NAME || "",
+        certificateUrl: application.CERTIFICATE_FILE || "",
       };
 
-      // Guardamos el ID de la solicitud actual para actualizarla al aprobar/rechazar
       currentApplicationCode = request.id;
 
-      // Renderizamos la tarjeta con los datos y la insertamos en el contenedor
+      // Almacenar la solicitud en el localStorage
+      storeRequestInLocalStorage(request);
+
       detailsDiv.innerHTML = renderRequest(request);
 
-      // Se actualiza el atributo data del botón del certificado por si se requiere más adelante
       let certificateBtn = document.getElementById("certificate-btn");
       if (certificateBtn) {
-        certificateBtn.setAttribute("data-certificate-url", request.certificateUrl);
+        certificateBtn.setAttribute(
+          "data-certificate-url",
+          request.certificateUrl
+        );
       }
     })
-    .catch(error => {
+    .catch((error) => {
       console.error("No se pudo traer una aplicación!", error);
       detailsDiv.innerHTML = `<p>Error al cargar la aplicación.</p>`;
     });
@@ -144,16 +207,18 @@ function updateApplicationStatus(applicationCode, status, reason = "") {
     body: JSON.stringify({
       APPLICATION_CODE: applicationCode,
       STATUS: status,
-      REASON: reason
-    })
+      REASON: reason,
+    }),
   })
-  .then(response => response.json())
-  .then(data => {
-    if (data.status !== "success") {
-      throw new Error(data.error.errorMessage || "Error al actualizar la solicitud");
-    }
-    return data;
-  });
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status !== "success") {
+        throw new Error(
+          data.error.errorMessage || "Error al actualizar la solicitud"
+        );
+      }
+      return data;
+    });
 }
 
 // Manejo de eventos para aprobar o rechazar la solicitud
@@ -162,12 +227,19 @@ document.addEventListener("click", function (event) {
     updateApplicationStatus(currentApplicationCode, 1)
       .then(() => {
         alert("Solicitud aprobada");
+        // Remover de localStorage ya que el status cambió
+        removeFromLocalStorage(currentApplicationCode);
         currentIndex++;
         totalPending--;
         updateCounter();
-        loadRequest();
+        if (totalPending > 0) {
+          loadRequest();
+        } else {
+          document.getElementById("requestDetails").innerHTML =
+            "<p>No hay solicitudes pendientes.</p>";
+        }
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error al aprobar la solicitud:", error);
       });
   }
@@ -177,22 +249,21 @@ document.addEventListener("click", function (event) {
       updateApplicationStatus(currentApplicationCode, 2, reason)
         .then(() => {
           alert("Solicitud rechazada: " + reason);
+          // Remover de localStorage ya que el status cambió
+          removeFromLocalStorage(currentApplicationCode);
           currentIndex++;
           totalPending--;
           updateCounter();
-          loadRequest();
+          if (totalPending > 0) {
+            loadRequest();
+          } else {
+            document.getElementById("requestDetails").innerHTML =
+              "<p>No hay solicitudes pendientes.</p>";
+          }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error al rechazar la solicitud:", error);
         });
     }
   }
-});
-
-// Inicializamos la carga del contador y la primera solicitud cuando el DOM esté listo
-document.addEventListener("DOMContentLoaded", function() {
-  loadPendingCount().then(() => {
-    updateCounter();
-    loadRequest();
-  });
 });

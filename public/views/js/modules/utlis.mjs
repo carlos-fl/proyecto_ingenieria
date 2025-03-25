@@ -58,6 +58,7 @@ export function showFailModal(modalErrorId) {
  * this is the id of the custom element with tag-id
  */
 export function showSuccessModal(modalSuccessId) {
+
     const modal = document.getElementById(modalSuccessId)
     modal.show()
 }
@@ -94,9 +95,9 @@ export function relocateWithErrorModal(URL, modalErrorId, modalDuration) {
  * @param {string} modalSuccessId 
  * modal id. The one with tag-id
  * @param {int} modalDuration
- * in milliseconds
+ * in milliseconds default 3200
  */
-export function relocateWithSuccessModal(URL, modalSuccessId, modalDuration) {
+export function relocateWithSuccessModal(URL, modalSuccessId, modalDuration = 2400) {
     showSuccessModal(modalSuccessId)
     setTimeout(() => {
         window.location.replace(URL)
@@ -119,8 +120,10 @@ export function showLoadingComponent(loadingID) {
  * this is the id in tag-id
  */
 export function hideLoadingComponent(loadingID) {
-    const modal = document.getElementById(loadingID)
-    modal.hide()
+    setTimeout(() => {
+        const modal = document.getElementById(loadingID)
+        modal.hide()
+    }, 500)
 }
 
 function parseToCsv(tableId){
