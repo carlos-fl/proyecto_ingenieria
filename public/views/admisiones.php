@@ -104,6 +104,12 @@
     <script src="js/components/navbar.js"></script>
     <script src="js/components/footer.js"></script>
     <script src="js/components/reviewerModal.js"></script>
+    <script>
+        document.getElementById('reviewersBox').addEventListener('click', function() {
+            var myModal = new bootstrap.Modal(document.getElementById('reviewerModal'));
+            myModal.show();
+        });
+    </script>
 </body>
 
 </html>

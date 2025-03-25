@@ -25,6 +25,12 @@
 
   $applicantServiceResponse = ApplicantService::getApplicantSubmittedForm($token);
   
-  http_response_code($applicantServiceResponse->error->errorCode);
+  if ($applicantServiceResponse->status == 'failure') {
+    http_response_code($applicantServiceResponse->error->errorCode);
+    echo json_encode($applicantServiceResponse);
+    return;
+  }
+
+  http_response_code(200);
   echo json_encode($applicantServiceResponse);
   $_SESSION['TOKEN'] = $token;
