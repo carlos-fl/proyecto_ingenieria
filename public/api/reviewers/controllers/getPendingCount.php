@@ -36,7 +36,7 @@ if (!$reviewer_id) {
 }
 
 try {
-    $stmt = $conn->prepare("SELECT COUNT(*) AS pending_count FROM tbl_applications WHERE status = 0 AND reviewer_id = ?");
+    $stmt = $conn->prepare("CALL SP_GET_PENDING_COUNT_BY_REVIEWER(?)");
     $stmt->bind_param("i", $reviewer_id);
     $stmt->execute();
 
