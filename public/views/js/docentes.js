@@ -359,22 +359,43 @@ function downloadGradesFormat(event){
 
 function hasGradeFormat(file){
   // Validar si un archivo csv tiene el formato adecuado
+  function hasNanValues(rowContents){
+    // Check if the row has NaN values where it shouldn't
+    return isNaN(rowContents[0].trim()) || isNaN(rowContents[1].trim())
+  }
+  function scoreOutOfBounds(rowContents){
+    // Check if the row has a score lower than 0 or greater than 100
+    return rowContents[1] < 0 || rowContents[1] > 100
+  }
+  function obsScoreDiffer(rowContents){
+    // Check if the given score and the OBS differ
+    return (rowContents[2] == "APB" && rowContents[1] < 65) || (rowContents[2] == "RPB" && rowContents[1] >= 65) || 
+    (rowContents[2] == "NSP" && rowContents[1] > 0 )
+  }
+  function unsupportedObs(rowContents, permittedObs){
+    // Assert if an unsupported OBS was given
+    return !permittedObs.includes(rowContents[2])
+  }
   return readFileAsText(file).
   then((result) => {
     let response = {status: false, message: ""}
     let fileRows = result.split("\n")
+    let permittedObs = ["apb", "rpb", "nsp", "abd"]
+    let permittedHeader = ["numero de cuenta", "puntaje", "obs"]
+    let incorrect_rows = []
     let header
     let content
     let count 
-    let incorrect_rows = []
     if (fileRows.length == 0){
       response.message = "El archivo no puede estar vacío"
       return response
     }
 
-    header = fileRows[0].split(",")
-    if (header[0].trim().toLowerCase() != "numero de cuenta" || header[1].trim().toLowerCase() != "puntaje"){
+    header = fileRows[0].split(",").map(val => val.trim().toLowerCase())
+    if (JSON.stringify(header) !== JSON.stringify(permittedHeader)){
       response.message = "El archivo debe de incluir el encabezado del formato"
+      console.log(header)
+      console.log(permittedHeader)
       return response
     }
     
@@ -390,14 +411,17 @@ function hasGradeFormat(file){
     count = 1
     incorrect_rows = []
     for (let row of content){
-      let rowContents = row.split(",")
-      if (isNaN(rowContents[0].trim()) || isNaN(rowContents[1].trim()) || rowContents[1] < 0 || rowContents[1] > 100){
+      let rowContents = row.split(",").map(val => val.trim().toLowerCase())
+      if (
+        hasNanValues(rowContents) || scoreOutOfBounds(rowContents) || obsScoreDiffer(rowContents) || 
+        unsupportedObs(rowContents, permittedObs)
+      ){
         incorrect_rows.push(count)
       }
       count++
     }
     if (incorrect_rows.length > 0){
-      response.message = `Las filas ${incorrect_rows.join(", ")} no cumplen con el formato. Por favor, verifique los valores en estas filas. Recuerde, los números de cuenta deben ser válidos y las notas deben ser del 0 al 100`
+      response.message = `Las filas ${incorrect_rows.join(", ")} no cumplen con el formato. Por favor, verifique los valores en estas filas. Recuerde, los números de cuenta deben ser válidos y las notas deben ser del 0 al 100. También, la observación solo puede ser APB, RPB, ABD o NSP y el puntaje y la observación deben de coincidir`
       return response
     }
     response.message = "Archivo válido"
@@ -452,6 +476,7 @@ function uploadGrades(event){
   body.append("csv", fileInput.files[0])
   console.log(body)
   console.log("Notas subidas con éxito")
+  showPopUp("Notas subidas con éxito", "success-popup", "/views/assets/img/checkmark.png")
   fileInput.removeAttribute("disabled")
   event.target.removeAttribute("disabled")
 }

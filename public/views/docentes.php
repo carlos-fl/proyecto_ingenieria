@@ -182,6 +182,7 @@
                 <tr>
                   <th>Numero de cuenta</td>
                   <th>Puntaje</td>
+                  <th>OBS</th>
                 </tr>
               </thead>
             </table>
@@ -192,6 +193,7 @@
                 <tr>
                   <th>Número de Cuenta</th>
                   <th>Puntuación</th>
+                  <th>OBS</th>
                 </tr>
               </thead>
               <tbody>
