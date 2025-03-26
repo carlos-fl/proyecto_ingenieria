@@ -184,7 +184,7 @@ function getTeacherSections() {
   // Conseguir las secciones que imparte un docente
   let classesTableBody = document.getElementById("teacher-sections");
   fetch(
-    `/api/teachers/controllers/teacherSections.php?teacher-number=${localStorage.getItem("employeeNumber")}`,
+    `/api/teachers/controllers/teacherSections.php?`,
     { METHOD: "GET" }
   )
     .then((response) => response.json())
