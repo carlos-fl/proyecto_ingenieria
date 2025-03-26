@@ -34,7 +34,7 @@ function loadPendingCount() {
     .then((response) => response.json())
     .then((data) => {
       if (data.status === "success") {
-        totalPending = data.count;
+        totalPending = data.data.pending_count;
       } else {
         totalPending = 0;
       }
@@ -153,19 +153,27 @@ function loadRequest() {
   )
     .then((response) => response.json())
     .then((data) => {
+
       if (data.status === "failure") {
-        console.error("La respuesta no contiene data:", data);
+        console.error("Error en la respuesta:", data);
         detailsDiv.innerHTML = `<p>${data.error.errorMessage}</p>`;
         return;
       }
 
-      if (!data.data) {
-        console.error("La respuesta no contiene data:", data);
-        detailsDiv.innerHTML = "<p>Error al cargar la aplicación.</p>";
+      if (!data.data || !Array.isArray(data.data) || data.data.length === 0) {
+        console.error("No hay solicitudes pendientes:", data);
+        detailsDiv.innerHTML = "<p>No hay solicitudes pendientes.</p>";
         return;
       }
 
-      const application = data.data;
+      const application = data.data[0]; // Primera solicitud del array
+
+      if (!application || typeof application !== "object") {
+        console.error("La solicitud recibida no es válida:", application);
+        detailsDiv.innerHTML = "<p>Error al procesar la solicitud.</p>";
+        return;
+      }
+
       let request = {
         id: application.APPLICATION_CODE,
         nombre: application.FIRST_NAME,
@@ -183,6 +191,7 @@ function loadRequest() {
       // Almacenar la solicitud en el localStorage
       storeRequestInLocalStorage(request);
 
+      // Renderizar la solicitud
       detailsDiv.innerHTML = renderRequest(request);
 
       let certificateBtn = document.getElementById("certificate-btn");
@@ -194,8 +203,8 @@ function loadRequest() {
       }
     })
     .catch((error) => {
-      console.error("No se pudo traer una aplicación!", error);
-      detailsDiv.innerHTML = `<p>Error al cargar la aplicación.</p>`;
+      console.error("Error al cargar la solicitud:", error);
+      detailsDiv.innerHTML = `<p>Error al cargar la solicitud.</p>`;
     });
 }
 

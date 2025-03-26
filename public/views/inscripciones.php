@@ -52,7 +52,7 @@
                 </div>
                 <div class="mb-3">
                   <label for="phone" class="form-label">Teléfono<span class="text-danger">*</span></label>
-                  <input type="tel" id="phone" name="phone" class="form-control" pattern="[0-9]{8}" placeholder="0000 0000" required />
+                  <input type="tel" id="phone" name="phone" class="form-control" pattern="[0-9]{8}" placeholder="+504 0000 0000" required />
                 </div>
                 <div class="mb-3">
                   <label for="email" class="form-label">Correo<span class="text-danger">*</span></label>
@@ -75,7 +75,7 @@
                   </select>
                 </div>
                 <div class="mb-3">
-                  <label for="main-career" class="form-label">Carrera Principal*</label>
+                  <label for="main-career" class="form-label">Carrera Principal<span class="text-danger">*</span></label>
                   <select id="main-career" name="main-career" class="form-select" required>
                     <option value="">Seleccione una carrera</option>
                   </select>
@@ -109,7 +109,7 @@
 
   <!-- Ventana modal -->
   <reviewer-modal tag-id="reviewer" application="loginRevisorSolicitudesAd.php" exam="./admissions/uploadExamResults/login.php"></reviewer-modal>
-  
+
   <modal-success tag-id="submission-success" modal-id="submission" arial-label-led-by="fileSuccessModal" header-title="Solicitud Enviada Correctamente. Revisa tu correo para confirmación" arial-label="sucess" hidden="false"></modal-success>
 
   <loading-modal tag-id="loading" modal-id="loading-modal"></loading-modal>
