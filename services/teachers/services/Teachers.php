@@ -67,7 +67,7 @@
       try {
           $sections = (object) $db->callStoredProcedure($query, "i", [$teacherNumber], $mysqli);
           if ($sections->num_rows == 0) {
-              return new DataResponse("failure", error: new ErrorResponse(404, "Not Data Found"));
+              return new DataResponse("failure", error: new ErrorResponse(404, "Not Data Found $teacherNumber"));
           }
   
           $sectionsData = $sections->fetch_all(1);
