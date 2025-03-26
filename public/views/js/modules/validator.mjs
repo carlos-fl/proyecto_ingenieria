@@ -13,7 +13,7 @@ export function validDNI(dni) {
 }
 
 export function validPhoneNumber(phone) {
-  let pattern = /^\+504\s?\d{4}(?:[-\s]?)\d{4}$/;
+  let pattern = /^((3[0-9])|([89][0-9]))(?!0{6}$)\d{2}(?:[-\s]?)\d{4}$/;
   let re = new RegExp(pattern);
   return re.test(phone);
 }

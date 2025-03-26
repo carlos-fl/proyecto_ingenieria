@@ -52,7 +52,7 @@
                 </div>
                 <div class="mb-3">
                   <label for="phone" class="form-label">Teléfono<span class="text-danger">*</span></label>
-                  <input type="tel" id="phone" name="phone" class="form-control" pattern="[0-9]{8}" placeholder="+504 0000 0000" required />
+                  <input type="tel" id="phone" name="phone" class="form-control" pattern="[0-9]{8}" placeholder="0000 0000" required />
                 </div>
                 <div class="mb-3">
                   <label for="email" class="form-label">Correo<span class="text-danger">*</span></label>
