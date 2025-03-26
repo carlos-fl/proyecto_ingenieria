@@ -68,9 +68,6 @@
         <section>
             <div class="container text-center">
                 <div class="row row-cols-4">
-                    <a href="requisitosCarreras.php">
-                        <div class="col"><img src="assets/img/Odontologia-color.png" alt=""></div>
-                    </a>
                     <a href="construccion.php">
                         <div class="col"><img src="assets/img/Ciencias-color.png" alt=""></div>
                     </a>
@@ -85,6 +82,15 @@
                     </a>
                     <a href="construccion.php">
                         <div class="col"><img src="assets/img/Ingenieria-color.png" alt=""></div>
+                    </a>
+                    <a href="construccion.php">
+                        <div class="col"><img src="assets/img/Ciencias-Espaciales-color.png" alt=""></div>
+                    </a>
+                    <a href="construccion.php">
+                        <div class="col"><img src="assets/img/Humanidades-y-Artes-color.png" alt=""></div>
+                    </a>
+                    <a href="construccion.php">
+                        <div class="col"><img src="assets/img/Quimica-y-Farmacia-color.png" alt=""></div>
                     </a>
                 </div>
             </div>

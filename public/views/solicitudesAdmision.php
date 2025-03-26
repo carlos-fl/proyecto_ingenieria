@@ -1,4 +1,6 @@
-<?php ?>
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -65,6 +67,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/components/navbar.js"></script>
   <script src="js/components/footer.js"></script>
+  <script>const reviewerId = <?php echo isset($_SESSION['USER_ID']) ? json_encode($_SESSION['USER_ID']) : 'null'; ?>;</script><!--IdReviewer-->
   <script src="js/solicitudesAdmision.js"></script>
   <script src="js/components/log-out.js"></script>
   <script src="js/components/reviewerModal.js"></script>

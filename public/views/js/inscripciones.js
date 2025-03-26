@@ -1,5 +1,12 @@
 // Lógica para la carga de la vista inscripciones.php
-import { changeBorder, hideLoadingComponent, relocateWithErrorModal, relocateWithSuccessModal, showLoadingComponent, showPopUp } from "./modules/utlis.mjs";
+import {
+  changeBorder,
+  hideLoadingComponent,
+  relocateWithErrorModal,
+  relocateWithSuccessModal,
+  showLoadingComponent,
+  showPopUp,
+} from "./modules/utlis.mjs";
 import {
   validDNI,
   validEmail,
@@ -40,9 +47,12 @@ function fetchMajorsByRegionalCenter(event) {
         option.innerText = majorName;
         option.value = majorId;
         mainMajorSelect.appendChild(option);
+        // Clonar la opción para el select secundario
         let clone = option.cloneNode(true);
         secondaryMajorSelect.appendChild(clone);
       }
+      // Una vez que se carguen las carreras, actualizamos las opciones para evitar duplicados.
+      updateCareerOptions();
     })
     .catch((error) => {
       console.log("No se pudieron obtener los datos de este centro", error);
@@ -82,16 +92,52 @@ function fetchRegionalCenters() {
   regionalCentersSelect.addEventListener("change", fetchMajorsByRegionalCenter);
 }
 
+// Función para actualizar las opciones de las carreras y evitar duplicados
+function updateCareerOptions() {
+  const mainCareerSelect = document.getElementById("main-career");
+  const secondaryCareerSelect = document.getElementById("secondary-career");
+
+  // Primero, habilitamos todas las opciones en ambos selects (excepto el placeholder)
+  Array.from(mainCareerSelect.options).forEach((option) => {
+    if (option.value !== "") {
+      option.disabled = false;
+    }
+  });
+  Array.from(secondaryCareerSelect.options).forEach((option) => {
+    if (option.value !== "") {
+      option.disabled = false;
+    }
+  });
+
+  // Si se ha seleccionado una carrera en el principal, deshabilitamos esa opción en el secundario
+  if (mainCareerSelect.value !== "") {
+    const optionToDisable = secondaryCareerSelect.querySelector(
+      `option[value="${mainCareerSelect.value}"]`
+    );
+    if (optionToDisable) {
+      optionToDisable.disabled = true;
+    }
+  }
+
+  // De forma similar, si se ha seleccionado una carrera en el secundario, deshabilitamos esa opción en el principal
+  if (secondaryCareerSelect.value !== "") {
+    const optionToDisableMain = mainCareerSelect.querySelector(
+      `option[value="${secondaryCareerSelect.value}"]`
+    );
+    if (optionToDisableMain) {
+      optionToDisableMain.disabled = true;
+    }
+  }
+}
+
 // Restaura el estilo original de todos los controles del formulario.
 function cleanFormStyle(form) {
-  // Devuelve el formulario a estilo original
   for (let control of form) {
     changeBorder(control, "var(--bs-border-width)", "var(--bs-border-color)");
   }
 }
 
 function emptyFormControls(form) {
-  // Retorna una lista con los controls que estén vacíos
   let empty = [];
   for (let control of form) {
     if (control.value === "" || control.value === null) empty.push(control);
@@ -100,15 +146,9 @@ function emptyFormControls(form) {
 }
 
 function emptyControlStyle(emptyControls) {
-  // Darles en border rojo a los controles dados
   for (let control of emptyControls) {
     changeBorder(control, "var(--bs-border-width)", "red");
   }
-}
-
-function differentOptions(mainCareer, secondaryCareer) {
-  // Verificar si se eligieron dos carreras diferentes
-  return mainCareer.value !== secondaryCareer.value;
 }
 
 // Valida y envía el formulario, mostrando notificaciones en caso de errores y un modal de éxito al completarse.
@@ -139,10 +179,9 @@ function submitForm(event) {
   ];
   let emptyControls = emptyFormControls(form);
   cleanFormStyle(form);
-  if (emptyControls.length != 0) {
-    // Indicar que se debe de llenar los campos obligatorios
+  if (emptyControls.length !== 0) {
     emptyControlStyle(emptyControls);
-    showPopUp("Porfavor, Llene todos los datos");
+    showPopUp("Por favor, llene todos los datos");
     return;
   }
   if (!validDNI(dni.value)) {
@@ -160,12 +199,14 @@ function submitForm(event) {
     showPopUp("Ingrese un correo válido");
     return;
   }
-  if (!differentOptions(mainCareerSelect, secondaryCareerSelect)) {
-    console.log("MISMA CARRERA!");
+  // Aunque el usuario no pueda seleccionar la misma carrera gracias a updateCareerOptions,
+  // se mantiene la verificación en el submit como seguridad adicional.
+  if (mainCareerSelect.value === secondaryCareerSelect.value) {
     emptyControlStyle([mainCareerSelect, secondaryCareerSelect]);
     showPopUp("Elija dos carreras distintas");
     return;
   }
+
   let formData = new FormData();
   formData.append("firstName", firstName.value.trim());
   formData.append("lastName", lastName.value.trim());
@@ -175,26 +216,24 @@ function submitForm(event) {
   formData.append("gender", genderSelect.value);
   formData.append("primaryMajor", mainCareerSelect.value);
   formData.append("secondaryMajor", secondaryCareerSelect.value);
-  formData.append("centerId", regionalCentersSelect.value)
+  formData.append("centerId", regionalCentersSelect.value);
   formData.append("comment", "Envio inscripcion");
   formData.append("certificate", certificateFile.files[0]);
 
-  showLoadingComponent("loading")
+  showLoadingComponent("loading");
   fetch("/api/admissions/controllers/createAdmission.php", {
     method: "POST",
     body: formData,
   })
     .then((response) => response.json())
     .then((data) => {
-      // Mostrar modal de éxito
-      hideLoadingComponent('loading')
-      if (data.status == 'success')
-        relocateWithSuccessModal('/', 'submission-success') 
-      else
-        relocateWithErrorModal('/', 'error-modal', 3100)
+      hideLoadingComponent("loading");
+      if (data.status === "success")
+        relocateWithSuccessModal("/", "submission-success");
+      else relocateWithErrorModal("/", "error-modal", 3100);
     })
     .catch((error) => {
-      hideLoadingComponent("loading")
+      hideLoadingComponent("loading");
       console.log("No se pudo guardar la solicitud", error);
       showPopUp("Error al enviar la solicitud, intente más tarde");
     });
@@ -229,33 +268,22 @@ const submitBtn = document.getElementById("submit-button");
 submitBtn.disabled = true;
 
 function checkFormCompletion() {
-  // Se comprueba que cada campo tenga un valor válido
   let allFilled = formFields.every(
     (field) => field.value && field.value.trim() !== ""
   );
   submitBtn.disabled = !allFilled;
 }
 
-//Bloquear el botón Enviar
+// Bloquear el botón Enviar mientras se completa el formulario
 formFields.forEach((field) => {
   field.addEventListener("input", checkFormCompletion);
   field.addEventListener("change", checkFormCompletion);
 });
 
-//Función para generar el número de solicitud:
-function generateApplicationNumber(length = 10) {
-  const chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let result = "";
-  for (let i = 0; i < length; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
-}
-
 // Valida la identidad ingresada (DNI o Pasaporte) según su formato.
 function validIdentity(value) {
-  const dniRegex = /^(0[1-9]|1[0-8])\d{2}-(19\d{2}|20[0-9]{2})-\d{5}$/;
+  const dniRegex =
+    /^(0[1-9]|1[0-8])\d{2}-(?:(19(?:2[5-9]|[3-9]\d))|(20(?:0\d|1\d|2[0-5])))-\d{5}$/;
   const passportRegex = /^[A-Z]{1,2}[0-9]{6,9}$/;
 
   if (dniRegex.test(value)) {
@@ -327,25 +355,28 @@ function validateField(field) {
     case "gender":
       if (value === "") {
         changeBorder(field, "var(--bs-border-width)", "red");
-        showPopUp(`Seleccione un valor en genero`);
+        showPopUp("Seleccione un valor en género");
         return false;
       }
+      break;
     case "regional-center":
       if (value === "") {
         changeBorder(field, "var(--bs-border-width)", "red");
-        showPopUp(`Seleccione un valor en centro regional`);
+        showPopUp("Seleccione un valor en centro regional");
         return false;
       }
+      break;
     case "main-career":
       if (value === "") {
         changeBorder(field, "var(--bs-border-width)", "red");
-        showPopUp(`Seleccione un valor en carrera principal`);
+        showPopUp("Seleccione un valor en carrera principal");
         return false;
       }
+      break;
     case "secondary-career":
       if (value === "") {
         changeBorder(field, "var(--bs-border-width)", "red");
-        showPopUp(`Seleccione un valor en carrera secundaria`);
+        showPopUp("Seleccione un valor en carrera secundaria");
         return false;
       }
       break;
@@ -359,7 +390,6 @@ function validateField(field) {
     default:
       break;
   }
-  // Si la validación es correcta, restablecemos el borde
   changeBorder(field, "var(--bs-border-width)", "var(--bs-border-color)");
   return true;
 }
@@ -369,6 +399,14 @@ formFieldsBlur.forEach((field) => {
     validateField(field);
   });
 });
+
+// Asignar el evento "change" a los selects de carrera para actualizar las opciones y evitar duplicados
+document
+  .getElementById("main-career")
+  .addEventListener("change", updateCareerOptions);
+document
+  .getElementById("secondary-career")
+  .addEventListener("change", updateCareerOptions);
 
 function main() {
   fetchRegionalCenters();

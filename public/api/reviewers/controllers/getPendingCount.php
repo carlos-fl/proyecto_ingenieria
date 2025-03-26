@@ -24,22 +24,29 @@ $db = new Database(
 
 $conn = $db->getConnection();
 
+$reviewer_id = $_GET["reviewer_id"] ?? null;
+
+if (!$reviewer_id) {
+    http_response_code(400);
+    echo json_encode([
+        "status" => "failure",
+        "error" => ["errorCode" => "400", "errorMessage" => "Missing reviewer_id"]
+    ]);
+    exit;
+}
+
 try {
-    $stmt = $conn->prepare("CALL SP_GET_PENDING_COUNT()");
+    $stmt = $conn->prepare("SELECT COUNT(*) AS pending_count FROM tbl_applications WHERE status = 0 AND reviewer_id = ?");
+    $stmt->bind_param("i", $reviewer_id);
     $stmt->execute();
-    
+
     $result = $stmt->get_result();
     if ($result->num_rows > 0) {
         $count = $result->fetch_assoc();
         echo json_encode(["status" => "success", "data" => $count]);
     } else {
-        http_response_code(404);
-        echo json_encode([
-            "status" => "failure",
-            "error" => ["errorCode" => "404", "errorMessage" => "No pending applications found"]
-        ]);
+        echo json_encode(["status" => "success", "data" => ["pending_count" => 0]]);
     }
-
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode([
@@ -49,4 +56,3 @@ try {
 }
 
 $conn->close();
-?>
