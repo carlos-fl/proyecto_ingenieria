@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . "/../../../../config/database/Database.php";
 require_once __DIR__ . "/../../../../config/env/Environment.php";
-require_once __DIR__ . "/../../../../services/emailNotifications/EmailService.php"; 
+require_once __DIR__ . "/../../../../services/emailNotifications/EmailService.php";
 require_once __DIR__ . "/../../../../services/applicants/AplicantService.php";
 
 header("Content-Type: application/json");
@@ -27,7 +27,7 @@ if (!isset($data["applicationCode"], $data["commentary"]) || empty($data["commen
 }
 
 $applicationCode = $data["applicationCode"];
-$commentary = trim($data["commentary"]); 
+$commentary = trim($data["commentary"]);
 
 $env = Environment::getVariables();
 $db = new Database(
@@ -64,16 +64,14 @@ try {
         $emailTemplatePath = __DIR__ . "/../../../../services/emailNotifications/emailsBlueprints/applicationReject.html";
 
         $token = ApplicantService::generateResubmissionToken();
-        //TODO change this to $env[HOST] for production
-        $link = $env['HOST'] . "/views/admissions/formResubmission/index.php?token=" . $token;
-        $emailData = ["name" => $userName, "application_code" => $applicationCode, "commentary" => $commentary, "link" => $link]; 
+        $link = $env['DB_HOST'] . "/views/admissions/formResubmission/index.php?token=" . $token;
+        $emailData = ["name" => $userName, "application_code" => $applicationCode, "commentary" => $commentary, "link" => $link];
         ApplicantService::sendResubmissionEmail($userEmail, $token, $emailData);
-        
+
         echo json_encode(["status" => "success"]);
     } else {
         throw new Exception("Database error: " . $stmt->error);
     }
-
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode([
@@ -83,4 +81,3 @@ try {
 }
 
 $conn->close();
-?>

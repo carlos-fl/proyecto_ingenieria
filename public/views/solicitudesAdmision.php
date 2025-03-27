@@ -42,7 +42,7 @@ session_start();
   </main>
   <footer-unah></footer-unah>
 
-  <!-- Ventana modal PDF-->
+  <!-- Ventana modal-->
   <div class="modal fade" id="certificateModal" tabindex="-1" aria-labelledby="certificateModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
@@ -50,12 +50,32 @@ session_start();
           <h5 class="modal-title" id="certificateModalLabel">Certificado de Secundaria</h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
-        <div class="modal-body">
-          <object id="modalCertificateObject" data="" type="application/pdf" width="100%" height="600px">
-            <p>Tu navegador no soporta la visualización de PDFs.
-              <a href="" target="_blank">Descarga el certificado</a>.
-            </p>
-          </object>
+        <div class="modal-body" id="modalBody">
+          <div id="spinnerCertificate" style="display: none;" class="d-flex justify-content-center align-items-center mb-3">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+          <!-- Contenedor para PDF -->
+          <div id="pdfViewer" style="display: none;">
+            <object id="pdfObject" data="" type="application/pdf" width="100%" height="600px">
+              <p>Tu navegador no soporta la visualización de PDFs.
+                <a id="pdfDownloadLink" href="" target="_blank">Descargar el certificado</a>.
+              </p>
+            </object>
+          </div>
+          <!-- Contenedor para imágenes -->
+          <div id="imgViewer" style="display: none;">
+            <img id="certificateImg" src="" alt="Certificado" class="img-fluid" />
+          </div>
+          <!-- Contenedor para documentos -->
+          <div id="docViewer" style="display: none;">
+            <iframe id="docIframe" src="" width="100%" height="600px" frameborder="0"></iframe>
+          </div>
+          <!-- Contenedor si no se puede mostrar -->
+          <div id="fallbackViewer" style="display: none;">
+            <p>No se puede visualizar el archivo. <a id="fallbackDownloadLink" href="" target="_blank">Descargar certificado</a>.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -67,7 +87,9 @@ session_start();
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/components/navbar.js"></script>
   <script src="js/components/footer.js"></script>
-  <script>const reviewerId = <?php echo isset($_SESSION['USER_ID']) ? json_encode($_SESSION['USER_ID']) : 'null'; ?>;</script><!--IdReviewer-->
+  <script>
+    const reviewerId = <?php echo isset($_SESSION['USER_ID']) ? json_encode($_SESSION['USER_ID']) : 'null'; ?>;
+  </script><!--IdReviewer-->
   <script src="js/solicitudesAdmision.js"></script>
   <script src="js/components/log-out.js"></script>
   <script src="js/components/reviewerModal.js"></script>
