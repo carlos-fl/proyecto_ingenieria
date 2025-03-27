@@ -1,8 +1,7 @@
-<?php 
+<?php
 require_once __DIR__ . "/../../../../config/database/Database.php";
 require_once __DIR__ . "/../../../../config/env/Environment.php";
 require_once __DIR__ . "/../../../../services/emailNotifications/EmailService.php";
-
 
 header("Content-Type: application/json");
 
@@ -41,7 +40,7 @@ $conn = $db->getConnection();
 
 try {
     $checkStmt = $conn->prepare("SELECT EMAIL, FIRST_NAME, LAST_NAME FROM TBL_APPLICATIONS WHERE APPLICATION_CODE = ?");
-    $checkStmt->bind_param("i", $applicationCode);
+    $checkStmt->bind_param("s", $applicationCode);
     $checkStmt->execute();
     $checkResult = $checkStmt->get_result();
 
@@ -58,10 +57,10 @@ try {
     $userName = $row["FIRST_NAME"] . " " . $row["LAST_NAME"];
 
     $stmt = $conn->prepare("CALL SP_APPROVE_APPLICATION(?)");
-    $stmt->bind_param("i", $applicationCode);
+    $stmt->bind_param("s", $applicationCode);
 
     if ($stmt->execute()) {
-        $emailTemplatePath = __DIR__ . "/../../../../../services/emailNotifications/emailsBlueprints/applicationApprove.html";
+        $emailTemplatePath = "applicationApprove.html";
         EmailService::sendEmail(
             $userEmail,
             "Tu solicitud ha sido aprobada - UNAH",
@@ -76,7 +75,6 @@ try {
     } else {
         throw new Exception("Database error: " . $stmt->error);
     }
-
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode([
@@ -86,4 +84,3 @@ try {
 }
 
 $conn->close();
-?>

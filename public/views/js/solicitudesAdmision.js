@@ -100,20 +100,112 @@ function renderRequest(request) {
   `;
 }
 
-// Listener para actualizar el certificado en la modal al abrirla
+// Función que determina y muestra el visor adecuado según la extensión
+function showCertificate(url) {
+  var spinner = document.getElementById("spinnerCertificate");
+
+  // Si la URL es nula, vacía o no existe, mostrar mensaje y salir
+  if (!url) {
+    if (spinner) spinner.style.display = "none";
+    var modalBody = document.getElementById("modalBody");
+    if (modalBody) {
+      modalBody.innerHTML = `
+        <div class="text-center">
+          <p>No se encontró certificado.</p>
+        </div>
+      `;
+    }
+    return;
+  }
+
+  if (spinner) spinner.style.display = "block";
+
+  // Ocultar todos los contenedores de visor
+  var pdfViewer = document.getElementById("pdfViewer");
+  var imgViewer = document.getElementById("imgViewer");
+  var docViewer = document.getElementById("docViewer");
+  var fallbackViewer = document.getElementById("fallbackViewer");
+
+  if (pdfViewer) pdfViewer.style.display = "none";
+  if (imgViewer) imgViewer.style.display = "none";
+  if (docViewer) docViewer.style.display = "none";
+  if (fallbackViewer) fallbackViewer.style.display = "none";
+
+  // Obtener la extensión del archivo
+  var extension = url.split(".").pop().toLowerCase();
+
+  if (extension === "pdf") {
+    var pdfObject = document.getElementById("pdfObject");
+    if (pdfObject) {
+      pdfObject.setAttribute("data", url);
+      var pdfDownloadLink = document.getElementById("pdfDownloadLink");
+      if (pdfDownloadLink) pdfDownloadLink.setAttribute("href", url);
+      // Cuando se cargue el PDF, ocultar el spinner
+      pdfObject.onload = function () {
+        if (spinner) spinner.style.display = "none";
+      };
+      if (pdfViewer) pdfViewer.style.display = "block";
+    }
+  } else if (["jpg", "jpeg", "png", "gif", "tiff", "bmp"].includes(extension)) {
+    var certificateImg = document.getElementById("certificateImg");
+    if (certificateImg) {
+      certificateImg.onload = function () {
+        if (spinner) spinner.style.display = "none";
+      };
+      certificateImg.setAttribute("src", url);
+      if (imgViewer) imgViewer.style.display = "block";
+    }
+  } else if (
+    ["doc", "docx", "xls", "xlsx", "ppt", "pptx"].includes(extension)
+  ) {
+    var viewerUrl =
+      "https://docs.google.com/gview?url=" +
+      encodeURIComponent(url) +
+      "&embedded=true";
+    var docIframe = document.getElementById("docIframe");
+    if (docIframe) {
+      docIframe.onload = function () {
+        if (spinner) spinner.style.display = "none";
+      };
+      docIframe.setAttribute("src", viewerUrl);
+      if (docViewer) docViewer.style.display = "block";
+    }
+  } else {
+    var fallbackDownloadLink = document.getElementById("fallbackDownloadLink");
+    if (fallbackDownloadLink) fallbackDownloadLink.setAttribute("href", url);
+    // Si no hay visor definido, ocultamos el spinner inmediatamente
+    if (spinner) spinner.style.display = "none";
+    if (fallbackViewer) fallbackViewer.style.display = "block";
+  }
+}
+
+// Listener para actualizar el contenido del modal al abrirlo
 var certificateModal = document.getElementById("certificateModal");
 certificateModal.addEventListener("show.bs.modal", function (event) {
   certificateModal.removeAttribute("aria-hidden");
 
   var button = event.relatedTarget;
   var certificateUrl = button.getAttribute("data-certificate-url");
-  var modalObject = document.getElementById("modalCertificateObject");
-  modalObject.setAttribute("data", certificateUrl);
 
-  var fallbackLink = modalObject.querySelector("a");
-  if (fallbackLink) {
-    fallbackLink.href = certificateUrl;
+  // Mostrar spinner y mensaje mientras se carga el certificado en el modal
+  var modalBody = document.getElementById("modalBody");
+  if (modalBody) {
+    modalBody.innerHTML = `
+      <div class="d-flex flex-column justify-content-center align-items-center">
+        <div id="spinnerCertificate" class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-3">Cargando Certificado…</p>
+      </div>
+    `;
   }
+
+  // Llamar a la función que mostrará el certificado en el visor correspondiente
+  showCertificate(certificateUrl);
+});
+
+certificateModal.addEventListener("hidden.bs.modal", function () {
+  certificateModal.setAttribute("aria-hidden", "true");
 });
 
 // Función para almacenar una solicitud en el localStorage
@@ -153,7 +245,6 @@ function loadRequest() {
   )
     .then((response) => response.json())
     .then((data) => {
-
       if (data.status === "failure") {
         console.error("Error en la respuesta:", data);
         detailsDiv.innerHTML = `<p>${data.error.errorMessage}</p>`;
@@ -232,32 +323,19 @@ function updateApplicationStatus(applicationCode, status, reason = "") {
 
 // Manejo de eventos para aprobar o rechazar la solicitud
 document.addEventListener("click", function (event) {
+  // Aprobar solicitud
   if (event.target && event.target.id === "approveButton") {
-    updateApplicationStatus(currentApplicationCode, 1)
-      .then(() => {
-        alert("Solicitud aprobada");
-        // Remover de localStorage ya que el status cambió
-        removeFromLocalStorage(currentApplicationCode);
-        currentIndex++;
-        totalPending--;
-        updateCounter();
-        if (totalPending > 0) {
-          loadRequest();
-        } else {
-          document.getElementById("requestDetails").innerHTML =
-            "<p>No hay solicitudes pendientes.</p>";
-        }
-      })
-      .catch((error) => {
-        console.error("Error al aprobar la solicitud:", error);
-      });
-  }
-  if (event.target && event.target.id === "rejectButton") {
-    let reason = prompt("Ingrese el motivo de rechazo:");
-    if (reason) {
-      updateApplicationStatus(currentApplicationCode, 2, reason)
-        .then(() => {
-          alert("Solicitud rechazada: " + reason);
+    fetch("/api/reviewers/controllers/approveApplication.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        applicationCode: currentApplicationCode,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          alert("Solicitud aprobada");
           // Remover de localStorage ya que el status cambió
           removeFromLocalStorage(currentApplicationCode);
           currentIndex++;
@@ -268,6 +346,49 @@ document.addEventListener("click", function (event) {
           } else {
             document.getElementById("requestDetails").innerHTML =
               "<p>No hay solicitudes pendientes.</p>";
+          }
+        } else {
+          throw new Error(
+            data.error.errorMessage || "Error al aprobar la solicitud"
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Error al aprobar la solicitud:", error);
+      });
+  }
+
+  // Rechazar solicitud
+  if (event.target && event.target.id === "rejectButton") {
+    let reason = prompt("Ingrese el motivo de rechazo:");
+    if (reason) {
+      fetch("/api/reviewers/controllers/rejectApplication.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          applicationCode: currentApplicationCode,
+          commentary: reason,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "success") {
+            alert("Solicitud rechazada: " + reason);
+            // Remover de localStorage ya que el status cambió
+            removeFromLocalStorage(currentApplicationCode);
+            currentIndex++;
+            totalPending--;
+            updateCounter();
+            if (totalPending > 0) {
+              loadRequest();
+            } else {
+              document.getElementById("requestDetails").innerHTML =
+                "<p>No hay solicitudes pendientes.</p>";
+            }
+          } else {
+            throw new Error(
+              data.error.errorMessage || "Error al rechazar la solicitud"
+            );
           }
         })
         .catch((error) => {
