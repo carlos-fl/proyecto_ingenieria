@@ -25,23 +25,28 @@
   <div class="container bg-white">
     <user-profile
     profile-title="Subir Resultados Admisión"
-    profile-img="<?php echo $_SESSION['PHOTO'] ?>"
+    profile-img="<?php echo base64_encode($_SESSION['PHOTO']) ?>"
     welcome-msg="Bienvenido a Sistema Admisión"
-    user-number="123456"
+    user-number="<?php echo $_SESSION['DNI'] ?>"
     user-name="<?php echo $_SESSION['FIRST_NAME'] . $_SESSION['LAST_NAME'] ?>"
     user-phone="<?php echo $_SESSION['PHONE'] ?>"
     user-email="<?php echo $_SESSION['INST_EMAIL'] ?>"
     >
     </user-profile>
-    <div class="upload-wrapper mb-3">
+    <div class="upload-wrapper mb-3 d-flex justify-content-center align-items-center">
+      <div class="me-2">
         <label for="csvFile" class="upload-btn">Subir Resultados</label>
         <input type="file" id="csvFile" name="csvFile" accept=".csv">
+      </div>
+      <div>
+        <button class="download-btn" id="admission-blueprint">Descargar formato</button>
+      </div>
     </div>
   </div>
 
   <loading-modal tag-id="loading" modal-id="loading-modal"></loading-modal>
 
-  <modal-error tag-id="csv-upload" modal-id="file-upload" arial-label-led-by="fileErrorModal" header-title="No se pudo procesar el archivo" arial-label="TEXT" hidden="false"></modal-error>
+  <modal-error tag-id="csv-upload" modal-id="file-upload" arial-label-led-by="fileErrorModal" header-title="" arial-label="TEXT" hidden="false"></modal-error>
 
   <modal-success tag-id="csv-upload-s" modal-id="file-upload-s" arial-label-led-by="fileSuccessModal" header-title="Archivo subido Correctamente" arial-label="sucess" hidden="false"></modal-success>
   <reviewer-modal tag-id="reviewer" application="../../loginRevisorSolicitudesAd.php" exam="./login.php"></reviewer-modal>
@@ -60,5 +65,6 @@
   <script src="../../js/components/successModal.js"></script>
   <script src="../../js/components/pop-up.js"></script>
   <script type="module" src="./controllers/parseCsv.js"></script>
+  <script type="module" src="./controllers/downloadBlueprint.js"></script>
 </body>
 </html>

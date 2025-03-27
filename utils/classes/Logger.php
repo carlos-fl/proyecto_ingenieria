@@ -2,6 +2,7 @@
 
   include_once __DIR__ . '/../../services/auth/types/loginRequest.php';
   include_once __DIR__ . '/../functions/jsonParse.php';
+  include_once __DIR__ . '/../../services/contentManagement/ContentManagement.php';
 
   class Logger {
     public static function loginAuth(string $role) {
@@ -41,13 +42,15 @@
         "error" => null
       ]);
 
+      $imageBlob = ContentManagement::getFileData($sessionData->user->PHOTO);
+
       $_SESSION['FIRST_NAME'] = $sessionData->user->FIRST_NAME; 
       $_SESSION['LAST_NAME'] = $sessionData->user->LAST_NAME; 
       $_SESSION['DNI'] = $sessionData->user->DNI; 
       $_SESSION['INST_EMAIL'] = $sessionData->user->INST_EMAIL; 
       $_SESSION['PERSONAL_EMAIL'] = $sessionData->user->PERSONAL_EMAIL; 
       $_SESSION['ROLES'] = $sessionData->roles; 
-      $_SESSION['PHOTO'] = $sessionData->user->PHOTO;
+      $_SESSION['PHOTO'] = $imageBlob;
       $_SESSION['PHONE'] = $sessionData->user->PHONE_NUMBER;
       $_SESSION['USER'] = $sessionData->user;
     }

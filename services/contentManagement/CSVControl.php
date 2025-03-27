@@ -57,10 +57,18 @@
       $db = Database::getDatabaseInstace();
       $mysqli = $db->getConnection();
 
-      $query_save_on_load = "CALL SP_SAVE_CSV_IN_TEMP(?)";
+      $query_save_on_load = "LOAD DATA LOCAL INFILE '$filePath' 
+                            INTO TABLE TBL_TEMP
+                            FIELDS TERMINATED BY ',' 
+                            LINES TERMINATED BY '\n'
+                            IGNORE 1 LINES;
+                            ";
       $query_save_res = "CALL SP_SAVE_ADMISSION_EXAM_RESULT()";
       try {
-        $db->callStoredProcedure($query_save_on_load, "s", [$filePath], mysqli: $mysqli);
+        //MYSQLI_OPT_LOCAL_INFILE is the 8 value
+        $mysqli->options(8, true);
+        $mysqli->query($query_save_on_load);
+        //$db->callStoredProcedure($query_save_on_load, "s", [$filePath], mysqli: $mysqli);
       } catch (Throwable $err) {
         return new CSVProcessStatus("failure", new ErrorResponse(500, $err->getMessage() . "1"));
       }
