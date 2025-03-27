@@ -41,11 +41,11 @@ export class CSV {
           const csvText = fileReader.result
           if (!this.#isValidFormat(csvText, columns)) {
             hideLoadingComponent(loadingID)
-            showFailModal(errorModalID)
+            showFailModal(errorModalID, "Formato inválido de columnas")
           } else {
             if (!this.#isValidData(csvText)) {
               hideLoadingComponent(loadingID)
-              showFailModal(errorModalID)
+              showFailModal(errorModalID, 'Los datos no concuerdan con las columnas')
               return
             }
             
@@ -59,19 +59,19 @@ export class CSV {
               if (res.status == 'success') {
                 showSuccessModal(successModalID)
               } else {
-                showFailModal(errorModalID)
+                showFailModal(errorModalID, "No se pudo guardar en el servidor... Intente de nuevo")
               }
               
             } catch(err) {
               hideLoadingComponent(loadingID)
-              showFailModal(errorModalID)
+              showFailModal(errorModalID, "Error del servidor al guardar... Intente de nuevo")
             }
           }
 
         })
 
       } catch(err) {
-        showFailModal(errorModalID)
+        showFailModal(errorModalID, err.message)
       }
     })
   } 

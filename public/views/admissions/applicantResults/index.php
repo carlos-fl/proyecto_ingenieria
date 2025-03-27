@@ -31,6 +31,8 @@
     <d-table id="tb" body-id="table-body-results" table-row='["Examen", "Fecha", "Calificación", "Numero de Solicitud"]'></d-table>
   </d-modal>
 
+  <loading-modal loading-id="loading" modal-id="loading-modal"></loading-modal>
+
 <!-- pop up to show errors -->
   <pop-up
     id="popUp"
@@ -68,6 +70,7 @@
   <script src="../../js/components/pop-up.js"></script>
   <script src="../../js/components/footer.js"></script>
   <script src="../../js/components/table.js"></script>
+  <script src="../../js/components/loading.js"></script>
   <script type="module" src="../../js/resultados.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

@@ -47,8 +47,9 @@ export function loginFailHandler(){
  * @param {string} modalErrorId 
  * this is the id of the custom element with tag-id
  */
-export function showFailModal(modalErrorId) {
+export function showFailModal(modalErrorId, message="Hubo un error...") {
     const modal = document.getElementById(modalErrorId)
+    modal.setAttribute('header-title', message)
     modal.show()
 }
 
@@ -194,4 +195,19 @@ export function cleanTableBody(table){
 }
 
 
-  
+/**
+ * 
+ * @param {string} fileName 
+ * this is how the file will be called when user downloads it
+ * @param {blob} blob 
+ * blob file
+ */ 
+export function downloadFile(fileName, blob) {
+    let downloadLink = document.createElement("a");
+    downloadLink.download = fileName;
+    downloadLink.href = window.URL.createObjectURL(blob);
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+}

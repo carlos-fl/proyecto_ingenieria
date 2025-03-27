@@ -6,8 +6,10 @@ class failModal extends HTMLElement {
     this.ariaLabelLedBy = ''
     this.arialLabel = ''
     this.hidden = "true"
-    this.headerTitle = ''
   }
+
+  static observedAttributes = ['header-title']
+
 
   connectedCallback(){
     this.modalErrorID = this.getAttribute('tag-id')

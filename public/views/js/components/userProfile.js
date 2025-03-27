@@ -35,7 +35,7 @@ class UserProfile extends HTMLElement {
                       </div>
                       <div class="d-flex flex-row justify-content-between align-items-center profile-container-body-info">
                         <div class="profile-container-body-info-img">
-                          <img src=${ this.profileImg } alt=${ this.imgDescription ?? 'Foto perfil del usuario' }>
+                          <img src=${"data:image/png;base64," + this.profileImg } alt=${ this.imgDescription ?? 'Foto perfil del usuario' }>
                         </div>
                         <div class="profile-container-body-info-personal">
                           <section>

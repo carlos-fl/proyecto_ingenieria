@@ -28,4 +28,19 @@
       $mysqli->close();
       return new GetResponse(status: 'success', data: $resourcesResult->fetch_all(1));
     }
+
+
+    public static function downloadUploadAdmissionExamResultsFormat(): void {
+      $filepath = __DIR__ . '/../../../uploads/files/admissionsBlueprint.csv';
+      if (!file_exists($filepath)) {
+        echo json_encode([
+          "status" => "failure",
+          "error" => [
+            "errorCode" => 404,
+            "errorMessage" => "Data Not Found",
+          ]
+        ]);
+      }
+      readfile($filepath);
+    }
   }

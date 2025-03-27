@@ -1,5 +1,5 @@
 import { Request } from "./modules/request.mjs";
-import { disableBtn, showModal, changeBorder, showPopUp } from "./modules/utlis.mjs";
+import { disableBtn, showModal, changeBorder, showPopUp, showLoadingComponent, hideLoadingComponent } from "./modules/utlis.mjs";
 import { validApplicantCode } from "./modules/validator.mjs";
 
 // Función para cargar y mostrar resultados; se utiliza el arreglo filtrado (si existe)
@@ -39,9 +39,11 @@ function loadResults(filteredResults) {
       }
 
       try {
+        showLoadingComponent('loading')
         const ENDPOINT = "/api/auth/controllers/applicantAuth.php"
         const body = { applicantCode: searchValue.value.trim() }
         const examResults = await Request.fetch(ENDPOINT, 'POST', body);
+        hideLoadingComponent('loading')
         if (examResults.status === "failure") {
           showPopUp("No se encontraron Resultados")
           return;
