@@ -28,7 +28,7 @@
     <main>
         <login-form action="/api/auth/controllers/examReviewer.php" imgSource="../../assets/img/unah.png" imgAlt="Logo UNAH"
             heading="Resultados" message="Debe autenticarse como revisor para usar este servicio" id="login-form"
-            data-redirect-success="solicitudeAdmision.php">
+            data-redirect-success="./index.php">
         </login-form>
     </main>
 
