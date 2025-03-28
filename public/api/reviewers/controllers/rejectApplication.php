@@ -64,7 +64,7 @@ try {
         $emailTemplatePath = __DIR__ . "/../../../../services/emailNotifications/emailsBlueprints/applicationReject.html";
 
         $token = ApplicantService::generateResubmissionToken();
-        $link = $env['DB_HOST'] . "/views/admissions/formResubmission/index.php?token=" . $token;
+        $link = $env['HOST'] . "/views/admissions/formResubmission/index.php?token=" . $token;
         $emailData = ["name" => $userName, "application_code" => $applicationCode, "commentary" => $commentary, "link" => $link];
         ApplicantService::sendResubmissionEmail($userEmail, $token, $emailData);
 
