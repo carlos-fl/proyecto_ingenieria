@@ -89,8 +89,6 @@ function loadShowSectionData(event) {
     })
     .then((data) => {
       if (data.status === "failure"){
-        console.log("No se pudo traer la lista de estudiantes")
-        console.log(data.response)
         return
       }
       let studentTableBody = studentTable.querySelector("tbody");;
@@ -130,7 +128,6 @@ function showUploadGradesModal(event){
 
 function getYoutubeVideoId(youtubeVideoUrl){
   let queryString = `?${youtubeVideoUrl.split("?")[1]}`
-  console.log(queryString)
   let urlParams = new URLSearchParams(queryString)
   return urlParams.get("v")
 }
@@ -165,7 +162,6 @@ function fetchVideo(event){
   })
   .catch((error) => {
     showPopUp("Hubo un error con el servidor ")
-    console.log(error.message)
   })
 }
 
@@ -341,7 +337,6 @@ function uploadVideo(event){
   .catch((error) =>{
     showPopUp("No se pudo guardar el video")
     event.target.removeAttribute("disabled")
-    console.log(error)
   })
 }
 
@@ -369,8 +364,8 @@ function hasGradeFormat(file){
   }
   function obsScoreDiffer(rowContents){
     // Check if the given score and the OBS differ
-    return (rowContents[2] == "APB" && rowContents[1] < 65) || (rowContents[2] == "RPB" && rowContents[1] >= 65) || 
-    (rowContents[2] == "NSP" && rowContents[1] > 0 )
+    return (rowContents[2] == "apb" && rowContents[1] < 65) || (rowContents[2] == "rpb" && rowContents[1] >= 65) || 
+    (rowContents[2] == "nsp" && rowContents[1] > 0 )
   }
   function unsupportedObs(rowContents, permittedObs){
     // Assert if an unsupported OBS was given
@@ -394,8 +389,6 @@ function hasGradeFormat(file){
     header = fileRows[0].split(",").map(val => val.trim().toLowerCase())
     if (JSON.stringify(header) !== JSON.stringify(permittedHeader)){
       response.message = "El archivo debe de incluir el encabezado del formato"
-      console.log(header)
-      console.log(permittedHeader)
       return response
     }
     
@@ -459,26 +452,46 @@ function permitGradeUpload(event){
 
 function uploadGrades(event){
   let fileInput = document.getElementById("uploadGradesInput")
+  let file = fileInput.files[0]
   let body = new FormData()
-  let tableRows = document.getElementById("uploadedGradesTable").querySelectorAll("tbody tr")
-  let grades = {grades: []}
   let gradesModal = document.getElementById("notasModal")
   let sectionId = gradesModal.dataset.currentSection
   fileInput.setAttribute("disabled", "disabled")
   event.target.setAttribute("disabled", "disabled")
-  for (let row of tableRows){
-    let cols = row.querySelectorAll("td")
-    let grade =  {accountNumber: cols[0].innerText.trim(), result: cols[1].innerText.trim()}
-    grades.grades.push(grade)
-  }
   body.append("sectionId", sectionId)
-  body.append("grades", JSON.stringify(grades))
   body.append("csv", fileInput.files[0])
-  console.log(body)
-  console.log("Notas subidas con éxito")
-  showPopUp("Notas subidas con éxito", "success-popup", "/views/assets/img/checkmark.png")
-  fileInput.removeAttribute("disabled")
-  event.target.removeAttribute("disabled")
+  fetch(`/api/teachers/controllers/uploadGrades.php?sectionId=${sectionId}`, {
+    method: "POST",
+    body: body
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status == "failure"){
+      let uploadGradesInputInfo = document.getElementById("uploadGradesInputInfo")
+      showPopUp("No se pudieron actualizar las notas")
+      uploadGradesInputInfo.innerText = data.message
+      uploadGradesInputInfo.className = "text-danger p-1 mt-1"
+      return
+    }
+    showPopUp("Notas subidas con éxito", "success-popup", "/views/assets/img/checkmark.png")
+    if (data.data){
+      let notFoundStudents = data.data["notFoundStudents"]
+      uploadGradesInputInfo.innerText = `Los estudiantes con los números de cuenta:\n ${notFoundStudents.join("\n")}
+      no se encuentran asignados a su sección, por lo que sus notas no fueron actualizadas. Porfavor, revise estos valores.\nLas demás si calificaciones fueron actualizadas en el sistema`
+      uploadGradesInputInfo.className = "text-danger p-1 mt-1"
+      return
+    }
+    document.getElementById("closeGradesModal").click()
+    }
+  )
+  .catch(
+    showPopUp("Hubo un problema con el servidor")
+  )
+  .finally( () => {
+    fileInput.removeAttribute("disabled")
+    event.target.removeAttribute("disabled")
+    }
+  )
 }
 
 function cleanUploadGradesModal(event){
@@ -517,7 +530,6 @@ function main() {
   uploadGradesInput.addEventListener("change", permitGradeUpload)
   uploadGradesBtn.addEventListener("click", uploadGrades)
   uploadGradesModal.addEventListener("hide.bs.modal", cleanUploadGradesModal)
-  
 }
 
 main()

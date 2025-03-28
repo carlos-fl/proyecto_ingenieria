@@ -167,7 +167,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="notasModalLabel">Subir Notas <span class="titleSuffix"></span></h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          <button type="button" id="closeGradesModal" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
           <div class="mb-3">
