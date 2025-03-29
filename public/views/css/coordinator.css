@@ -1,0 +1,41 @@
+.container {
+  display: flex;
+  margin-top: 10px;
+  width: 95vw;
+  height: 70vh;
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: white;
+}
+
+.request-container {
+  border-right: solid 1px gray;
+  width: 40%;
+  height: 100%;
+}
+
+.request-view-container {
+  width: 100%;
+}
+
+.side-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+#side-buttons > button {
+  width: 100%;
+  margin-bottom: 2px;
+}
+
+.b {
+  background-color: var(--secondary-color) !important;
+  color: var(--white) !important;
+}
+
+.b-focus {
+  background-color: var(--primary-color) !important;
+  color: var(--white) !important;
+}

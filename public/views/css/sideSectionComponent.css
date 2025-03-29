@@ -1,0 +1,19 @@
+.side-section-c {
+  max-width: 300px;
+}
+
+h1 {
+  color: #0000;
+}
+
+.container-s {
+  background-color: white;
+  width: 90%;
+  margin: 40px auto;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.w-80 {
+  width: 80%;
+}
