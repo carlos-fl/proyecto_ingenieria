@@ -1,0 +1,125 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1%;
+  width: 100%;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.row {
+  width: 104%;
+}
+
+.sidebar {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas: "hd""mn""ft";
+}
+
+.col-sm-3 {
+  width: 20% !important;
+  border-right: 1px solid !important;
+}
+
+.list-group-item {
+  transition: background-color 0.3s ease, border 0.3s ease;
+}
+
+.list-group-item:hover {
+  background-color: grey;
+  border: 1px solid #ccc !important;
+}
+
+.col-8.col-sm-6 {
+  width: 100% !important;
+}
+
+#user-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#profile-img{
+  display: flex;
+  width: 100%;
+  height: auto;
+  align-items: center;
+}
+
+#left-bar-h {
+  padding: 1.5% !important;
+  color: rgb(0, 0, 0);
+  border-bottom: 1px solid;
+  width: 100% !important;
+  margin-bottom: 5%;
+}
+
+#profile-bar-h {
+  text-align: left;
+  padding: 10px !important;
+  color: rgb(0, 0, 0);
+  border-bottom: 1px solid;
+  width: 100% !important;
+}
+
+.rounded {
+  width: 15%;
+  height: auto !important;
+  overflow: hidden;
+}
+
+#welcome-msg {
+  text-align: right;
+  margin-top: 1%;
+  margin-bottom: 5%;
+}
+
+.info-card {
+  margin: 0px auto;
+  margin-top: 2%;
+  width: 100%;
+  border: 1px solid #000;
+  border-radius: 4px;
+  padding: 6px;
+  position: relative;
+}
+
+.info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.info-row span {
+  flex: 1;
+  text-align: center;
+}
+
+.info-labels span {
+  color: #999;
+}
+
+.edit-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.edit-btn i {
+  color: #007bff;
+}
+
+  .sidebar {
+    padding: 1%;
+  }

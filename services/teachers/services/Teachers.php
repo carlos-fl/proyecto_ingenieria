@@ -7,6 +7,7 @@
   include_once __DIR__ . '/../../../utils/types/postResponse.php';
   include_once __DIR__ . '/../types/SectionsResponse.php';
   include_once __DIR__ . '/../types/TeacherData.php';
+  include_once __DIR__ . '/../types/DataResponse.php';
   include_once __DIR__ . '/../types/SectionData.php';
   
   class TeacherService {
@@ -230,5 +231,45 @@
       }catch (Throwable $error){
         return false;
       }
+    }
+
+    public static function uploadGrades(int $sectionId, int $userId, array $grades){
+      if (!self::hasSection($sectionId, $userId)) {
+        return new DataResponse("failure", error: new ErrorResponse(404, "Section not assigned to user"));
+      }
+      try{
+          $notFoundStudents = array();
+          self::uploadGradesDB($sectionId, $grades, $notFoundStudents);
+          return new DataResponse("success", data: ["notFoundStudents" => $notFoundStudents]);
+      }catch (Throwable $error){
+        return new DataResponse("failure", error: new ErrorResponse(500, "Error with DB Connection. ERROR: $error"));
+      }
+    }
+
+    /**
+     *  @param sectionId:  Id of the section the student is part of
+     *  @param grades: Student grades ["Numero de Cuenta"=>, "Puntaje"=>, "OBS"=>]
+     *  @param nofFoundStudents: Student grades Array passed by reference to manage students that were not found in the section
+     */
+    private static function uploadGradesDB($sectionId, $grades, array &$notFoundStudents): void{
+      // Upload grades to the database}
+      $db = Database::getDatabaseInstace();
+      $mysqli = $db->getConnection();
+      $hasStudentSp = "CALL SP_SECTION_HAS_STUDENT(?, ?)";
+      $uploadGradesSp = "CALL SP_UPLOAD_GRADE(?, ?, ?, ?)";
+      foreach($grades as $grade){
+        $accountNumber = $grade["Numero de cuenta"];
+        $obs = $grade["OBS"];
+        $score = $grade["Puntaje"];
+        $hasStudent = (object) $db->callStoredProcedure($hasStudentSp, "ii", [$sectionId, $accountNumber], $mysqli);
+        if (!$hasStudent->fetch_assoc()["RESULT"]){
+          // Professor doesn't have given student in its section
+          $notFoundStudents[] = $accountNumber;
+          continue;
+        }
+        // Update the student's results
+        (object) $db->callStoredProcedure($uploadGradesSp, "iiis", [$sectionId, $accountNumber, $score, $obs], $mysqli);
+      }
+      $mysqli->close();
     }
   }
