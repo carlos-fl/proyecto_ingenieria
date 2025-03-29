@@ -1,3 +1,10 @@
+<?php 
+
+  if (empty($_SESSION) || !in_array("COORDINATOR", $_SESSION['ROLES'])) {
+    header('Location: /');
+  }
+
+?>
 
 <!DOCTYPE html>
 <html lang="es">
