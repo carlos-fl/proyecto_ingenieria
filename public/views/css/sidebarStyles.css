@@ -1,0 +1,17 @@
+.sidebar{
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas: "hd" "mn" "ft";
+}
+
+.sidebar-hd{
+    grid-area: hd
+}
+
+.sidebar-mn{
+    grid-area: mn;
+}
+
+.sidebar-ft{
+    grid-area: ft
+}
