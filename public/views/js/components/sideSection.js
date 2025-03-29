@@ -23,7 +23,7 @@ class SideSection extends HTMLElement {
       <div>
         <h1 class="text-black">UNAH</h1> 
       </div>
-      <div class="d-flex flex-column justify-content-between align-items-center h-50">${ elements }</div>
+      <div id="side-buttons" class="d-flex flex-column justify-content-center align-items-center h-50">${ elements }</div>
       <div>
         <log-out></log-out> 
       </div>

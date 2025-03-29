@@ -1,0 +1,6 @@
+.b {
+  background-color: var(--secondary-color) !important;
+  color: var(--white) !important;
+  width: 100%;
+  margin-bottom: 2px;
+}

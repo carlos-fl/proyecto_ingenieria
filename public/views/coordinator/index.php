@@ -1,10 +1,4 @@
-<?php 
 
-  if (empty($_SESSION) || !in_array('COORDINATOR', $_SESSION['ROLES'])) {
-    header('Location: /views/loginDocentes.php');
-  }
-
-?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -15,6 +9,7 @@
   <link rel="icon" type="image/png" href="../assets/img/UNAH-escudo.png" />
   <link rel="stylesheet" href="../css/sideSectionComponent.css">
   <link rel="stylesheet" href="../css/userProfileComponent.css">
+  <link rel="stylesheet" href="../css/coordinatorHome.css">
   <link rel="stylesheet" href="../css/styles.css" />
   <!--<link rel="stylesheet" href="../css/docentesStyles.css" />-->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -51,11 +46,11 @@
           <d-table table-row='["clase", "seccion", "horario", "uv"]'></d-table>
         </div>
       </div>
-      <div class="order-1 border border-right ">
+      <div class="order-1 border border-right">
         <side-section>
-          <button>VER SOLICITUDES</button>
-          <button>VER HISTORIAL ESTUDIANTES</button>
-          <button>VER CARGA ACADÉMICA</button>
+          <button class="btn btn-sm b">VER SOLICITUDES</button>
+          <button class="btn btn-sm b">VER HISTORIAL ESTUDIANTES</button>
+          <button class="btn btn-sm b">VER CARGA ACADÉMICA</button>
         </side-section>
       </div>
     </div>

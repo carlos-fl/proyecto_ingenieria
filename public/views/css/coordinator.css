@@ -18,7 +18,16 @@
   width: 100%;
 }
 
-.request-nav-container {
+.side-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+#side-buttons > button {
+  width: 100%;
+  margin-bottom: 2px;
 }
 
 .b {
