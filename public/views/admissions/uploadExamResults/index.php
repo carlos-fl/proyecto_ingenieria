@@ -1,3 +1,6 @@
+<?php 
+  session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,7 +30,7 @@
     user-email="<?php echo $_SESSION['INST_EMAIL'] ?>"
     >
     </user-profile>
-    <div class="upload-wrapper mb-3 d-flex justify-content-center align-items-center">
+    <div class="upload-wrapper mb-3 d-flex justify-content-center align-items-center p-4">
       <div class="me-2">
         <label for="csvFile" class="upload-btn">Subir Resultados</label>
         <input type="file" id="csvFile" name="csvFile" accept=".csv">

@@ -3,6 +3,7 @@ class UserProfile extends HTMLElement {
     super()
   }
 
+  static observedAttributes = ['profile-title', 'welcome-msg', 'profile-img', 'desc-img', 'user-number', 'user-email', 'user-name', 'user-phone']
 
   connectedCallback(){
     this.profileTitle = this.getAttribute('profile-title')
@@ -22,8 +23,9 @@ class UserProfile extends HTMLElement {
   }
 
   render() {
+    this.setAttribute('id', 'user-profile')
     this.innerHTML = `
-                  <div class="container bg-white p-5">
+                  <div class="container bg-white px-5">
                     <div class="profile-container-title">
                       <div class="profile-bar-h mb-5">
                         <h3>${ this.profileTitle }</h3>

@@ -154,6 +154,7 @@ class LoginForm extends HTMLElement{
         window.localStorage.setItem("userLastName", data["LAST_NAME"])
         window.localStorage.setItem("userPhoneNumber", data["PHONE_NUMBER"]) 
         window.localStorage.setItem("userInstEmail", data["INST_EMAIL"])
+        window.localStorage.setItem('userPhoto', data['PHOTO'])
     }
 }
 
