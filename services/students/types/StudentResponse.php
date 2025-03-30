@@ -17,7 +17,7 @@ class StudentResponse {
         return $this->status;
     }
 
-    public function getError(): ErrorResponse {
+    public function getError(): ?ErrorResponse {
         return $this->error;
     }
 }
