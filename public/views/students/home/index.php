@@ -53,18 +53,22 @@
               <a class="list-group-item list-group-item-action disabled" aria-disabled="true">
                 <i class="fa-regular fa-clipboard"></i> Calificaciones
               </a>
-              <a href="#" class="list-group-item list-group-item-action">
+              <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#requestsModal">
                 <i class="fa-regular fa-paste"></i> Solicitudes
               </a>
-              <a href="#" class="list-group-item list-group-item-action">
-                <i class="fa-regular fa-id-badge"></i> Certificado Academico
+              <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#academicCertificateModal">
+                <i class="fa-regular fa-id-badge"></i> Certificado Académico
               </a>
               <a class="list-group-item list-group-item-action disabled" aria-disabled="true">
                 <i class="fa-regular fa-money-bill-1"></i> Estado de Cuenta
               </a>
-              <a href="#" class="list-group-item list-group-item-action">
+              <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#contactsModal">
                 <i class="fa-regular fa-user"></i> Contactos
               </a>
+              <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#groupsModal">
+                <i class="fa-regular fa-handshake"></i> Grupos
+              </a>
+
             </div>
           </div>
           <div class="sidebar-ft">
@@ -83,33 +87,39 @@
                 </aside>
                 <div id="user-container">
                   <div id="profile-img">
-                    <img src="../../assets/img/default-profile.png" class="rounded" alt="..." style="background-color: black" />
-                    <button class="btn"><i class="fa-regular fa-pen-to-square"></i> Subir foto de perfil</button>
+                    <img id="profileImg" src="../../assets/img/default-profile.png" class="rounded" alt="Profile Picture" style="background-color: black; width: 150px; height: 150px; object-fit: cover;" />
+                    <button class="btn" id="uploadBtn">
+                      <i class="fa-regular fa-pen-to-square"></i> Subir foto de perfil
+                    </button>
+                    <input type="file" id="fileInput" style="display: none;" accept="image/*" />
                   </div>
-                  <button type="button" class="btn btn-primary position-relative">
+                  <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#messageListModal">
                     <i class="fa-regular fa-message"></i> Mensajeria
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                       99+
                       <span class="visually-hidden">Mensajes sin leer</span>
                     </span>
                   </button>
+
                 </div>
               </section>
               <section>
                 <div class="info-card">
                   <div class="info-header">
                     <span>Información Personal</span>
-                    <button class="edit-btn "><i class="fa-regular fa-pen-to-square"></i> Editar</button>
+                    <button class="edit-btn" data-bs-toggle="modal" data-bs-target="#editInfoModal">
+                      <i class="fa-regular fa-pen-to-square"></i> Editar
+                    </button>
                   </div>
                   <hr />
                   <div class="info-row info-labels">
-                    <span>Número de Empleado</span>
+                    <span>Número de Cuenta</span>
                     <span>Nombre Completo</span>
                     <span>Correo</span>
                     <span>Teléfono</span>
                   </div>
                   <div class="info-row">
-                    <span id="employeeNumber">123456</span>
+                    <span id="accountNumber">123456</span>
                     <span id="name">Nombre de ejemplo</span>
                     <span id="email">ejemplo@correo.com</span>
                     <span id="phone">00000000</span>
@@ -217,6 +227,387 @@
 
   <footer-unah></footer-unah>
 
+  <!-- Modal Solicitudes-->
+  <div class="modal fade" id="requestsModal" tabindex="-1" aria-labelledby="requestsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="requestsModalLabel">Solicitudes</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="list-group">
+            <a href="exceptional-cancellation.html" class="list-group-item list-group-item-action">
+              <i class="fa-solid fa-ban"></i> Solicitar Cancelacion Excepcional
+            </a>
+            <a href="replacement-payment.html" class="list-group-item list-group-item-action">
+              <i class="fa-solid fa-money-bill-wave"></i> Solicitar Pago de Reposicion
+            </a>
+            <a href="center-change.html" class="list-group-item list-group-item-action">
+              <i class="fa-solid fa-building"></i> Solicitar Cambio de Centro
+            </a>
+            <a href="course-change.html" class="list-group-item list-group-item-action">
+              <i class="fa-solid fa-graduation-cap"></i> Solicitar Cambio de Carrera
+            </a>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Certificado Academico-->
+  <div class="modal fade" id="academicCertificateModal" tabindex="-1" aria-labelledby="academicCertificateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="academicCertificateModalLabel">Descargar Certificado Académico</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <p>Haz clic en el botón de descarga para obtener tu certificado académico.</p>
+        </div>
+        <div class="modal-footer">
+          <!-- Enlace de descarga -->
+          <a href="download-academic-certificate.html" class="btn btn-primary">
+            <i class="fa-solid fa-download"></i> Descargar Certificado
+          </a>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Contactos-->
+  <div class="modal fade" id="contactsModal" tabindex="-1" aria-labelledby="contactsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="contactsModalLabel">Contactos</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Sección para crear grupos -->
+          <div class="mb-4">
+            <h6>Create Group</h6>
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Group Name" aria-label="Group Name" id="groupNameInput">
+              <button class="btn btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#createGroupModal">Crear Grupo</button>
+            </div>
+          </div>
+          <!-- Lista de Contactos -->
+          <div class="list-group" style="max-height: 300px; overflow-y: auto;">
+            <!-- Contacto 1 -->
+            <div class="list-group-item list-group-item-action">
+              <div class="d-flex w-100 justify-content-between align-items-center">
+                <div>
+                  <h6 class="mb-1">Juan Pérez</h6>
+                  <p class="mb-1 small">Cuenta: 123456</p>
+                </div>
+                <div>
+                  <!-- Botón para abrir chat -->
+                  <a href="#" class="btn btn-sm btn-outline-success me-1" title="Chat" onclick="openChat('Juan Pérez','123456')">
+                    <i class="fa-solid fa-comments"></i>
+                  </a>
+                  <!-- Botón para mostrar acciones adicionales -->
+                  <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#contactActions1" aria-expanded="false" aria-controls="contactActions1">
+                    <i class="fa-solid fa-ellipsis-v"></i>
+                  </button>
+                </div>
+              </div>
+              <!-- Opciones adicionales -->
+              <div class="collapse mt-2" id="contactActions1">
+                <div class="d-flex">
+                  <button class="btn btn-sm btn-primary me-2">Agregar a Grupo</button>
+                  <button class="btn btn-sm btn-danger">Eliminar Contacto</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Contacto 2 -->
+            <div class="list-group-item list-group-item-action">
+              <div class="d-flex w-100 justify-content-between align-items-center">
+                <div>
+                  <h6 class="mb-1">María López</h6>
+                  <p class="mb-1 small">Cuenta: 654321</p>
+                </div>
+                <div>
+                  <a href="#" class="btn btn-sm btn-outline-success me-1" title="Chat">
+                    <i class="fa-solid fa-comments"></i>
+                  </a>
+                  <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#contactActions2" aria-expanded="false" aria-controls="contactActions2">
+                    <i class="fa-solid fa-ellipsis-v"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="collapse mt-2" id="contactActions2">
+                <div class="d-flex">
+                  <button class="btn btn-sm btn-primary me-2">Agregar a Grupo</button>
+                  <button class="btn btn-sm btn-danger">Eliminar Contacto</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para agregar usuarios al grupo -->
+  <div class="modal fade" id="createGroupModal" tabindex="-1" aria-labelledby="createGroupModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createGroupModalLabel">Agregar miembros del grupo</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="list-group" style="max-height: 300px; overflow-y: auto;">
+            <!-- Ejemplo de Usuario 1 -->
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="mb-1">Juan Pérez</h6>
+                <small>Cuenta: 123456</small>
+              </div>
+              <div>
+                <button class="btn btn-sm btn-outline-success toggle-user-btn" data-user-id="001">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+            </div>
+            <!-- Ejemplo de Usuario 2 -->
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="mb-1">María López</h6>
+                <small>Cuenta: 654321</small>
+              </div>
+              <div>
+                <button class="btn btn-sm btn-outline-success toggle-user-btn" data-user-id="002">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary">Confirmar creacion</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Editar Información Personal -->
+  <div class="modal fade" id="editInfoModal" tabindex="-1" aria-labelledby="editInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editInfoModalLabel">Editar Información Personal</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editInfoForm">
+            <div class="mb-3">
+              <label for="editName" class="form-label">Nombre Completo</label>
+              <input type="text" class="form-control" id="editName" value="Nombre de ejemplo">
+            </div>
+            <div class="mb-3">
+              <label for="editEmail" class="form-label">Correo</label>
+              <input type="email" class="form-control" id="editEmail" value="ejemplo@correo.com">
+            </div>
+            <div class="mb-3">
+              <label for="editPhone" class="form-label">Teléfono</label>
+              <input type="text" class="form-control" id="editPhone" value="00000000">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" onclick="updateInfo()">Confirmar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Lista de Chats -->
+  <div class="modal fade" id="messageListModal" tabindex="-1" aria-labelledby="messageListModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="messageListModalLabel">Mensajes</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="list-group">
+            <!-- Chat con Juan Pérez -->
+            <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#chatModal" onclick="loadChat('Juan Pérez','123456')">
+              <div class="d-flex w-100 justify-content-between">
+                <div>
+                  <h6 class="mb-1">Juan Pérez</h6>
+                  <p class="mb-1 small">Cuenta: 123456</p>
+                </div>
+                <small class="text-muted">12:30 PM</small>
+              </div>
+              <p class="mb-1">Último mensaje de Juan...</p>
+            </a>
+            <!-- Chat con María López -->
+            <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#chatModal" onclick="loadChat('María López','654321')">
+              <div class="d-flex w-100 justify-content-between">
+                <div>
+                  <h6 class="mb-1">María López</h6>
+                  <p class="mb-1 small">Cuenta: 654321</p>
+                </div>
+                <small class="text-muted">11:15 AM</small>
+              </div>
+              <p class="mb-1">Último mensaje de María...</p>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Chat Individual -->
+  <div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="chatModalLabel">Mensaje con <span id="chatContactName">Nombre contacto</span></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Contenedor de mensajes -->
+          <div class="chat-container" style="max-height: 400px; overflow-y: auto;">
+            <!-- Ejemplo de mensaje recibido -->
+            <div class="d-flex mb-2">
+              <div class="p-2 bg-light rounded" style="max-width: 70%;">
+                <p class="mb-1">Hola, ¿cómo estás?</p>
+                <small class="text-muted">10:00 AM - Visto</small>
+              </div>
+            </div>
+            <!-- Ejemplo de mensaje enviado -->
+            <div class="d-flex justify-content-end mb-2">
+              <div class="p-2 bg-primary text-white rounded" style="max-width: 70%;">
+                <p class="mb-1">¡Hola! Todo bien, gracias.</p>
+                <small class="text-light">10:05 AM - Enviado</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <!-- Input para escribir mensajes -->
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Escribe un mensaje" aria-label="Mensaje" id="messageInput">
+            <button class="btn btn-primary" type="button" onclick="sendMessage()">Enviar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Lista de Grupos -->
+  <div class="modal fade" id="groupsModal" tabindex="-1" aria-labelledby="groupsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="groupsModalLabel">Mis Grupos</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Lista de grupos -->
+          <div class="list-group" style="max-height: 400px; overflow-y: auto;">
+            <!-- Grupo de ejemplo 1 -->
+            <div class="list-group-item">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <h6 class="mb-1">Grupo A</h6>
+                  <small>Miembros: 5</small>
+                </div>
+                <div>
+                  <button class="btn btn-sm btn-outline-primary me-1" onclick="openGroupChat('Grupo A','groupA')">
+                    <i class="fa-solid fa-comments"></i> Chat
+                  </button>
+                  <button class="btn btn-sm btn-outline-success me-1">
+                    <i class="fa-solid fa-user-plus"></i> Agregar Miembro
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger">
+                    <i class="fa-solid fa-trash"></i> Borrar Grupo
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- Grupo de ejemplo 2 -->
+            <div class="list-group-item">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <h6 class="mb-1">Grupo B</h6>
+                  <small>Miembros: 3</small>
+                </div>
+                <div>
+                  <button class="btn btn-sm btn-outline-primary me-1" onclick="openGroupChat('Grupo B','groupB')">
+                    <i class="fa-solid fa-comments"></i> Chat
+                  </button>
+                  <button class="btn btn-sm btn-outline-success me-1">
+                    <i class="fa-solid fa-user-plus"></i> Agregar Miembro
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger">
+                    <i class="fa-solid fa-trash"></i> Borrar Grupo
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Chat Grupal -->
+  <div class="modal fade" id="groupChatModal" tabindex="-1" aria-labelledby="groupChatModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="groupChatModalLabel">Chat grupal: <span id="groupChatName">Nombre del Grupo</span></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Contenedor de mensajes -->
+          <div class="chat-container" style="max-height: 400px; overflow-y: auto;">
+            <!-- Ejemplo de mensaje recibido -->
+            <div class="d-flex mb-2">
+              <div class="p-2 bg-light rounded" style="max-width: 70%;">
+                <p class="mb-1">Hola a todos, ¿cómo están?</p>
+                <small class="text-muted">10:00 AM - Visto</small>
+              </div>
+            </div>
+            <!-- Ejemplo de mensaje enviado -->
+            <div class="d-flex justify-content-end mb-2">
+              <div class="p-2 bg-primary text-white rounded" style="max-width: 70%;">
+                <p class="mb-1">¡Muy bien, gracias!</p>
+                <small class="text-light">10:05 AM - Enviado</small>
+              </div>
+            </div>
+            <!-- Se agregarán más mensajes -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <!-- Input para escribir mensajes -->
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Escribe un mensaje" aria-label="Mensaje" id="groupMessageInput">
+            <button class="btn btn-primary" type="button" onclick="sendGroupMessage()">Enviar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
@@ -229,6 +620,8 @@
   <script src="../../js/components/footer.js"></script>
   <script src="../../js/components/log-out.js"></script>
   <script src="../../js/components/reviewerModal.js"></script>
+  <script src="./controllers/info.js"></script>
+  <script src="./controllers/chats.js"></script>
 
 </body>
 
