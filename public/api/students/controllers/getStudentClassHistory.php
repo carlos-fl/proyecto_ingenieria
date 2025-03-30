@@ -15,7 +15,7 @@ if (empty($_SESSION)) {
     return;
 }
 
-$studentId = $_GET['student-id'] ?? $_SESSION["STUDENT_ID"];
+$studentId = $_GET['student-id'] ?? $_SESSION["ID_STUDENT"];
 if (!$studentId) {
     echo json_encode(new DataResponse("failure", error: new ErrorResponse(401, "Unauthorized")));
     return;

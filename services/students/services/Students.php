@@ -49,6 +49,51 @@ class StudentService {
         }
     }
 
+    public static function getStudentId(int $userId): ?int {
+        $db = Database::getDatabaseInstace();
+        $mysqli = $db->getConnection();
+    
+        $query = "CALL SP_GET_STUDENT_ID(?)";
+    
+        try {
+            $result = (object) $db->callStoredProcedure($query, "i", [$userId], $mysqli);
+            if ($result->num_rows == 0) {
+                return null;
+            }
+    
+            $studentData = $result->fetch_assoc();
+            $mysqli->close();
+            return (int) $studentData['ID_STUDENT'];
+        } catch (Throwable $err) {
+            return null;
+        }
+    }
+    
+    public static function getStudentAccountNumber(int $userId): ?int {
+        $db = Database::getDatabaseInstace();
+        $mysqli = $db->getConnection();
+    
+        $query = "CALL SP_GET_STUDENT_ACCOUNT_NUMBER(?)";
+    
+        try {
+            $result = (object) $db->callStoredProcedure($query, "i", [$userId], $mysqli);
+            if ($result->num_rows == 0) {
+                return null;
+            }
+    
+            $studentData = $result->fetch_assoc();
+            $mysqli->close();
+            return (int) $studentData['STUDENT_ACCOUNT_NUMBER'];
+    
+        } catch (Throwable $err) {
+            return null;
+        }
+    }
+
+
+
+
+
 
 
 
