@@ -40,6 +40,7 @@ if (!in_array("STUDENTS", $sessionData->roles)) {
 $userId = $sessionData->user->USER_ID;
 $idStudent = StudentService::getStudentId($userId);
 $accountNumber = StudentService::getStudentAccountNumber($userId);
+$profilePhoto = StudentService::getProfilePhoto($studentId);
 
 http_response_code(200);
 echo json_encode([
@@ -48,8 +49,9 @@ echo json_encode([
     "sessionData" => [
         "user" => $sessionData->user,
         "roles" => $sessionData->roles,
-        "ID_STUDENT" => $idStudent,
-        "STUDENT_ACCOUNT_NUMBER" => $accountNumber["STUDENT_ACCOUNT_NUMBER"]
+        "studentId" => $studentId,
+        "studentAccountNumber" => $studentAccountNumber,
+        "profilePhoto" => $profilePhoto
     ],
     "error" => null
 ]);
@@ -62,4 +64,5 @@ $_SESSION['INST_EMAIL'] = $sessionData->user->INST_EMAIL;
 $_SESSION['PERSONAL_EMAIL'] = $sessionData->user->PERSONAL_EMAIL; 
 $_SESSION['ROLES'] = $sessionData->roles;
 $_SESSION["ID_STUDENT"] = $idStudent;
-$_SESSION["STUDENT_ACCOUNT_NUMBER"] = $accountNumber["STUDENT_ACCOUNT_NUMBER"];
+$_SESSION["STUDENT_ACCOUNT_NUMBER"] = $studentAccountNumber;
+$_SESSION["PROFILE_PHOTO"] = $profilePhoto;

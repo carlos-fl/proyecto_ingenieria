@@ -90,6 +90,32 @@ class StudentService {
         }
     }
 
+    public static function getStudentProfile(int $studentId): DataResponse {
+        $db = Database::getDatabaseInstace();
+        $mysqli = $db->getConnection();
+        
+        $query = "CALL SP_GET_STUDENT_PROFILE(?)";
+        
+        try {
+            $profile = (object) $db->callStoredProcedure($query, "i", [$studentId], $mysqli);
+            if ($profile->num_rows == 0) {
+                return new DataResponse("failure", error: new ErrorResponse(404, "Student profile not found"));
+            }
+
+            $profileData = $profile->fetch_assoc();
+            $mysqli->close();
+
+            return new DataResponse("success", [
+                "description" => $profileData['description'] ?? null,
+                "photos" => json_decode($profileData['photos'], true) ?? []
+            ]);
+
+        } catch (Throwable $err) {
+            return new DataResponse("failure", error: new ErrorResponse(500, $err->getMessage()));
+        }
+    }
+
+
 
 
 
