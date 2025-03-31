@@ -115,6 +115,35 @@ class StudentService {
         }
     }
 
+    public static function getStudentContacts(int $studentId): DataResponse {
+        $db = Database::getDatabaseInstace();
+        $mysqli = $db->getConnection();
+    
+        $query = "CALL SP_GET_CONTACT_LIST(?)";
+    
+        try {
+            $contacts = (object) $db->callStoredProcedure($query, "i", [$studentId], $mysqli);
+    
+            if ($contacts->num_rows == 0) {
+                return new DataResponse("failure", error: new ErrorResponse(404, "No contacts found"));
+            }
+    
+            $contactsData = $contacts->fetch_all(MYSQLI_ASSOC);
+    
+            $mysqli->close();
+            return new DataResponse("success", $contactsData);
+        } catch (Throwable $err) {
+            return new DataResponse("failure", error: new ErrorResponse(500, $err->getMessage()));
+        }
+    }
+
+
+
+
+
+
+
+
 
 
 
