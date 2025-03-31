@@ -4,6 +4,8 @@ include_once __DIR__ . '/../../../config/database/Database.php';
 include_once __DIR__ . '/../../../utils/types/postResponse.php';
 include_once __DIR__ . '/../types/StudentResponse.php';
 include_once __DIR__ . '/../types/StudentData.php';
+include_once __DIR__ . '/../types/StudentRequest.php';
+
 
 class StudentService {
     public static function getStudent(int $studentId): StudentResponse {
@@ -114,6 +116,48 @@ class StudentService {
             return new DataResponse("failure", error: new ErrorResponse(500, $err->getMessage()));
         }
     }
+
+    
+    public static function getDifferentMajors($studentId){
+        /**Get the majors a student is not enrolled into */
+        $db = Database::getDatabaseInstace();
+        $mysqli = $db->getConnection();
+        $query = "CALL SP_GET_DIFFERENT_STUDENT_MAJORS(?)";
+        try {
+            $majors = (object) $db->callStoredProcedure($query, "i", [$studentId], $mysqli);
+            return ["status" => "success", "majors" => $majors->fetch_all(MYSQLI_ASSOC)];
+        } catch (\Throwable $error) {
+            return ["status" => "failure", "message" => "$error", "code" => 500];
+        }
+    }
+
+    public static function newStudentRequest(int $studentId, StudentRequest $studentRequest){
+        $db = Database::getDatabaseInstace();
+        $mysqli = $db->getConnection();
+        $content = json_encode($studentRequest->getContent());
+        $requestType = $studentRequest->getRequestType();
+        $query = "CALL SP_NEW_STUDENT_REQUEST(?, ?, ?)";
+        try{
+            $request = (object) $db->callStoredProcedure($query, "iss", [$studentId, $requestType, $content], $mysqli);
+            return ["status" => "success"];
+        } catch (\Throwable $error){
+            return ["status" => "failure", "message" => "$error", "code" => 500];
+        }
+    }
+
+    public static function getStudentMajorChangeRequests(int $studentId): array | false{
+        /**Get all the requests of a requestType done by the student */
+        $db = Database::getDatabaseInstace();
+        $mysqli = $db->getConnection();
+        $query = "CALL SP_GET_STUDENT_MAJOR_CHANGE_REQUESTS(?)";
+        try{
+            $requests = (object) $db->callStoredProcedure($query, "i", [$studentId], $mysqli);
+            return ["status" => "success", "requests" => $requests->fetch_all(MYSQLI_ASSOC)];
+        } catch (\Throwable $error){
+            return ["status" => "failure", "message" => $error, "code" => 500];
+        }
+    }
+
 
     public static function getStudentContacts(int $studentId): DataResponse {
         $db = Database::getDatabaseInstace();

@@ -37,7 +37,7 @@
                                 En este apartado puedes realizar tus solicitudes para el cambio de carrera. El coordinador de la carrera de tu centro será el responsable de revisar tu solicitud.
                             </p>
                         </div>
-                        <div class="table-responsive mt-4">
+                        <div class="table-responsive mt-4 table-overflow">
                             <table class="table table-striped table-hover">
                                 <thead class="table-dark">
                                     <tr>
@@ -47,15 +47,14 @@
                                         <th>Status</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="studentRequestsTableBody">
                                 </tbody>
                             </table>
                         </div>
-                        <div id="careerChangeTblInfo" class="text-center text-secondary">
-                            No tienes solicitudes de cambio de carrera
+                        <div id="majorChangeTblInfo" class="text-center text-secondary">
                         </div>
-                        <div class="d-flex justify-content-end">
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newRequestModal">Nueva solicitud</button>
+                        <div class="d-flex justify-content-end mt-3">
+                            <button id="newRequestBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newRequestModal">Nueva solicitud</button>
                         </div>
                     </section>
                 </div>
@@ -74,30 +73,30 @@
                 <div class="modal-body">
                     <fieldset class="px-3">
                         <div class="mt-2">
-                            <label class="mb-1" for="newMajor">Nueva carrera</label>
+                            <label class="mb-1" for="newMajor">Nueva carrera <span class="text-danger">*</span></label>
                             <select name="newMajor" id="newMajorSelect" class="form-select">
-                                <option value="">Seleccione la carrera...</option>
-                                <option value="">Ingenieria Química</option>
-                                <option value="">Ingenieria Industrial</option>
-                                <option value="">Administración de Empresas</option>
                             </select>
+                            <div id="newMajorInfo"></div>
                         </div>
                         <div class="mt-3">
-                            <label class="mb-1"for="changeReason">Motivo del cambio</label>
+                            <label class="mb-1"for="changeReason">Motivo del cambio<span class="text-danger">*</span></label>
                             <textarea name="changeReason" id="changeReason" class="form-control"></textarea>
-                        </div>
-                        <div class="mt-3">
-                            <label for="requestSupport">Documentación de respaldo</label>
-                            <input type="file" name="requestSupport id="requestSupportFiles" class="form-control" multiple>
                         </div>
                     </fieldset>
                 </div>
                 <div class="modal-footer">
-                    <button id="downloadStudentTableBtn" class="btn btn-success">Enviar</button>
+                    <button id="sendRequestBtn" class="btn btn-success" disabled>Enviar</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <pop-up
+        id="popUp"
+        imgsource="/views/assets/img/crossmark.png"
+        popupclass=""
+        message="">
+    </pop-up>
 
     <footer-unah></footer-unah>
 </body>
@@ -108,7 +107,9 @@
 <script type="module" src="../../js/components/navbar.js"></script>
 <script type="module" src="../../js/components/footer.js"></script>
 <script type="module"src="../../js/components/log-out.js"></script>
+<script type="module"src="../../js/components/pop-up.js"></script>
 <script type="module"src="../../js/components/modal.js"></script>
+<script type="module" src="../js/majorChange.js"></script>
 
 
 </html>

@@ -134,3 +134,18 @@ footer {
     background-position: center;
     z-index: 5
 }
+
+/* =====================================
+ CSS para tablas"
+===================================== */
+
+.table-overflow{
+    max-height: 15em;
+    overflow-y: auto;
+  }
+  
+  
+  .table-overflow thead{
+    position: sticky;
+    top: 0;
+  }
