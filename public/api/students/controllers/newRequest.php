@@ -16,7 +16,6 @@ Request::isWrongRequestMethod('POST');
 
 session_start();
 header("Content-Type: application/json");
-$_SESSION["ID_STUDENT"] = 1;
 
 if (!isset($_SESSION["ID_STUDENT"])){
     http_response_code(401);

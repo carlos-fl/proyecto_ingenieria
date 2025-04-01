@@ -7,7 +7,6 @@ Request::isWrongRequestMethod('GET');
 
 session_start();
 header("Content-Type: application/json");
-$_SESSION["ID_STUDENT"] = 1;
 if (!isset($_SESSION["ID_STUDENT"])){
     http_response_code(401);
     echo json_encode(["status" => "failure", "message" => "User not logged in"]);
