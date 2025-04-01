@@ -1,4 +1,3 @@
-//Funcion para traer contactos
 function loadContacts() {
   const contactsList = document.getElementById("contactsList");
   const loadingIndicator = document.getElementById("loadingContacts");
@@ -35,7 +34,7 @@ function loadContacts() {
                                 <p class="mb-1 small text-muted">Email: ${contact.email}</p>
                             </div>
                             <div>
-                                <a href="#" class="btn btn-sm btn-outline-success me-1" title="Chat" onclick="openChat('${contact.firstName} ${contact.lastName}','${contact.studentId}')">
+                                <a href="#" class="btn btn-sm btn-outline-success me-1" title="Chat" onclick="openChatFromContacts('${contact.firstName} ${contact.lastName}','${contact.studentId}')">
                                     <i class="fa-solid fa-comments"></i>
                                 </a>
                                 <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#contactActions${index}" aria-expanded="false">

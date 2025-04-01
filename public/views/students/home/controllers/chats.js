@@ -20,14 +20,12 @@ function loadChats() {
         return;
       }
 
-      // Verificar si no hay mensajes
       if (data.data.length === 0) {
         messageList.innerHTML =
           '<p class="text-muted">No hay mensajes disponibles.</p>';
         return;
       }
 
-      // Agregar cada chat a la lista
       data.data.forEach((chat, index) => {
         const contactName = chat.name || "Desconocido";
         const contactEmail = chat.email || "No disponible";
@@ -37,7 +35,7 @@ function loadChats() {
           : "Fecha desconocida";
 
         const chatHTML = `
-          <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#chatModal" onclick="openChat('${contactName}', '${chat.chatId}')">
+          <a href="#" class="list-group-item list-group-item-action" onclick="openChatFromMessages('${contactName}', '${chat.chatId}')">
             <div class="d-flex w-100 justify-content-between">
               <div>
                 <h6 class="mb-1">${contactName}</h6>
@@ -58,7 +56,7 @@ function loadChats() {
     });
 }
 
-// Función para cargar el chat del contacto seleccionado
+// Función para cargar mensajes chat
 function loadChat(contactName, contactId) {
   // Actualizar el estado del chat
   currentChatId = contactId;
@@ -112,8 +110,9 @@ function loadChat(contactName, contactId) {
     });
 }
 
-function openChat(contactName, contactId) {
-  // Limpia el contenedor de mensajes y carga el chat
+//Funcion para abrir bandeja
+function openChatFromMessages(contactName, contactId) {
+  // Limpia mensajes previos y carga el chat
   const chatMessages = document.getElementById("chatMessages");
   chatMessages.innerHTML = "";
   loadChat(contactName, contactId);
@@ -122,22 +121,41 @@ function openChat(contactName, contactId) {
   chatContactName.innerText = contactName;
   chatContactName.setAttribute("data-contact-id", contactId);
 
-  var contactsModalElem = document.getElementById("contactsModal");
-  var contactsModal = bootstrap.Modal.getInstance(contactsModalElem);
+  var chatModal = new bootstrap.Modal(document.getElementById("chatModal"));
+  chatModal.show();
+}
+
+//Funcion para abrir chat desde contactos
+function openChatFromContacts(contactName, contactId) {
+  const chatMessages = document.getElementById("chatMessages");
+  chatMessages.innerHTML = "";
+  loadChat(contactName, contactId);
+
+  const chatContactName = document.getElementById("chatContactName");
+  chatContactName.innerText = contactName;
+  chatContactName.setAttribute("data-contact-id", contactId);
+
+  const contactsModalElem = document.getElementById("contactsModal");
+  const contactsModal = bootstrap.Modal.getInstance(contactsModalElem);
+  
+  document.body.focus();
 
   if (contactsModal) {
     contactsModalElem.addEventListener("hidden.bs.modal", function handler() {
+      contactsModalElem.removeEventListener("hidden.bs.modal", handler);
+
       const backdrop = document.querySelector(".modal-backdrop");
       if (backdrop) {
-        backdrop.parentNode.removeChild(backdrop);
+        backdrop.remove();
       }
-      var chatModal = new bootstrap.Modal(document.getElementById("chatModal"));
+
+      const chatModal = new bootstrap.Modal(document.getElementById("chatModal"));
       chatModal.show();
-      contactsModalElem.removeEventListener("hidden.bs.modal", handler);
     });
+
     contactsModal.hide();
   } else {
-    var chatModal = new bootstrap.Modal(document.getElementById("chatModal"));
+    const chatModal = new bootstrap.Modal(document.getElementById("chatModal"));
     chatModal.show();
   }
 }
