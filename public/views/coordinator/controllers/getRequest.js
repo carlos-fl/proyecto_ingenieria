@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
  * @param {string} type 
  */
 async function modalContent(requestID, type) {
-  const modal = document.getElementById('d-modal-r')
+  const modal = document.getElementById('request-modal')
   const modalBody = document.getElementById('modal-body')
   const acceptButton = document.createElement('button')
   const rejectButton = document.createElement('button')
@@ -89,7 +89,7 @@ async function acceptRequest(requestID, type) {
     hideLoadingComponent('loading')
     showSuccessModal("request-success")
 
-    const modal = document.getElementById('d-modal-r')
+    const modal = document.getElementById('request-modal')
     modal.hide()
 
     getRequests(type)
@@ -115,7 +115,7 @@ async function rejectRequest(requestID, type) {
     hideLoadingComponent('loading')
     showSuccessModal('request-success')
 
-    const modal = document.getElementById('d-modal-r')
+    const modal = document.getElementById('request-modal')
     modal.hide()
 
     getRequests(type)
