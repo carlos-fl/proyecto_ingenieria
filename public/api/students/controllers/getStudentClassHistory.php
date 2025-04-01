@@ -23,17 +23,4 @@ if (!$studentId) {
 
 $historyResponse = StudentService::getStudentClassHistory((int) $studentId);
 
-// Encriptar ID_SECTION y guardar IV en la sesión
-Environment::read();
-$env = Environment::getVariables();
-$encryption = new Encryption($env["CYPHER_ALGO"], $env["CYPHER_KEY"]);
-
-foreach ($historyResponse->data as &$record) {
-    if (isset($record['section'])) {  // Asegura que 'section' existe
-        $encryptedSectionIv = $encryption->encrypt((string) $record['section']);
-        $record["section"] = $encryptedSectionIv["value"];
-        $_SESSION[$encryptedSectionIv["value"]] = $encryptedSectionIv["iv"];
-    }
-}
-
 echo json_encode($historyResponse);
