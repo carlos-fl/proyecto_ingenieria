@@ -135,8 +135,20 @@ class StudentService
         }
     }
 
-    public static function newStudentRequest(int $studentId, StudentRequest $studentRequest)
-    {
+    public static function getDifferentRegionalCenters($studentId){
+        /**Get the majors a student is not enrolled into */
+        $db = Database::getDatabaseInstace();
+        $mysqli = $db->getConnection();
+        $query = "CALL SP_GET_DIFFERENT_STUDENT_REGIONAL_CENTERS(?)";
+        try {
+            $centers = (object) $db->callStoredProcedure($query, "i", [$studentId], $mysqli);
+            return ["status" => "success", "centers" => $centers->fetch_all(MYSQLI_ASSOC)];
+        } catch (\Throwable $error) {
+            return ["status" => "failure", "message" => "$error", "code" => 500];
+        }
+    }
+
+    public static function newStudentRequest(int $studentId, StudentRequest $studentRequest){
         $db = Database::getDatabaseInstace();
         $mysqli = $db->getConnection();
         $content = json_encode($studentRequest->getContent());
@@ -156,10 +168,23 @@ class StudentService
         $db = Database::getDatabaseInstace();
         $mysqli = $db->getConnection();
         $query = "CALL SP_GET_STUDENT_MAJOR_CHANGE_REQUESTS(?)";
-        try {
+        try{
             $requests = (object) $db->callStoredProcedure($query, "i", [$studentId], $mysqli);
             return ["status" => "success", "requests" => $requests->fetch_all(MYSQLI_ASSOC)];
         } catch (\Throwable $error) {
+            return ["status" => "failure", "message" => $error, "code" => 500];
+        }
+    }
+
+    public static function getStudentCenterChangeRequests(int $studentId): array | false{
+        /**Get all the requests of a requestType done by the student */
+        $db = Database::getDatabaseInstace();
+        $mysqli = $db->getConnection();
+        $query = "CALL SP_GET_STUDENT_CENTER_CHANGE_REQUESTS(?)";
+        try{
+            $requests = (object) $db->callStoredProcedure($query, "i", [$studentId], $mysqli);
+            return ["status" => "success", "requests" => $requests->fetch_all(MYSQLI_ASSOC)];
+        } catch (\Throwable $error){
             return ["status" => "failure", "message" => $error, "code" => 500];
         }
     }

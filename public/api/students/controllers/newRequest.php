@@ -2,6 +2,7 @@
 include_once __DIR__ . '/../../../../utils/classes/Request.php';
 include_once __DIR__ . '/../../../../services/students/services/Students.php';
 include_once __DIR__ . '/../../../../services/students/types/MajorChangeStudentRequest.php';
+include_once __DIR__ . '/../../../../services/students/types/CenterChangeStudentRequest.php';
 include_once __DIR__ . '/../../../../services/students/types/StudentRequestType.php';
 
 // Realizar una nueva solicitud de cambio de carrera
@@ -26,6 +27,11 @@ if ($requestType === StudentRequestType::MAJORCHANGE){
     $majorId = $_SESSION["MAJOR"][$_POST["major"]];
     $content = $_POST["content"];
     $studentRequest = new MajorChangeStudentRequest($majorId, $content);
+}
+elseif ($requestType === StudentRequestType::CAMPUSTRANSFER){
+    $centerId = $_SESSION["CENTER"][$_POST["center"]];
+    $content = $_POST["content"];
+    $studentRequest = new CenterChangeStudentRequest($centerId, $content);
 }
 else {
     http_response_code(400);
