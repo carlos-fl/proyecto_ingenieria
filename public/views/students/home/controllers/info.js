@@ -1,6 +1,5 @@
 // Función para cargar la información personal del estudiante
 function loadPersonalInfo() {
-  // Muestra "Cargando..." en cada campo
   document.getElementById("accountNumber").innerText = "Cargando...";
   document.getElementById("name").innerText = "Cargando...";
   document.getElementById("email").innerText = "Cargando...";
@@ -30,7 +29,7 @@ function loadPersonalInfo() {
     .catch((error) => console.error("Error en la petición", error));
 }
 
-// Al mostrar la modal, precargar el teléfono y la descripción actuales
+// Mostrar la modal, precargar el teléfono y la descripción actuales
 document
   .getElementById("editInfoModal")
   .addEventListener("show.bs.modal", function () {
@@ -69,7 +68,6 @@ function updateInfo() {
       editModal.hide();
     });
 }
-
 
 //Funcion para actualizar foto de perfil
 function uploadProfileImage(file) {
