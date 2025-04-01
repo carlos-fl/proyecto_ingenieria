@@ -1,10 +1,4 @@
-<?php 
 
-  if (empty($_SESSION) || !in_array('COORDINATOR', $_SESSION['ROLES'])) {
-    header('Location: /');
-  }
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,8 +49,9 @@
 
   <footer-unah></footer-unah>
 
-  <d-modal tag-id="d-modal-r" modal-id="requests" arial-label-led-by="solicitudModal" header-title="Solicitudes" arial-label="TEXT" hidden="false"
-  ></d-modal>
+
+  <d-modal tag-id="request-modal" modal-id="y-student-modal" arial-label-led-by="history-student-modal-results" header-title="Historial" arial-label="student-history" hidden="false"></d-modal>
+  
 
 <!-- pop up to show errors -->
   <pop-up
@@ -68,14 +63,15 @@
 
 
 
-  <modal-error tag-id="request-error" modal-id="request-fail" arial-label-led-by="requestError" header-title="Un error Ha Sucedido. Intente de Nuevo" arial-label="error" hidden="false"></modal-error>
   <loading-modal tag-id="loading" modal-id="loading-modal"></loading-modal>
+  <modal-error tag-id="request-error" modal-id="request-fail" arial-label-led-by="requestError" header-title="Un error Ha Sucedido. Intente de Nuevo" arial-label="error" hidden="false"></modal-error>
 
   <modal-success tag-id="request-success" modal-id="request-success-p" arial-label-led-by="requestSuccess" header-title="Solicitud se ha actualizado Correctamente" arial-label="error" hidden="false"></modal-success>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+
   <script src="../js/components/modal.js"></script>
   <script src="../js/components/navbar.js"></script>
   <script src="../js/components/footer.js"></script>
