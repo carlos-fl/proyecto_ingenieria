@@ -246,10 +246,10 @@
             <a href="replacement-payment.html" class="list-group-item list-group-item-action">
               <i class="fa-solid fa-money-bill-wave"></i> Solicitar Pago de Reposicion
             </a>
-            <a href="center-change.html" class="list-group-item list-group-item-action">
+            <a href="../requests/centerChange.php" class="list-group-item list-group-item-action">
               <i class="fa-solid fa-building"></i> Solicitar Cambio de Centro
             </a>
-            <a href="course-change.html" class="list-group-item list-group-item-action">
+            <a href="../requests/majorChange.php" class="list-group-item list-group-item-action">
               <i class="fa-solid fa-graduation-cap"></i> Solicitar Cambio de Carrera
             </a>
           </div>
