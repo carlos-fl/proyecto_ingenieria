@@ -4,15 +4,16 @@ class Table extends HTMLElement {
     this.tableRow = [] // this is an array with the elements inside thead. Basically the column names
   }
 
-  static observedAttributes = ['table-row']
+  static observedAttributes = ['table-row', 'tag-id', 'body-id']
 
   connectedCallback(){
     if (this.hasAttribute('table-row')) {
       this.tableRow = JSON.parse(this.getAttribute("table-row"))
     }
     this.tagId = this.getAttribute('tag-id')
+    this.body = this.getAttribute('body-id')
 
-    this.bodyID = 'table-body-results'// this is the id of tbody tag 
+    this.bodyID = this.body ?? 'table-body-results'// this is the id of tbody tag 
     this.render()
   }
 

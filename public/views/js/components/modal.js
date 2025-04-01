@@ -9,6 +9,8 @@ class Modal extends HTMLElement {
     this.headerTitle = ''
   }
 
+  static modalInstance = null
+
  connectedCallback(){
     this.dModalID = this.getAttribute('tag-id')
     this.modalID = this.getAttribute("modal-id")
@@ -24,19 +26,20 @@ class Modal extends HTMLElement {
   }
 
   show() {
-    const modal = document.getElementById(this.modalID)
-    if (modal) {
-      const bootstrapModal = new bootstrap.Modal(modal)
-      bootstrapModal.show()
+    if (this.modalInstance) {
+      this.modalInstance.show()
+    } else {
+      const modalElement = document.getElementById(this.modalID);
+      if (modalElement) {
+        const modalInstance = new bootstrap.Modal(modalElement);
+        this.modalInstance = modalInstance
+        modalInstance.show();
+      }
     }
   }
 
   hide() {
-    const modal = document.getElementById(this.modalID)
-    if (modal) {
-      const bootstrapModal = new bootstrap.Modal(modal)
-      bootstrapModal.hide()
-    }
+    this.modalInstance.hide()
   }
 
   render() {
@@ -55,7 +58,7 @@ class Modal extends HTMLElement {
                     <h5 class="modal-title" id=${ this.ariaLabelLedBy }>${ this.headerTitle }</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body d-flex justify-content-center align-items-center">
+                <div id="modal-body" class="modal-body d-flex justify-content-center align-items-center">
                     ${ modalBody } 
                 </div>
             </div>

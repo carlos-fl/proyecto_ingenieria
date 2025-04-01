@@ -63,3 +63,13 @@ export function isValidYoutubeUrl(url) {
   const re = new RegExp(PATTERN);
   return re.test(url);
 }
+
+/**
+ * 
+ * @param {string} accountNumber 
+ */
+export function isValidAccountNumber(accountNumber) {
+  const PATTERN = /^\d{11}$/
+  const re = new RegExp(PATTERN)
+  return re.test(accountNumber)
+}

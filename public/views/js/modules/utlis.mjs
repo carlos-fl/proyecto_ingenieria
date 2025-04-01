@@ -29,7 +29,7 @@ export function showFailPopUp(popUpId, content){
 }
 
 export function changeBorder(domElement, borderWidth, color){
-    domElement.style.border = borderWidth + 'solid ' + color
+    domElement.style.border = `${borderWidth} solid ${color}`
 }
 
 
@@ -202,7 +202,7 @@ export function cleanTableBody(table){
  * @param {blob} blob 
  * blob file
  */ 
-export function downloadFile(fileName, blob) {
+export function downlodFile(fileName, blob) {
     let downloadLink = document.createElement("a");
     downloadLink.download = fileName;
     downloadLink.href = window.URL.createObjectURL(blob);
@@ -210,4 +210,20 @@ export function downloadFile(fileName, blob) {
     document.body.appendChild(downloadLink);
     downloadLink.click();
     document.body.removeChild(downloadLink);
+}
+
+/**
+ * 
+ * @param {HTMLInputElement} input 
+ * @param {string} inputBorderWidth 
+ * @param {string} changeToColor 
+ * @param {string} normalColor 
+ * @param {number} time
+ * milliseconds
+ */
+export function changeBorderWithTiming(input, inputBorderWidth, changeToColor, normalColor, time) {
+    changeBorder(input, inputBorderWidth, changeToColor)
+    setTimeout(() => {
+      changeBorder(input, inputBorderWidth, normalColor)
+    }, time)
 }
