@@ -62,5 +62,6 @@
   $_SESSION['INST_EMAIL'] = $sessionData->user->INST_EMAIL; 
   $_SESSION['PERSONAL_EMAIL'] = $sessionData->user->PERSONAL_EMAIL; 
   $_SESSION['ROLES'] = $sessionData->roles;
+  $_SESSION['USER'] = $sessionData->user;
   $_SESSION["TEACHER_NUMBER"] = $teacherNumber;
 

@@ -24,8 +24,9 @@ class SideSection extends HTMLElement {
         <h1 class="text-black">UNAH</h1> 
       </div>
       <div id="side-buttons" class="d-flex flex-column justify-content-center align-items-center h-50">${ elements }</div>
-      <div>
-        <log-out></log-out> 
+      <div class="d-flex flex-column justify-content-center align-items-center">
+        <log-out class="my-1 w-80"></log-out> 
+        <button class="btn b"><a class="text-decoration-none text-white" href="/views/docentes.php">Ir a Docente</a></button>
       </div>
     </div>
     `

@@ -55,9 +55,9 @@
       </div>
       <div class="order-1 border border-right">
         <side-section>
-          <button class="btn btn-sm b">VER SOLICITUDES</button>
-          <button class="btn btn-sm b">VER HISTORIAL ESTUDIANTES</button>
-          <button class="btn btn-sm b">VER CARGA ACADÉMICA</button>
+          <button id="requests" class="btn btn-sm b">VER SOLICITUDES</button>
+          <button id="students-history" class="btn btn-sm b">VER HISTORIAL ESTUDIANTES</button>
+          <button id="academic-load" class="btn btn-sm b">VER CARGA ACADÉMICA</button>
         </side-section>
       </div>
     </div>
@@ -202,6 +202,7 @@
   <script src="../js/components/sideSection.js"></script>
   <script src="../js/components/table.js"></script>
   <script src="./controllers/setUserProfileInfo.js"></script>
+  <script src="./controllers/redirect.js"></script>
 
 </body>
 

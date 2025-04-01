@@ -43,4 +43,33 @@
       }
       readfile($filepath);
     }
+
+    private static function download(string $path) {
+      readfile($path);
+    }
+
+    public static function downloadLoadAsCsv(int $id) {
+      $db = Database::getDatabaseInstace();
+      $mysqli = $db->getConnection();
+      $query = 'CALL SP_GET_ACADEMIC_LOAD_PATH(?)';
+      try {
+        $res = $db->callStoredProcedure($query, 'i', [$id], $mysqli);
+        http_response_code(404);
+        if ($res->num_rows == 0) {
+          echo json_encode([
+          "status" => "failure",
+          "error" => [
+            "errorCode" => 404,
+            "errorMessage" => "Data Not Found",
+          ]
+        ]); 
+        return;
+        }
+        $data = $res->fetch_assoc();
+        http_response_code(200);
+        self::download($data["PATH"]);
+      } catch(Throwable) {
+
+      }
+    }
   }
