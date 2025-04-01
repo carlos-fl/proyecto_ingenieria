@@ -189,6 +189,19 @@ class StudentService
         }
     }
 
+    public static function getClassCancelRequests(int $studentId): array | false
+    {
+        /**Get all the requests of a requestType done by the student */
+        $db = Database::getDatabaseInstace();
+        $mysqli = $db->getConnection();
+        $query = "CALL SP_GET_STUDENT_CLASS_CANCEL_REQUESTS(?)";
+        try{
+            $requests = (object) $db->callStoredProcedure($query, "i", [$studentId], $mysqli);
+            return ["status" => "success", "requests" => $requests->fetch_all(MYSQLI_ASSOC)];
+        } catch (\Throwable $error) {
+            return ["status" => "failure", "message" => $error, "code" => 500];
+        }
+    }
 
     public static function getStudentContacts(int $studentId): StudentResponse
     {
