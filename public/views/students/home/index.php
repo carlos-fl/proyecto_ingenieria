@@ -85,13 +85,13 @@ if (empty($_SESSION)) {
               <header id="profile-bar-h">
                 <h3>Perfil de Estudiante</h3>
               </header>
-              <section style="height: 25vh; border-bottom: 1px solid !important">
+              <section style="height: 25%; border-bottom: 1px solid !important">
                 <aside id="welcome-msg">
                   <h4>Bienvenido Estudiante!</h4>
                 </aside>
                 <div id="user-container">
                   <div id="profile-img">
-                    <img id="profileImg" src="../../assets/img/default-profile.png" class="rounded" alt="Profile Picture" style="background-color: black; width: 150px; height: 150px; object-fit: cover;" />
+                    <img id="profileImg" src="../../assets/img/default-profile.png" class="rounded" alt="Profile Picture" />
                     <button class="btn" id="uploadBtn">
                       <i class="fa-regular fa-pen-to-square"></i> Subir foto de perfil
                     </button>
