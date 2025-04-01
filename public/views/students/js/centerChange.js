@@ -126,6 +126,8 @@ function sendRequest(event){
     let modal = document.getElementById("newRequestModal")
     let centerSelect = document.getElementById("newCenterSelect")
     let changeReason = document.getElementById("changeReason")
+    let sendBtn = document.getElementById("sendRequestBtn")
+    sendBtn.setAttribute("disabled", "disabled")
     let body = new FormData()
     modal = bootstrap.Modal.getInstance(modal);
     body.append("center", centerSelect.value)
@@ -140,6 +142,7 @@ function sendRequest(event){
             showPopUp("No pudo realizarse la solicitud")
             centerSelect.removeAttribute("disabled")
             changeReason.removeAttribute("disabled")
+            sendBtn.removeAttribute("disabled")
             return 
         }
         showPopUp("Solicitud realizada con éxito", "success-popup", "/views/assets/img/checkmark.png")

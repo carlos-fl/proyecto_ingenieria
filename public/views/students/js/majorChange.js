@@ -125,6 +125,8 @@ function sendRequest(event){
     let modal = document.getElementById("newRequestModal")
     let majorSelect = document.getElementById("newMajorSelect")
     let changeReason = document.getElementById("changeReason")
+    let sendBtn = document.getElementById("sendRequestBtn")
+    sendBtn.setAttribute("disabled", "disabled")
     let body = new FormData()
     modal = bootstrap.Modal.getInstance(modal);
     body.append("major", majorSelect.value)
@@ -139,6 +141,8 @@ function sendRequest(event){
             showPopUp("No pudo realizarse la solicitud")
             majorSelect.removeAttribute("disabled")
             changeReason.removeAttribute("disabled")
+            sendBtn.removeAttribute("disabled")
+
             return 
         }
         showPopUp("Solicitud realizada con éxito", "success-popup", "/views/assets/img/checkmark.png")

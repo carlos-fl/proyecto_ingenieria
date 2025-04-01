@@ -92,6 +92,8 @@ function fetchClassCancelRequest(){
 function sendRequest(event){    
     let modal = document.getElementById("newRequestModal")
     let classCancel = document.getElementById("classCancel")
+    let sendBtn = document.getElementById("sendRequestBtn")
+    sendBtn.setAttribute("disabled", "disabled")
     let body = new FormData()
     modal = bootstrap.Modal.getInstance(modal);
     body.append("cancel", classCancel.files[0])
@@ -103,7 +105,7 @@ function sendRequest(event){
         if (data.status == "failure"){
             showPopUp("No pudo realizarse la solicitud")
             classCancel.removeAttribute("disabled")
-            changeReason.removeAttribute("disabled")
+            sendBtn.removeAttribute("disabled")
             return 
         }
         showPopUp("Solicitud realizada con éxito", "success-popup", "/views/assets/img/checkmark.png")
