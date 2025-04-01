@@ -2,13 +2,11 @@
 session_start();
 header('Content-Type: application/json');
 
-// Verificar que el estudiante esté autenticado
-if (!isset($_SESSION['student_id'])) {
+if (!isset($_SESSION['ID_STUDENT'])) {
     echo json_encode(["status" => "error", "message" => "Usuario no autenticado."]);
     exit;
 }
 
-// Obtener datos del body de la petición
 $input = json_decode(file_get_contents("php://input"), true);
 if (!$input) {
     echo json_encode(["status" => "error", "message" => "Datos inválidos."]);
@@ -23,15 +21,12 @@ if ($phone === null || $description === null) {
     exit;
 }
 
-// Incluir la conexión a la base de datos
 require_once '../../database/database.php';
 $database = Database::getDatabaseInstace();
 $mysqli = $database->getConnection();
 
-// Identificador del estudiante según la sesión
-$studentId = $_SESSION['student_id'];
+$studentId = $_SESSION['ID_STUDENT'];
 
-// Preparar la llamada al SP
 $query = "CALL sp_update_student_personal_info(?, ?, ?)";
 $spResult = $database->callStoredProcedure($query, "iss", [$studentId, $phone, $description], $mysqli);
 

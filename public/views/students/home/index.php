@@ -1,8 +1,8 @@
 <?php
-  session_start();
-  if (empty($_SESSION)) {
-      header('Location: loginEstudiantes.php');
-  }
+session_start();
+if (empty($_SESSION)) {
+  header('Location: loginEstudiantes.php');
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -100,9 +100,6 @@
                   </div>
                   <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#messageListModal">
                     <i class="fa-regular fa-message"></i> Mensajeria
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                      99+
-                      <span class="visually-hidden">Mensajes sin leer</span>
                     </span>
                   </button>
                 </div>
@@ -123,17 +120,17 @@
                     <span>Teléfono</span>
                   </div>
                   <div class="info-row" style="margin-bottom: 1rem;">
-                    <span id="accountNumber">123456</span>
-                    <span id="name">Nombre de ejemplo</span>
-                    <span id="email">ejemplo@correo.com</span>
-                    <span id="phone">00000000</span>
+                    <span id="accountNumber"></span>
+                    <span id="name"></span>
+                    <span id="email"></span>
+                    <span id="phone"></span>
                   </div>
                   <div class="card description-card" style="border: 1px solid #e0e0e0; border-radius: 8px;">
                     <div class="card-header" style="background-color: #f7f7f7; border-bottom: 1px solid #e0e0e0; font-weight: bold; color: #333;">
                       Descripción
                     </div>
                     <div class="card-body" style="padding: 1rem;">
-                      <p class="card-text" id="description" style="margin: 0;">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Necessitatibus commodi recusandae sapiente id odit molestias corrupti voluptates ipsa, similique, doloremque quisquam enim. Esse, qui id doloribus ipsa officiis at iusto.</p>
+                      <p class="card-text" id="description" style="margin: 0;"></p>
                     </div>
                   </div>
                 </div>
@@ -156,8 +153,8 @@
                       <span>Indice Periodo</span>
                     </div>
                     <div class="info-row">
-                      <span id="globalIndex">80%</span>
-                      <span id="periodIndex ">97%</span>
+                      <span id="globalIndex"></span>
+                      <span id="periodIndex "></span>
                     </div>
                     <div class="card text-center">
                       <div class="card-header">
@@ -191,24 +188,7 @@
                                   </thead>
                                   <tbody>
                                     <tr>
-                                      <td>CDG01</td>
-                                      <td>NOMBRE CLASE</td>
-                                      <td>5.0</td>
-                                      <td>1001</td>
-                                      <td>2025</td>
-                                      <td>1</td>
-                                      <td>95</td>
-                                      <td>AP</td>
-                                    </tr>
-                                    <tr>
-                                      <td>CDG02</td>
-                                      <td>NOMBRE CLASE</td>
-                                      <td>4.0</td>
-                                      <td>1002</td>
-                                      <td>2025</td>
-                                      <td>2</td>
-                                      <td>90</td>
-                                      <td>AP</td>
+                                      <td></td>
                                     </tr>
                                   </tbody>
                                 </table>
@@ -302,7 +282,6 @@
               </button>
             </div>
           </div>
-
           <!-- Sección para agregar contacto -->
           <div class="mb-4">
             <button class="btn btn-outline-success w-100" type="button" data-bs-toggle="collapse" data-bs-target="#addContactCollapse" aria-expanded="false" aria-controls="addContactCollapse">
@@ -314,65 +293,16 @@
                   <label for="contactEmailInput" class="form-label">Correo institucional</label>
                   <input type="email" class="form-control" id="contactEmailInput" placeholder="correo@institucion.edu">
                 </div>
-                <!-- Falta: Incluir de manera dinámica, el nombre y correo del contacto a agregar después de validarlo -->
                 <button class="btn btn-primary" type="button" onclick="sendFriendRequest()">
                   Enviar solicitud de amistad
                 </button>
               </div>
             </div>
           </div>
-
           <!-- Lista de Contactos -->
-          <div class="list-group" style="max-height: 300px; overflow-y: auto;">
-            <!-- Contacto 1 -->
-            <div class="list-group-item list-group-item-action">
-              <div class="d-flex w-100 justify-content-between align-items-center">
-                <div>
-                  <h6 class="mb-1">Juan Pérez</h6>
-                  <p class="mb-1 small text-muted">Cuenta: 123456</p>
-                </div>
-                <div>
-                  <a href="#" class="btn btn-sm btn-outline-success me-1" title="Chat" onclick="openChat('Juan Pérez','123456')">
-                    <i class="fa-solid fa-comments"></i>
-                  </a>
-                  <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#contactActions1" aria-expanded="false" aria-controls="contactActions1">
-                    <i class="fa-solid fa-ellipsis-v"></i>
-                  </button>
-                </div>
-              </div>
-              <!-- Opciones adicionales -->
-              <div class="collapse mt-2" id="contactActions1">
-                <div class="d-flex">
-                  <button class="btn btn-sm btn-primary me-2">Agregar a Grupo</button>
-                  <button class="btn btn-sm btn-danger">Eliminar Contacto</button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Contacto 2 -->
-            <div class="list-group-item list-group-item-action">
-              <div class="d-flex w-100 justify-content-between align-items-center">
-                <div>
-                  <h6 class="mb-1">María López</h6>
-                  <p class="mb-1 small text-muted">Cuenta: 654321</p>
-                </div>
-                <div>
-                  <a href="#" class="btn btn-sm btn-outline-success me-1" title="Chat" onclick="openChat('María López','654321')">
-                    <i class="fa-solid fa-comments"></i>
-                  </a>
-                  <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#contactActions2" aria-expanded="false" aria-controls="contactActions2">
-                    <i class="fa-solid fa-ellipsis-v"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="collapse mt-2" id="contactActions2">
-                <div class="d-flex">
-                  <button class="btn btn-sm btn-primary me-2">Agregar a Grupo</button>
-                  <button class="btn btn-sm btn-danger">Eliminar Contacto</button>
-                </div>
-              </div>
-            </div>
-          </div>
+          <div id="loadingContacts" class="text-center text-muted">Cargando Contactos…</div>
+          <div id="errorContacts" class="text-danger text-center" style="display: none;"></div>
+          <div id="contactsList" class="list-group" style="max-height: 300px; overflow-y: auto;"></div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -391,26 +321,13 @@
         </div>
         <div class="modal-body">
           <div class="list-group" style="max-height: 300px; overflow-y: auto;">
-            <!-- Ejemplo de Usuario 1 -->
             <div class="list-group-item d-flex justify-content-between align-items-center">
               <div>
-                <h6 class="mb-1">Juan Pérez</h6>
-                <small>Cuenta: 123456</small>
+                <h6 class="mb-1"></h6>
+                <small></small>
               </div>
               <div>
                 <button class="btn btn-sm btn-outline-success toggle-user-btn" data-user-id="001">
-                  <i class="fa-solid fa-plus"></i>
-                </button>
-              </div>
-            </div>
-            <!-- Ejemplo de Usuario 2 -->
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-              <div>
-                <h6 class="mb-1">María López</h6>
-                <small>Cuenta: 654321</small>
-              </div>
-              <div>
-                <button class="btn btn-sm btn-outline-success toggle-user-btn" data-user-id="002">
                   <i class="fa-solid fa-plus"></i>
                 </button>
               </div>
@@ -465,29 +382,14 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
-          <div class="list-group">
-            <!-- Chat con Juan Pérez -->
-            <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#chatModal" onclick="loadChat('Juan Pérez','123456')">
-              <div class="d-flex w-100 justify-content-between">
-                <div>
-                  <h6 class="mb-1">Juan Pérez</h6>
-                  <p class="mb-1 small">Cuenta: 123456</p>
-                </div>
-                <small class="text-muted">12:30 PM</small>
-              </div>
-              <p class="mb-1">Último mensaje de Juan...</p>
-            </a>
-            <!-- Chat con María López -->
-            <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#chatModal" onclick="loadChat('María López','654321')">
-              <div class="d-flex w-100 justify-content-between">
-                <div>
-                  <h6 class="mb-1">María López</h6>
-                  <p class="mb-1 small">Cuenta: 654321</p>
-                </div>
-                <small class="text-muted">11:15 AM</small>
-              </div>
-              <p class="mb-1">Último mensaje de María...</p>
-            </a>
+          <div id="loadingMessages" style="display: none;">
+            <p>Loading...</p> <!-- Indicador de carga -->
+          </div>
+          <div id="errorMessages" style="display: none;">
+            <p class="text-danger">Error al cargar los mensajes.</p> <!-- Mensaje de error -->
+          </div>
+          <div class="list-group" id="messageList">
+            <!-- Los mensajes se agregarán aquí dinámicamente -->
           </div>
         </div>
       </div>
@@ -504,21 +406,7 @@
         </div>
         <div class="modal-body">
           <!-- Contenedor de mensajes -->
-          <div class="chat-container" style="max-height: 400px; overflow-y: auto;">
-            <!-- Ejemplo de mensaje recibido -->
-            <div class="d-flex mb-2">
-              <div class="p-2 bg-light rounded" style="max-width: 70%;">
-                <p class="mb-1">Hola, ¿cómo estás?</p>
-                <small class="text-muted">10:00 AM - Visto</small>
-              </div>
-            </div>
-            <!-- Ejemplo de mensaje enviado -->
-            <div class="d-flex justify-content-end mb-2">
-              <div class="p-2 bg-primary text-white rounded" style="max-width: 70%;">
-                <p class="mb-1">¡Hola! Todo bien, gracias.</p>
-                <small class="text-light">10:05 AM - Enviado</small>
-              </div>
-            </div>
+          <div class="chat-container" style="max-height: 400px; overflow-y: auto;" id="chatMessages">
           </div>
         </div>
         <div class="modal-footer">
@@ -592,7 +480,7 @@
     </div>
   </div>
 
-  <!-- Modal: Chat Grupal -->
+  <!-- Modal Chat Grupal -->
   <div class="modal fade" id="groupChatModal" tabindex="-1" aria-labelledby="groupChatModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
@@ -644,6 +532,7 @@
   <script src="../../js/components/reviewerModal.js"></script>
   <script src="./controllers/info.js"></script>
   <script src="./controllers/chats.js"></script>
+  <script src="./controllers/contacts.js"></script>
 
 </body>
 
