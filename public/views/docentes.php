@@ -35,7 +35,7 @@
               <h1>UNAH</h1>
             </header>
           </div>
-          <div class="sidebar-mn">
+          <div id="sidebarMain" class="sidebar-mn">
           </div>
           <div class="sidebar-ft">
             <log-out></log-out>

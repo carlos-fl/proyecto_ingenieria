@@ -507,6 +507,38 @@ function cleanUploadGradesModal(event){
   uploadTable.classList.add("d-none")
 }
 
+function initCoordinatorChairPrivileges(){
+  // Check if a teacher is coordinator or department chair too
+  let sidebarMain = document.getElementById("sidebarMain")
+  fetch("/api/teachers/controllers/getTeacherRoles.php")
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === "failure"){
+      return
+    }
+    let roles = data.roles;
+    if (roles.includes("COORDINATOR")){
+      // Dibujar dinámicamente el rol de coordinator
+      let coordinatorAnchor = document.createElement("a")
+      coordinatorAnchor.href = "/views/coordinator/index.php"
+      coordinatorAnchor.innerText = "Ingresar como Coordinador"
+      sidebarMain.appendChild(coordinatorAnchor)
+    }
+    else if (roles.includes("DEPARTMENT CHAIR")){
+      // Dibujar dinámicamente el anchor a la vista
+      // TODO: IMPLEMENT
+      let chairAnchor = document.createElement("a")
+      chairAnchor.href = "#"
+      chairAnchor.innerText = "Ingresar a mi perfil de Jefe de Departamento"
+      sidebarMain.appendChild(chairAnchor)
+    }
+
+  })
+  .catch(
+    // No se pudo verificar el privilegio 
+  )
+}
+
 
 function main() {
   let deleteVideoBtn = document.getElementById("deleteVideoBtn")
@@ -520,6 +552,7 @@ function main() {
   let uploadGradesBtn = document.getElementById("uploadGradesBtn")
   loadTeacherProfile();
   getTeacherSections();
+  initCoordinatorChairPrivileges();
   // Eventos a elementos de la página
   deleteVideoBtn.addEventListener("click", deleteVideo);
   videoInput.addEventListener("change", validateUrl)

@@ -1,5 +1,5 @@
 <?php 
-
+  session_start();
   if (empty($_SESSION) || !in_array("COORDINATOR", $_SESSION['ROLES'])) {
     header('Location: /');
   }
