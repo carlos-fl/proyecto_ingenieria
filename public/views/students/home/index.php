@@ -220,7 +220,7 @@ if (empty($_SESSION)) {
         </div>
         <div class="modal-body">
           <div class="list-group">
-            <a href="exceptional-cancellation.html" class="list-group-item list-group-item-action">
+            <a href="../requests/classCancel.php" class="list-group-item list-group-item-action">
               <i class="fa-solid fa-ban"></i> Solicitar Cancelacion Excepcional
             </a>
             <a href="replacement-payment.html" class="list-group-item list-group-item-action">
