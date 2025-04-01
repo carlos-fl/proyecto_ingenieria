@@ -3,7 +3,7 @@
 session_start();
 header('Content-Type: application/json');
 
-include_once __DIR__ .'/../../../../services/auth/services/auth.service.php';
+include_once __DIR__ . '/../../../../services/auth/services/auth.service.php';
 include_once __DIR__ . '/../../../../utils/classes/Logger.php';
 include_once __DIR__ . '/../../../../utils/classes/Request.php';
 include_once __DIR__ . '/../../../../services/students/services/Students.php';
@@ -39,8 +39,8 @@ if (!in_array("STUDENTS", $sessionData->roles)) {
 
 $userId = $sessionData->user->USER_ID;
 $idStudent = StudentService::getStudentId($userId);
-$accountNumber = StudentService::getStudentAccountNumber($userId);
-$profilePhoto = StudentService::getProfilePhoto($studentId);
+$studentAccountNumber = StudentService::getStudentAccountNumber($userId);
+//$profilePhoto = StudentService::getProfilePhoto($userId);
 
 http_response_code(200);
 echo json_encode([
@@ -49,9 +49,9 @@ echo json_encode([
     "sessionData" => [
         "user" => $sessionData->user,
         "roles" => $sessionData->roles,
-        "studentId" => $studentId,
-        "studentAccountNumber" => $studentAccountNumber,
-        "profilePhoto" => $profilePhoto
+        "studentId" => $idStudent,
+        "studentAccountNumber" => $studentAccountNumber
+        //"profilePhoto" => $profilePhoto
     ],
     "error" => null
 ]);
@@ -65,4 +65,4 @@ $_SESSION['PERSONAL_EMAIL'] = $sessionData->user->PERSONAL_EMAIL;
 $_SESSION['ROLES'] = $sessionData->roles;
 $_SESSION["ID_STUDENT"] = $idStudent;
 $_SESSION["STUDENT_ACCOUNT_NUMBER"] = $studentAccountNumber;
-$_SESSION["PROFILE_PHOTO"] = $profilePhoto;
+//$_SESSION["PROFILE_PHOTO"] = $profilePhoto;

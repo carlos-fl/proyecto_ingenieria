@@ -1,4 +1,9 @@
-<?php ?>
+<?php
+  session_start();
+  if (empty($_SESSION)) {
+      header('Location: loginEstudiantes.php');
+  }
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -68,7 +73,6 @@
               <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#groupsModal">
                 <i class="fa-regular fa-handshake"></i> Grupos
               </a>
-
             </div>
           </div>
           <div class="sidebar-ft">
@@ -91,7 +95,8 @@
                     <button class="btn" id="uploadBtn">
                       <i class="fa-regular fa-pen-to-square"></i> Subir foto de perfil
                     </button>
-                    <input type="file" id="fileInput" style="display: none;" accept="image/*" />
+                    <span id="uploadSpinner" class="spinner-border spinner-border-sm" style="display: none; position: absolute; top: 10px; right: 10px;" role="status" aria-hidden="true"></span>
+                    <input type="file" id="fileInput" style="display: none;" accept="image/*" onchange="handleProfileImageUpload(this.files)" />
                   </div>
                   <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#messageListModal">
                     <i class="fa-regular fa-message"></i> Mensajeria
@@ -100,7 +105,6 @@
                       <span class="visually-hidden">Mensajes sin leer</span>
                     </span>
                   </button>
-
                 </div>
               </section>
               <section>
@@ -118,15 +122,29 @@
                     <span>Correo</span>
                     <span>Teléfono</span>
                   </div>
-                  <div class="info-row">
+                  <div class="info-row" style="margin-bottom: 1rem;">
                     <span id="accountNumber">123456</span>
                     <span id="name">Nombre de ejemplo</span>
                     <span id="email">ejemplo@correo.com</span>
                     <span id="phone">00000000</span>
                   </div>
+                  <div class="card description-card" style="border: 1px solid #e0e0e0; border-radius: 8px;">
+                    <div class="card-header" style="background-color: #f7f7f7; border-bottom: 1px solid #e0e0e0; font-weight: bold; color: #333;">
+                      Descripción
+                    </div>
+                    <div class="card-body" style="padding: 1rem;">
+                      <p class="card-text" id="description" style="margin: 0;">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Necessitatibus commodi recusandae sapiente id odit molestias corrupti voluptates ipsa, similique, doloremque quisquam enim. Esse, qui id doloribus ipsa officiis at iusto.</p>
+                    </div>
+                  </div>
                 </div>
               </section>
               <section>
+                <div id="loadingContainer" class="text-center my-3" style="display:none;">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                  </div>
+                  <div>Cargando…</div>
+                </div>
                 <div class="container my-5">
                   <div class="info-card">
                     <div class="info-header">
@@ -195,24 +213,9 @@
                                   </tbody>
                                 </table>
                               </div>
-                              <nav aria-label="Page navigation example">
-                                <ul class="pagination justify-content-end">
-                                  <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
-                                  </li>
-                                  <li class="page-item active">
-                                    <a class="page-link" href="#">1</a>
-                                  </li>
-                                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                  <li class="page-item">
-                                    <a class="page-link" href="#">Siguiente</a>
-                                  </li>
-                                </ul>
-                              </nav>
+                              <div id="paginationContainer"></div>
                             </div>
                           </div>
-
                         </div>
                       </div>
                     </div>
@@ -284,19 +287,41 @@
   <div class="modal fade" id="contactsModal" tabindex="-1" aria-labelledby="contactsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header bg-primary text-white">
           <h5 class="modal-title" id="contactsModalLabel">Contactos</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
           <!-- Sección para crear grupos -->
           <div class="mb-4">
-            <h6>Create Group</h6>
+            <h6 class="mb-2">Crear Grupo</h6>
             <div class="input-group">
-              <input type="text" class="form-control" placeholder="Group Name" aria-label="Group Name" id="groupNameInput">
-              <button class="btn btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#createGroupModal">Crear Grupo</button>
+              <input type="text" class="form-control" placeholder="Nombre del Grupo" aria-label="Group Name" id="groupNameInput">
+              <button class="btn btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#createGroupModal">
+                Crear Grupo
+              </button>
             </div>
           </div>
+
+          <!-- Sección para agregar contacto -->
+          <div class="mb-4">
+            <button class="btn btn-outline-success w-100" type="button" data-bs-toggle="collapse" data-bs-target="#addContactCollapse" aria-expanded="false" aria-controls="addContactCollapse">
+              <i class="fa-solid fa-plus"></i> Agregar Contacto
+            </button>
+            <div class="collapse mt-3" id="addContactCollapse">
+              <div class="card card-body">
+                <div class="mb-3">
+                  <label for="contactEmailInput" class="form-label">Correo institucional</label>
+                  <input type="email" class="form-control" id="contactEmailInput" placeholder="correo@institucion.edu">
+                </div>
+                <!-- Falta: Incluir de manera dinámica, el nombre y correo del contacto a agregar después de validarlo -->
+                <button class="btn btn-primary" type="button" onclick="sendFriendRequest()">
+                  Enviar solicitud de amistad
+                </button>
+              </div>
+            </div>
+          </div>
+
           <!-- Lista de Contactos -->
           <div class="list-group" style="max-height: 300px; overflow-y: auto;">
             <!-- Contacto 1 -->
@@ -304,14 +329,12 @@
               <div class="d-flex w-100 justify-content-between align-items-center">
                 <div>
                   <h6 class="mb-1">Juan Pérez</h6>
-                  <p class="mb-1 small">Cuenta: 123456</p>
+                  <p class="mb-1 small text-muted">Cuenta: 123456</p>
                 </div>
                 <div>
-                  <!-- Botón para abrir chat -->
                   <a href="#" class="btn btn-sm btn-outline-success me-1" title="Chat" onclick="openChat('Juan Pérez','123456')">
                     <i class="fa-solid fa-comments"></i>
                   </a>
-                  <!-- Botón para mostrar acciones adicionales -->
                   <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#contactActions1" aria-expanded="false" aria-controls="contactActions1">
                     <i class="fa-solid fa-ellipsis-v"></i>
                   </button>
@@ -331,10 +354,10 @@
               <div class="d-flex w-100 justify-content-between align-items-center">
                 <div>
                   <h6 class="mb-1">María López</h6>
-                  <p class="mb-1 small">Cuenta: 654321</p>
+                  <p class="mb-1 small text-muted">Cuenta: 654321</p>
                 </div>
                 <div>
-                  <a href="#" class="btn btn-sm btn-outline-success me-1" title="Chat">
+                  <a href="#" class="btn btn-sm btn-outline-success me-1" title="Chat" onclick="openChat('María López','654321')">
                     <i class="fa-solid fa-comments"></i>
                   </a>
                   <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#contactActions2" aria-expanded="false" aria-controls="contactActions2">
@@ -412,17 +435,16 @@
         </div>
         <div class="modal-body">
           <form id="editInfoForm">
-            <div class="mb-3">
-              <label for="editName" class="form-label">Nombre Completo</label>
-              <input type="text" class="form-control" id="editName" value="Nombre de ejemplo">
-            </div>
-            <div class="mb-3">
-              <label for="editEmail" class="form-label">Correo</label>
-              <input type="email" class="form-control" id="editEmail" value="ejemplo@correo.com">
-            </div>
+            <!-- Campo Teléfono -->
             <div class="mb-3">
               <label for="editPhone" class="form-label">Teléfono</label>
-              <input type="text" class="form-control" id="editPhone" value="00000000">
+              <input type="text" class="form-control" id="editPhone" placeholder="Ingrese su teléfono">
+            </div>
+            <!-- Campo Descripción -->
+            <div class="mb-3">
+              <label for="editDescription" class="form-label">Descripción</label>
+              <textarea class="form-control" id="editDescription" rows="3" maxlength="300" placeholder="Escribe una breve descripción sobre ti (máximo 300 caracteres)"></textarea>
+              <div id="descHelp" class="form-text">Máximo 300 caracteres.</div>
             </div>
           </form>
         </div>

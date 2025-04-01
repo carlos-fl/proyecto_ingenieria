@@ -1,17 +1,21 @@
 <?php
 
-class StudentData {
+class StudentData
+{
     public int $studentId;
     public int $studentAccountNumber;
+    public string $description;
     public string $firstName;
     public string $lastName;
     public string $email;
     public string $phone;
     public ?string $profilePhoto;
 
-    public function __construct(int $studentId, int $studentAccountNumber, string $firstName, string $lastName, string $email, string $phone, ?string $profilePhoto) {
+    public function __construct(int $studentId, int $studentAccountNumber, string $description, string $firstName, string $lastName, string $email, string $phone, ?string $profilePhoto)
+    {
         $this->studentId = $studentId;
         $this->studentAccountNumber = $studentAccountNumber;
+        $this->description = $description;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->email = $email;
@@ -19,9 +23,10 @@ class StudentData {
         $this->profilePhoto = $profilePhoto;
     }
 
-    public static function setPropertiesWithArray(array $data): self {
+    public static function setPropertiesWithArray(array $data): self
+    {
         $photos = isset($data['photos']) ? json_decode($data['photos'], true) : [];
-        
+
         $profilePhoto = null;
         if (is_array($photos)) {
             foreach ($photos as $photo) {
@@ -35,6 +40,7 @@ class StudentData {
         return new self(
             $data['studentId'],
             $data['studentAccountNumber'],
+            $data['description'],
             $data['firstName'],
             $data['lastName'],
             $data['institutionalEmail'],

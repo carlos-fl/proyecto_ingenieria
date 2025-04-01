@@ -27,9 +27,9 @@
     </header>
 
     <main>
-        <login-form action="src/services/auth/controllers/login.php" imgSource="assets/img/unah.png" imgAlt="Logo UNAH"
+        <login-form action="/api/auth/controllers/studentAuth.php" imgSource="assets/img/unah.png" imgAlt="Logo UNAH"
             heading="Bienvenido Estudiante" message="Debe autenticarse como estudiante para usar este servicio" id="login-estudiante"
-            data-redirect-success="estudiantes.php">
+            data-redirect-success="students/home/index.php">
         </login-form>
     </main>
 
@@ -49,7 +49,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-    <script src="js/login.js"></script>
+    <script src="js/studentsLogin.js"></script>
     <script type="module" src="js/components/login-form.js"></script>
     <script type="module" src="js/components/pop-up.js"></script>
     <script type="module" src="js/components/navbar.js"></script>
