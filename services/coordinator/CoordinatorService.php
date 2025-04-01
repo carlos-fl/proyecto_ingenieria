@@ -61,7 +61,7 @@
       $mysqli = $db->getConnection();
       $query = "CALL SP_GET_STUDENT_HISTORY_BY_ACCOUNT_NUMBER(?)";
       try {
-        $result = $db->callStoredProcedure($query, 'ii', [$accountNumber], $mysqli);
+        $result = $db->callStoredProcedure($query, 'i', [$accountNumber], $mysqli);
         $mysqli->close();
         if ($result->num_rows == 0) {
           return new StudentsResponse("failure", error: new ErrorResponse(404, 'Data Not Found')); 
@@ -70,15 +70,15 @@
         $history = $result->fetch_all(1);
         $historyGrouped = [];
         foreach($history as $item) {
-          if (!isset($historyGrouped[$item["YEAR"]])) {
-            $historyGrouped[$item["YEAR"]] = [];
+          if (!isset($historyGrouped[$item["PERIOD"]])) {
+            $historyGrouped[$item["PERIOD"]] = [];
           }
-          array_push($historyGrouped[$item['YEAR']], $item);
+          array_push($historyGrouped[$item['PERIOD']], $item);
         }
 
         return new StudentsResponse("success", $historyGrouped);
-      } catch(Throwable) {
-        return new StudentsResponse('failure', error: new ErrorResponse(500, "Server error"));
+      } catch(Throwable $err) {
+        return new StudentsResponse('failure', error: new ErrorResponse(500, "Server error " . $err->getMessage()));
       }
     }
 

@@ -1,10 +1,4 @@
-<?php 
 
-  if (empty($_SESSION) || !in_array('COORDINATOR', $_SESSION['ROLES'])) {
-    header('Location: /');
-  }
-
-?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -58,7 +52,7 @@
           </div>
         </div>
         <div class="overflow-auto w-75">
-          <d-table class="w-90" tag-id="student-history-table" table-row='["Estudiante","Número de cuenta","índice global"]'></d-table>
+          <d-table class="w-90" tag-id="student-history-table" table-row='["Estudiante","Número de cuenta","índice global", "Acción"]'></d-table>
         </div>
       </div>
     </div>
@@ -66,11 +60,11 @@
   <!--Footer de la página-->
   <footer-unah></footer-unah>
 
+  <!-- modal to show history table  -->
+  <d-modal tag-id="history-modal" modal-id="history-student-modal" arial-label-led-by="history-student-modal-results" header-title="Historial" arial-label="student-history" hidden="false"></d-modal>
   <loading-modal tag-id="loading" modal-id="loading-modal"></loading-modal>
   <modal-error tag-id="history-error" modal-id="history-m-error" arial-label-led-by="history-modal-error" header-title="" arial-label="TEXT" hidden="false"></modal-error>
 
-<!-- modal to show history table  -->
-  <d-modal tag-id="history-modal" modal-id="history-student-modal" arial-label-led-by="history-student-modal-results" header-title="Historial" arial-label="student-history" hidden="false"></d-modal>
 
 <!-- pop up to show errors -->
   <pop-up

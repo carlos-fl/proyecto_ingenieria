@@ -12,7 +12,7 @@ async function getStudents() {
     const data = await Request.fetch(URL, 'GET')
     hideLoadingComponent('loading')
 
-    setTableBody(data.data)
+    fillTable(data.data)
   } catch(err) {
     hideLoadingComponent('loading')
     showPopUp("No se encontraron historiales...")
