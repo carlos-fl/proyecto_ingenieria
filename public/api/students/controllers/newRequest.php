@@ -29,12 +29,16 @@ $requestType = $_POST["requestType"];
 if ($requestType === StudentRequestType::MAJORCHANGE){
     $majorId = $_SESSION["MAJOR"][$_POST["major"]];
     $content = $_POST["content"];
-    $studentRequest = new MajorChangeStudentRequest($majorId, $content);
+    $file = $_FILES["backup"];
+    $backup = ContentManagement::saveFile($file);
+    $studentRequest = new MajorChangeStudentRequest($majorId, $content, $backup);
 }
 elseif ($requestType === StudentRequestType::CAMPUSTRANSFER){
     $centerId = $_SESSION["CENTER"][$_POST["center"]];
     $content = $_POST["content"];
-    $studentRequest = new CenterChangeStudentRequest($centerId, $content);
+    $file = $_FILES["backup"];
+    $backup = ContentManagement::saveFile($file);
+    $studentRequest = new CenterChangeStudentRequest($centerId, $content, $backup);
 }
 elseif ($requestType === StudentRequestType::CANCELLATION){
     $file = $_FILES["cancel"];

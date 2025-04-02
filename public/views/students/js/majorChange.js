@@ -18,7 +18,8 @@ function validateInput(event){
 function checkInputFull(event){
     let majorSelect = document.getElementById("newMajorSelect")
     let changeReason = document.getElementById("changeReason")
-    if (majorSelect.value !== "" && changeReason.value !== ""){
+    let backUpFile = document.getElementById("backup")
+    if (majorSelect.value !== "" && changeReason.value !== "" && backUpFile.value !== ""){
         event.target.removeAttribute("disabled")
     }else{
         event.target.setAttribute("disabled", "disabled")
@@ -40,13 +41,14 @@ function cleanRequestModal(event){
 function fetchMajors(){
     // Traer las carreras a las que no pertenece un usuario
     let majorSelect = document.getElementById("newMajorSelect")
-    majorSelect.innerHTML = "<option>Cargando Carreras...</option>"
+    majorSelect.innerHTML = `<option value="">Cargando Carreras...</option>`
     majorSelect.setAttribute("disabled", "disabled")
     fetch("/api/students/controllers/getDifferentMajors.php", {method:"GET"})
     .then(response => response.json())
     .then(data => {
         if (data.status == "failure"){
             showPopUp("Hubo un error al traer las carreras")
+            majorSelect.innerHTML = `<option value="">No pudieron cargarse las carreras. Por favor, refresque la página.</option>`
             return
         }
         let majors = data.majors
@@ -61,6 +63,7 @@ function fetchMajors(){
     })
     .catch( (error) =>{
         showPopUp("Hubo un error al traer las carreras")
+        majorSelect.innerHTML = `<option value="">No pudieron cargarse las carreras. Por favor, refresque la página.</option>`
     })
 }
 
@@ -125,12 +128,14 @@ function sendRequest(event){
     let modal = document.getElementById("newRequestModal")
     let majorSelect = document.getElementById("newMajorSelect")
     let changeReason = document.getElementById("changeReason")
+    let backUpFile = document.getElementById("backup")
     let sendBtn = document.getElementById("sendRequestBtn")
     sendBtn.setAttribute("disabled", "disabled")
     let body = new FormData()
     modal = bootstrap.Modal.getInstance(modal);
     body.append("major", majorSelect.value)
     body.append("content", changeReason.value)
+    body.append("backup", backUpFile.files[0])
     body.append("requestType", "MAJORCHANGE")
     majorSelect.setAttribute("disabled", "disabled")
     changeReason.setAttribute("disabled", "disabled")
@@ -160,11 +165,13 @@ function main(){
     let newRequestBtn = document.getElementById("newRequestBtn")
     let majorSelect = document.getElementById("newMajorSelect")
     let changeReason = document.getElementById("changeReason")
+    let backUpFile = document.getElementById("backup")
     let sendBtn = document.getElementById("sendRequestBtn")
     let modal = document.getElementById("newRequestModal")
     newRequestBtn.addEventListener("click", fetchMajors)
     majorSelect.addEventListener("change", validateInput)
     changeReason.addEventListener("input", validateInput)
+    backUpFile.addEventListener("input", validateInput)
     sendBtn.addEventListener("input-change", checkInputFull)
     sendBtn.addEventListener("click", sendRequest)
     modal.addEventListener("hide.bs.modal", cleanRequestModal)

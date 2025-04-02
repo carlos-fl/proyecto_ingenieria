@@ -18,7 +18,8 @@ function validateInput(event){
 function checkInputFull(event){
     let centerSelect = document.getElementById("newCenterSelect")
     let changeReason = document.getElementById("changeReason")
-    if (centerSelect.value !== "" && changeReason.value !== ""){
+    let backUpFile = document.getElementById("backup")
+    if (centerSelect.value !== "" && changeReason.value !== "" && backUpFile.value !== ""){
         event.target.removeAttribute("disabled")
     }else{
         event.target.setAttribute("disabled", "disabled")
@@ -40,13 +41,14 @@ function cleanRequestModal(event){
 function fetchCenters(){
     // Traer las carreras a las que no pertenece un usuario
     let centerSelect = document.getElementById("newCenterSelect")
-    centerSelect.innerHTML = "<option>Cargando Centros...</option>"
+    centerSelect.innerHTML = `<option value="">Cargando Centros...</option>`
     centerSelect.setAttribute("disabled", "disabled")
     fetch("/api/students/controllers/getDifferentRegionalCenters.php", {method:"GET"})
     .then(response => response.json())
     .then(data => {
         if (data.status == "failure"){
-            showPopUp("Hubo un error al traer las carreras")
+            showPopUp("Hubo un error al traer los centros regionales")
+            centerSelect.innerHTML = `<option value="">No se pudieron cargar los centros. Por favor refresque la página.</option>`
             return
         }
         console.log(data)
@@ -62,6 +64,7 @@ function fetchCenters(){
     })
     .catch( (error) =>{
         showPopUp("Hubo un error al traer los centros regionales")
+        centerSelect.innerHTML = `<option value="">No se pudieron cargar los centros.Por favor refresque la página.</option>`
     })
 }
 
@@ -126,12 +129,14 @@ function sendRequest(event){
     let modal = document.getElementById("newRequestModal")
     let centerSelect = document.getElementById("newCenterSelect")
     let changeReason = document.getElementById("changeReason")
+    let backUpFile = document.getElementById("backup")
     let sendBtn = document.getElementById("sendRequestBtn")
     sendBtn.setAttribute("disabled", "disabled")
     let body = new FormData()
     modal = bootstrap.Modal.getInstance(modal);
     body.append("center", centerSelect.value)
     body.append("content", changeReason.value)
+    body.append("backup", backUpFile.files[0])
     body.append("requestType", "CAMPUSTRANSFER")
     centerSelect.setAttribute("disabled", "disabled")
     changeReason.setAttribute("disabled", "disabled")
@@ -160,11 +165,13 @@ function main(){
     let newRequestBtn = document.getElementById("newRequestBtn")
     let centerSelect = document.getElementById("newCenterSelect")
     let changeReason = document.getElementById("changeReason")
+    let backUpFile = document.getElementById("backup")
     let sendBtn = document.getElementById("sendRequestBtn")
     let modal = document.getElementById("newRequestModal")
     newRequestBtn.addEventListener("click", fetchCenters)
     centerSelect.addEventListener("change", validateInput)
     changeReason.addEventListener("input", validateInput)
+    backUpFile.addEventListener("input", validateInput)
     sendBtn.addEventListener("input-change", checkInputFull)
     sendBtn.addEventListener("click", sendRequest)
     modal.addEventListener("hide.bs.modal", cleanRequestModal)

@@ -82,6 +82,10 @@
                             <label class="mb-1"for="changeReason">Motivo del cambio<span class="text-danger">*</span></label>
                             <textarea name="changeReason" id="changeReason" class="form-control"></textarea>
                         </div>
+                        <div class="mt-3">
+                            <label class="mb-1"for="backup">Documentación de respaldo<span class="text-danger">*</span></label>
+                            <input name="backup" type="file" id="backup" class="form-control" accept="application/pdf"></input>
+                        </div>
                     </fieldset>
                 </div>
                 <div class="modal-footer">
