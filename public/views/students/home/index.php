@@ -263,7 +263,7 @@ if (empty($_SESSION)) {
     </div>
   </div>
 
-  <!-- Modal Contactos-->
+  <!-- Modal Contactos -->
   <div class="modal fade" id="contactsModal" tabindex="-1" aria-labelledby="contactsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
@@ -383,10 +383,10 @@ if (empty($_SESSION)) {
         </div>
         <div class="modal-body">
           <div id="loadingMessages" style="display: none;">
-            <p>Loading...</p> <!-- Indicador de carga -->
+            <p>Cargando...</p>
           </div>
           <div id="errorMessages" style="display: none;">
-            <p class="text-danger">Error al cargar los mensajes.</p> <!-- Mensaje de error -->
+            <p class="text-danger">Error al cargar los mensajes.</p>
           </div>
           <div class="list-group" id="messageList">
             <!-- Los mensajes se agregarán aquí dinámicamente -->
