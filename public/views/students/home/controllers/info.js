@@ -10,18 +10,14 @@ function loadPersonalInfo() {
     .then((response) => response.json())
     .then((data) => {
       if (data.status === "success") {
-        let fullName = `${data.data.firstName || ""} ${
-          data.data.lastName || ""
-        }`.trim();
+        let fullName = `${data.data.firstName || ""} ${data.data.lastName || ""}`.trim();
         fullName = fullName || "N/A";
 
-        document.getElementById("accountNumber").innerText =
-          data.data.studentAccountNumber || "N/A";
+        document.getElementById("accountNumber").innerText = data.data.studentAccountNumber || "N/A";
         document.getElementById("name").innerText = fullName || "N/A";
         document.getElementById("email").innerText = data.data.email || "N/A";
         document.getElementById("phone").innerText = data.data.phone || "N/A";
-        document.getElementById("description").innerText =
-          data.data.description || "Sin descripción";
+        document.getElementById("description").innerText = data.data.description || "Sin descripción";
       } else {
         console.error("Error al cargar la información personal", data.error);
       }
@@ -29,22 +25,39 @@ function loadPersonalInfo() {
     .catch((error) => console.error("Error en la petición", error));
 }
 
-// Mostrar la modal, precargar el teléfono y la descripción actuales
-document
-  .getElementById("editInfoModal")
-  .addEventListener("show.bs.modal", function () {
-    document.getElementById("editPhone").value =
-      document.getElementById("phone").innerText;
-    document.getElementById("editDescription").value =
-      document.getElementById("description").innerText;
-  });
+// Mostrar la modal y precargar los valores actuales
+document.getElementById("editInfoModal").addEventListener("show.bs.modal", function () {
+  // Precargar teléfono y descripción actuales
+  document.getElementById("editPhone").value = document.getElementById("phone").innerText;
+  document.getElementById("editDescription").value = document.getElementById("description").innerText;
 
-//Función para actualizar la información del perfil y enviarla al servidor
+  // Ajustar atributos de accesibilidad
+  this.removeAttribute("aria-hidden");
+  this.setAttribute("aria-modal", "true");
+
+  // Mover el foco al primer elemento interactivo dentro del modal
+  const firstButton = this.querySelector('.btn-primary');
+  if (firstButton) {
+    firstButton.focus();
+  }
+});
+
+// Restaurar el atributo aria-hidden cuando se cierra la modal
+document.getElementById("editInfoModal").addEventListener("hidden.bs.modal", function () {
+  this.setAttribute("aria-hidden", "true");
+});
+
+// Función para actualizar la información del perfil
 function updateInfo() {
-  var phone = document.getElementById("editPhone").value;
+  var phone = document.getElementById("editPhone").value.trim();
   var description = document.getElementById("editDescription").value;
 
-  fetch("../../../../api/students/controllers/updateStudentPersonalInfo.php", {
+  if (!phone) {
+    alert("El número de teléfono es obligatorio");
+    return;
+  }
+
+  fetch("../../../../api/students/controllers/updateStudentProfile.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ phone, description }),
@@ -55,21 +68,17 @@ function updateInfo() {
         document.getElementById("phone").innerText = phone;
         document.getElementById("description").innerText = description;
       } else {
-        console.error("Error al actualizar la información", data.error);
+        console.error("Error al actualizar la información", data.error || data.message);
       }
     })
-    .catch((error) =>
-      console.error("Error en la petición de actualización", error)
-    )
+    .catch((error) => console.error("Error en la petición de actualización", error))
     .finally(() => {
-      var editModal = bootstrap.Modal.getInstance(
-        document.getElementById("editInfoModal")
-      );
+      var editModal = bootstrap.Modal.getInstance(document.getElementById("editInfoModal"));
       editModal.hide();
     });
 }
 
-//Funcion para actualizar foto de perfil
+// Función para actualizar foto de perfil
 function uploadProfileImage(file) {
   var formData = new FormData();
   formData.append("profileImage", file);
@@ -120,24 +129,22 @@ function handleProfileImageUpload(files) {
 }
 
 // Cuando se selecciona un archivo, se muestra una vista previa y se envía al servidor
-document
-  .getElementById("fileInput")
-  .addEventListener("change", function (event) {
-    var file = event.target.files[0];
-    if (file) {
-      // Mostrar vista previa
-      var reader = new FileReader();
-      reader.onload = function (e) {
-        document.getElementById("profileImg").src = e.target.result;
-      };
-      reader.readAsDataURL(file);
+document.getElementById("fileInput").addEventListener("change", function (event) {
+  var file = event.target.files[0];
+  if (file) {
+    // Mostrar vista previa
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      document.getElementById("profileImg").src = e.target.result;
+    };
+    reader.readAsDataURL(file);
 
-      // Subir la imagen al servidor
-      uploadProfileImage(file);
-    }
-  });
+    // Subir la imagen al servidor
+    uploadProfileImage(file);
+  }
+});
 
-//Funcion para Historial Academico
+// Función para cargar el historial académico
 function loadClassHistorial() {
   const tableBody = document.querySelector("table tbody");
   const loadingContainer = document.getElementById("loadingContainer");
@@ -189,8 +196,7 @@ function loadClassHistorial() {
 
           // Botón "Anterior"
           const liPrev = document.createElement("li");
-          liPrev.className =
-            "page-item" + (currentPage === 1 ? " disabled" : "");
+          liPrev.className = "page-item" + (currentPage === 1 ? " disabled" : "");
           const aPrev = document.createElement("a");
           aPrev.className = "page-link";
           aPrev.href = "#";
@@ -226,8 +232,7 @@ function loadClassHistorial() {
 
           // Botón "Siguiente"
           const liNext = document.createElement("li");
-          liNext.className =
-            "page-item" + (currentPage === totalPages ? " disabled" : "");
+          liNext.className = "page-item" + (currentPage === totalPages ? " disabled" : "");
           const aNext = document.createElement("a");
           aNext.className = "page-link";
           aNext.href = "#";
