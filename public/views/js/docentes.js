@@ -1,4 +1,4 @@
-import { showPopUp, changeBorder, exportTableToCSV, readFileAsText, parseCsvToTable, cleanTableBody} from "./modules/utlis.mjs";
+import { showPopUp, changeBorder, exportTableToCSV, readFileAsText, parseCsvToTable, cleanTableBody, newTableData, newPrimaryBtn} from "./modules/utlis.mjs";
 import { isValidYoutubeUrl } from "./modules/validator.mjs";
 
 // Lógica para la carga y comportamiento de la vista docente.php
@@ -46,21 +46,6 @@ function loadTeacherProfile() {
   email.innerText = `${localStorage.getItem("userInstEmail")}`
   phone.innerText =`${localStorage.getItem("userPhoneNumber")}`
   employeeNumber.innerText = `${localStorage.getItem("employeeNumber")}`
-}
-
-function newTableData(content, name = "") {
-  let data = document.createElement("td");
-  data.className = name;
-  data.innerText = content ?? "Manolo";
-  return data;
-}
-
-function newPrimaryBtn(content) {
-  // Create a new Primary button HTML Element
-  let btn = document.createElement("button");
-  btn.innerText = content;
-  btn.className = "btn btn-primary btn-sm mx-2";
-  return btn;
 }
 
 function sectionModalTitle(event){

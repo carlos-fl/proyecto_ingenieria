@@ -227,3 +227,18 @@ export function changeBorderWithTiming(input, inputBorderWidth, changeToColor, n
       changeBorder(input, inputBorderWidth, normalColor)
     }, time)
 }
+
+export function newTableData(content, name = "") {
+    let data = document.createElement("td");
+    data.className = name;
+    data.innerText = content ?? "Manolo";
+    return data;
+}
+
+export function newPrimaryBtn(content) {
+    // Create a new Primary button HTML Element
+    let btn = document.createElement("button");
+    btn.innerText = content;
+    btn.className = "btn btn-primary btn-sm mx-2";
+    return btn;
+}
