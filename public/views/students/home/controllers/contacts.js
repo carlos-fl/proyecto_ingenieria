@@ -62,3 +62,76 @@ function loadContacts() {
 document.addEventListener("DOMContentLoaded", function () {
   loadContacts();
 });
+
+// Función para obtener los grupos del estudiante
+function loadGroups() {
+  const loadingMsg = document.querySelector('#groupsLoading');
+  const groupsList = document.querySelector('#groupsList');
+
+  if (!loadingMsg || !groupsList) {
+    console.error("No se encontró el mensaje de carga o la lista de grupos.");
+    return;
+  }
+
+  loadingMsg.classList.remove('hidden');
+  groupsList.classList.add('hidden');
+
+  fetch('../../../../api/students/controllers/getStudentGroups.php', {
+    method: 'GET',
+    credentials: 'include'
+  })
+    .then(response => response.json())
+    .then(data => {
+      groupsList.innerHTML = '';
+
+      loadingMsg.classList.add('hidden');
+      groupsList.classList.remove('hidden');
+
+      if (data.status === "success" && Array.isArray(data.data) && data.data.length > 0) {
+        data.data.forEach(function (group) {
+          const groupItem = document.createElement('div');
+          groupItem.className = 'list-group-item';
+          groupItem.innerHTML = `
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="mb-1">${group.groupName}</h6>
+                <small>Miembros: ${group.memberCount}</small>
+              </div>
+              <div>
+                <button class="btn btn-sm btn-outline-primary me-1" onclick="openGroupChat('${group.groupName}', '${group.groupId}')">
+                  <i class="fa-solid fa-comments"></i> Chat
+                </button>
+                <button class="btn btn-sm btn-outline-success me-1">
+                  <i class="fa-solid fa-user-plus"></i> Agregar Miembro
+                </button>
+                <button class="btn btn-sm btn-outline-danger">
+                  <i class="fa-solid fa-trash"></i> Borrar Grupo
+                </button>
+              </div>
+            </div>
+          `;
+          groupsList.appendChild(groupItem);
+        });
+      } else {
+        groupsList.innerHTML = `<div class="list-group-item text-center text-muted">No tienes grupos aún.</div>`;
+      }
+    })
+    .catch(error => {
+      console.error("Error al obtener grupos:", error);
+      loadingMsg.classList.add('hidden');
+      groupsList.classList.remove('hidden');
+      groupsList.innerHTML = `<div class="list-group-item text-center text-danger">Error al cargar los grupos.</div>`;
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  var groupsModal = document.getElementById('groupsModal');
+  groupsModal.addEventListener('shown.bs.modal', function () {
+    loadGroups();
+  });
+});
+
+// Función abrir el chat de un grupo
+function openGroupChat(groupName, groupId) {
+  console.log('Abrir chat para:', groupName, groupId);
+}

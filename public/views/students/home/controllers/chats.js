@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
       clearTimeout(chatPollTimeout);
       chatPollTimeout = null;
     }
+    document.body.focus();
   });
 
   // Función para abrir el chat desde la lista de mensajes
@@ -55,6 +56,14 @@ document.addEventListener("DOMContentLoaded", () => {
       chatModalInstance.show();
     }
   };
+
+  const messageInput = document.getElementById("messageInput");
+  messageInput.addEventListener("keypress", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
 
   loadChats();
 });
@@ -131,36 +140,63 @@ function loadChat(contactName, contactId) {
   const chatMessages = document.getElementById("chatMessages");
   chatMessages.classList.add("updating");
 
+  const threshold = 20;
+  const isAtBottom =
+    chatMessages.scrollHeight -
+      chatMessages.clientHeight -
+      chatMessages.scrollTop <
+    threshold;
+  const previousScrollTop = chatMessages.scrollTop;
+
   if (chatPollTimeout) {
     clearTimeout(chatPollTimeout);
   }
 
-  fetch(`/api/students/controllers/getConversation.php?otherStudentId=${contactId}`)
+  fetch(
+    `/api/students/controllers/getConversation.php?otherStudentId=${contactId}`
+  )
     .then((response) => response.json())
     .then((data) => {
       isFetchingChat = false;
       chatMessages.classList.remove("updating");
 
       if (data.status === "failure") {
-        chatMessages.innerHTML = "<p class='text-muted'>No hay mensajes disponibles.</p>";
+        chatMessages.innerHTML =
+          "<p class='text-muted'>No hay mensajes disponibles.</p>";
         return;
       }
 
-      // Actualiza el contenido de los mensajes
       chatMessages.innerHTML = "";
       data.data.forEach((message) => {
-        const isFromLoggedUser = message.SENDER_ID !== contactId;
+        const isFromLoggedUser =
+          message.SENDER_ID.toString() !== contactId.toString();
+        const alignmentClass = isFromLoggedUser
+          ? "justify-content-end"
+          : "justify-content-start";
+        const bubbleClass = isFromLoggedUser ? "me" : "other";
+
         const messageHTML = `
-          <div class="d-flex ${isFromLoggedUser ? "justify-content-end" : "justify-content-start"} mb-2 fade-in">
-            <div class="p-2 chat-bubble ${isFromLoggedUser ? "bg-primary text-white" : "bg-light"} rounded">
+          <div class="d-flex ${alignmentClass} mb-2 fade-in">
+            <div class="chat-bubble ${bubbleClass}">
               <p class="mb-1">${message.message}</p>
-              <small class="text-muted">${new Date(message.sentAt).toLocaleString()} - ${message.READ_STATUS}</small>
+              <small class="text-muted">${new Date(
+                message.sentAt
+              ).toLocaleString()} - ${message.READ_STATUS}</small>
             </div>
           </div>
         `;
         chatMessages.innerHTML += messageHTML;
       });
-      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      if (isAtBottom) {
+        chatMessages.scrollTo({
+          top: chatMessages.scrollHeight,
+          behavior: "smooth",
+        });
+      } else {
+        chatMessages.scrollTop = previousScrollTop;
+      }
+
       chatPollTimeout = setTimeout(() => {
         loadChat(contactName, contactId);
       }, 4000);
@@ -168,7 +204,8 @@ function loadChat(contactName, contactId) {
     .catch((error) => {
       isFetchingChat = false;
       chatMessages.classList.remove("updating");
-      chatMessages.innerHTML = "<p class='text-danger'>Error al cargar los mensajes.</p>";
+      chatMessages.innerHTML =
+        "<p class='text-danger'>Error al cargar los mensajes.</p>";
       console.error("Error al obtener los mensajes:", error);
       chatPollTimeout = setTimeout(() => {
         loadChat(contactName, contactId);
@@ -186,7 +223,7 @@ function sendMessage() {
     const messageBubble = document.createElement("div");
     messageBubble.className = "d-flex justify-content-end mb-2 fade-in";
     messageBubble.innerHTML = `
-      <div class="p-2 chat-bubble bg-primary text-white rounded">
+      <div class="chat-bubble me">
         <p class="mb-1">${messageText}</p>
         <small class="text-light">Ahora - Enviado</small>
       </div>

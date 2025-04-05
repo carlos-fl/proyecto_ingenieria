@@ -420,65 +420,31 @@ if (empty($_SESSION)) {
     </div>
   </div>
 
-  <!-- Modal Lista de Grupos -->
-  <div class="modal fade" id="groupsModal" tabindex="-1" aria-labelledby="groupsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="groupsModalLabel">Mis Grupos</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+<!-- Modal Lista de Grupos -->
+<div class="modal fade" id="groupsModal" tabindex="-1" aria-labelledby="groupsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="groupsModalLabel">Mis Grupos</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Mensaje de Cargando Grupos... -->
+        <div id="groupsLoading" class="text-center" style="height: 200px; line-height: 200px;">
+          Cargando Grupos...
         </div>
-        <div class="modal-body">
-          <!-- Lista de grupos -->
-          <div class="list-group" style="max-height: 400px; overflow-y: auto;">
-            <!-- Grupo de ejemplo 1 -->
-            <div class="list-group-item">
-              <div class="d-flex justify-content-between align-items-center">
-                <div>
-                  <h6 class="mb-1">Grupo A</h6>
-                  <small>Miembros: 5</small>
-                </div>
-                <div>
-                  <button class="btn btn-sm btn-outline-primary me-1" onclick="openGroupChat('Grupo A','groupA')">
-                    <i class="fa-solid fa-comments"></i> Chat
-                  </button>
-                  <button class="btn btn-sm btn-outline-success me-1">
-                    <i class="fa-solid fa-user-plus"></i> Agregar Miembro
-                  </button>
-                  <button class="btn btn-sm btn-outline-danger">
-                    <i class="fa-solid fa-trash"></i> Borrar Grupo
-                  </button>
-                </div>
-              </div>
-            </div>
-            <!-- Grupo de ejemplo 2 -->
-            <div class="list-group-item">
-              <div class="d-flex justify-content-between align-items-center">
-                <div>
-                  <h6 class="mb-1">Grupo B</h6>
-                  <small>Miembros: 3</small>
-                </div>
-                <div>
-                  <button class="btn btn-sm btn-outline-primary me-1" onclick="openGroupChat('Grupo B','groupB')">
-                    <i class="fa-solid fa-comments"></i> Chat
-                  </button>
-                  <button class="btn btn-sm btn-outline-success me-1">
-                    <i class="fa-solid fa-user-plus"></i> Agregar Miembro
-                  </button>
-                  <button class="btn btn-sm btn-outline-danger">
-                    <i class="fa-solid fa-trash"></i> Borrar Grupo
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+        <!-- Lista de grupos (inicialmente oculta) -->
+        <div id="groupsList" class="list-group hidden" style="max-height: 400px; overflow-y: auto;">
+          <!-- Se llenará dinámicamente -->
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
       </div>
     </div>
   </div>
+</div>
+
 
   <!-- Modal Chat Grupal -->
   <div class="modal fade" id="groupChatModal" tabindex="-1" aria-labelledby="groupChatModalLabel" aria-hidden="true">

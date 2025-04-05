@@ -15,6 +15,7 @@
   display: grid;
   grid-template-rows: auto 1fr auto;
   grid-template-areas: "hd""mn""ft";
+  padding: 1%;
 }
 
 .col-sm-3 {
@@ -119,7 +120,35 @@
 .edit-btn i {
   color: #007bff;
 }
+.hidden {
+  display: none !important;
+}
 
-  .sidebar {
-    padding: 1%;
-  }
+.chat-bubble {
+  max-width: 70%;               
+  padding: 15px;               
+  border-radius: 15px;          
+  margin: 5px 0;               
+  font-size: 1.1em;             
+  word-wrap: break-word;    
+}
+
+.chat-bubble.me {
+  background-color: #0d6efd !important; 
+  color: #fff !important;
+  text-align: left !important;
+}
+
+.chat-bubble.other {
+  background-color: #e0e0e0 !important; 
+  color: #000 !important;
+  text-align: left !important;
+  border: 1px solid #ccc !important;
+}
+
+.d-flex.justify-content-end {
+  justify-content: flex-end !important;
+}
+.d-flex.justify-content-start {
+  justify-content: flex-start !important;
+}
