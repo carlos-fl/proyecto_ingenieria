@@ -52,7 +52,7 @@ if (empty($_SESSION)) {
               <a class="list-group-item list-group-item-action disabled" aria-disabled="true">
                 <i class="fa-regular fa-address-card"></i> Forma 03
               </a>
-              <a class="list-group-item list-group-item-action disabled" aria-disabled="true">
+              <a class="list-group-item list-group-item-action" href="../../library/home/index.php">
                 <i class="fa-regular fa-paste"></i> Biblioteca Virtual
               </a>
               <a class="list-group-item list-group-item-action disabled" aria-disabled="true">
