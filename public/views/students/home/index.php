@@ -43,7 +43,7 @@ if (empty($_SESSION)) {
           </div>
           <div class="sidebar-mn">
             <div class="list-group">
-              <a class="list-group-item list-group-item-action disabled" aria-disabled="true">
+              <a href="../../enrollment/index.php" class="list-group-item list-group-item-action" aria-disabled="true">
                 <i class="fa-regular fa-rectangle-list"></i> Matricular Clases
               </a>
               <a class="list-group-item list-group-item-action disabled" aria-disabled="true">
