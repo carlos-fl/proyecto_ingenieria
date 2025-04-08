@@ -27,6 +27,7 @@ class DepartmentChairService {
         $query = "CALL SP_GET_DEPARTMENT_MAJORS(?)";
         try {
             $results = (object) $db->callStoredProcedure($query, 'i', [$chairmanTeacherNumber], $mysqli);
+            $result = [];
             while ($row = $results->fetch_assoc()){
                 $result[] = $row;
             }
@@ -47,6 +48,7 @@ class DepartmentChairService {
         $query = "CALL SP_GET_MAJOR_ACADEMIC_LOAD(?, ?)";
         try {
             $results = (object) $db->callStoredProcedure($query, 'ii', [$majorId, $page], $mysqli);
+            $result = [];
             while ($row = $results->fetch_assoc()){
                 $result[] = $row;
             }
