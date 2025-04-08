@@ -31,6 +31,7 @@ class Navbar extends HTMLElement{
     const docentesHref = this.getAttribute('docentes-href') || '/views/loginDocentes.php';
     const matriculaHref = this.getAttribute('matricula-href') || '/views/login.php';
     const admisionesHref = this.getAttribute('admisiones-href') || '/views/admisiones.php';
+    const bibliotecahref = this.getAttribute('biblioteca-href') || '/views/library/login/libraryLogin.php';
 
         this.innerHTML = `
             <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -64,7 +65,7 @@ class Navbar extends HTMLElement{
                             <a class="nav-link" href="${admisionesHref}">Admisiones</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="${estudiantesHref}">Biblioteca</a>
+                            <a class="nav-link" href="${bibliotecahref}">Biblioteca</a>
                         </li>
                         </ul>
                     </div>

@@ -12,8 +12,11 @@
     justify-content: space-between;
     align-items: center;
     padding: 1%;
-    border-right: 1px solid !important;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: #f8f9fa;
+    min-height: 100vh;
 }
+
 
 .books-container {
     width: 75%;
@@ -40,4 +43,67 @@
 .card:hover {
     transform: translateY(-10px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+
+#modalPDFContainer iframe {
+    width: 100%;
+    height: calc(100vh - 150px);
+    border: none;
+}
+
+@media (min-width: 1200px) {
+    .modal-xl {
+        max-width: 90%;
+    }
+}
+
+#search-bar {
+    width: 100%;
+}
+
+.v-nav .navbar {
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+#searchForm {
+    width: 100%;
+}
+
+#searchInput {
+    border-radius: 20px;
+    transition: box-shadow 0.3s ease;
+}
+
+#searchInput:focus {
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.nav.flex-column {
+    width: 100%;
+    margin-top: 1.5rem;
+}
+
+.nav.flex-column .nav-link {
+    color: #343a40;
+    padding: 0.75rem 1rem;
+    border-radius: 50px;
+    transition: background-color 0.3s ease;
+}
+
+.nav.flex-column .nav-link:hover {
+    background-color: rgba(0, 123, 255, 0.1);
+    text-decoration: none;
+}
+
+.sidebar-ft {
+    width: 100%;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
