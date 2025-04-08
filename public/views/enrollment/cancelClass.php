@@ -37,34 +37,11 @@
       <div>
         <h6 style="color: var(--primary-color)">Clases matriculadas</h6>
       </div>
-      <div class="overflow-auto h-50">
-        <d-table tag-id="enroll-table" table-row='["UV", "clase", "hora inicio", "hora final"]' class="w-100 rounded"></d-table>
+      <div class="overflow-auto h-100">
+        <d-table tag-id="enroll-table" table-row='["UV", "clase", "hora inicio", "hora final", "Cancelar"]' class="w-100 rounded"></d-table>
       </div>
     </div>
-  <!-- matricular clases -->
-    <div class="h-50 w-75 mb-5 d-flex flex-column justify-content-center align-content-center">
-      <div class="d-flex justify-content-between align-items-center h-75">
-        <div class="h-100" style="width: 33.3%">
-          <select id="departments" class="h-100 w-100">
-            <option value="">Departamentos</option>
-          </select>
-        </div>
-        <div class="h-100" style="width: 33.3%">
-          <select id="classes" class="h-100 w-100">
-            <option value="">Clases</option>
-          </select>
-        </div>
-        <div class="h-100" style="width: 33.3%">
-          <select id="sections" class="h-100 w-100">
-            <option value="">Secciones</option>
-          </select>
-        </div>
-      </div>
-      <div>
-        <button class="btn btn-primary mt-2" id="enrol">Matricular</button>
-      </div>
-    </div>
-    <footer-unah class="w-100 position-fixed bottom-0"></footer-unah>
+      <footer-unah class="w-100 position-fixed bottom-0"></footer-unah>
   </main>
 
   <loading-modal tag-id="loading" modal-id="loading-modal"></loading-modal>
@@ -91,10 +68,7 @@
   <script src="../js/components/footer.js"></script>
   <script src="../js/components/table.js"></script>
   <script src="../js/components/pop-up.js"></script>
-  <script type="module" src="./controllers/enrolledClasses.js"></script>
+  <script type="module" src="./controllers/cancelClass.js"></script>
   <script type="module" src="./controllers/verifyActiveEnrollment.js"></script>
-  <script type="module" src="./controllers/fillDepartments.js"></script>
-  <script type="module" src="./controllers/selectClass.js"></script>
-  <script type="module" src="./controllers/enrol.js"></script>
 </body>
 </html>

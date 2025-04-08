@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const classes = await Request.fetch(CLASSES_URL, 'GET')
     const classesSelect = document.getElementById('classes')
     classesSelect.innerHTML = ''
+    classesSelect.innerHTML += '<option value="">Seleccione una clase</option>'
     classes.data.forEach((el) => {
       classesSelect.innerHTML += `<option value=${el.ID_CLASS}>${el.CLASS_NAME}</option>`
     })
