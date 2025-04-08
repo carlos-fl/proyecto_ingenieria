@@ -511,10 +511,9 @@ function initCoordinatorChairPrivileges(){
     }
     else if (roles.includes("DEPARTMENT CHAIR")){
       // Dibujar dinámicamente el anchor a la vista
-      // TODO: IMPLEMENT
       let chairAnchor = document.createElement("a")
-      chairAnchor.href = "#"
-      chairAnchor.innerText = "Ingresar a mi perfil de Jefe de Departamento"
+      chairAnchor.href = "/views/department_chair/home/index.php"
+      chairAnchor.innerText = "Ingresar como Jefe de Departamento"
       sidebarMain.appendChild(chairAnchor)
     }
 
