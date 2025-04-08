@@ -21,7 +21,7 @@
       docentes-href="views/loginDocentes.php"
       matricula-href="views/login.php"
       admisiones-href="views/admisiones.php"
-      biblioteca-href="views/LoginEstudiantes.php"></navbar-unah>
+      biblioteca-href="views/library/login/libraryLogin.php"></navbar-unah>
     <div class="top-bar">
       <div>
         <nav class="navbar bg-body-tertiary" id="header-bar">
@@ -88,6 +88,11 @@
   <script src="views/js/components/navbar.js"></script>
   <script src="views/js/components/footer.js"></script>
   <script src="views/js/components/reviewerModal.js"></script>
+  <script>
+    document.getElementById("library-btn").addEventListener("click", function() {
+      window.location.href = "views/library/login/libraryLogin.php";
+    });
+  </script>
 
 </body>
 

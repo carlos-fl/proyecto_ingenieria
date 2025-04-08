@@ -3,15 +3,13 @@
 include_once __DIR__ . '/../../../../utils/classes/Request.php';
 include_once __DIR__ . '/../../../../config/database/Database.php';
 
-Request::isWrongRequestMethod('POST');
+Request::isWrongRequestMethod('GET');
 session_start();
 header("Content-Type: application/json");
 
-$bookId = $_POST["bookId"] ?? null;
-
-if (!$bookId) {
-    http_response_code(400);
-    echo json_encode(["status" => "failure", "message" => "Missing book ID", "code" => 400]);
+if (empty($_SESSION) || !isset($_SESSION["ROLES"], $_SESSION["TEACHER_NUMBER"])) {
+    http_response_code(401);
+    echo json_encode(["status" => "failure", "message" => "Unauthorized", "code" => 401]);
     return;
 }
 
@@ -26,21 +24,35 @@ if (!($hasTeacherAndCoordinator || $hasTeacherAndDepartmentChair)) {
     return;
 }
 
+$teacherNumber = $_SESSION["TEACHER_NUMBER"];
+
 $db = Database::getDatabaseInstace();
 $mysqli = $db->getConnection();
 
 try {
-    $query = "CALL SP_DEACTIVATE_BOOK(?)";
-    $db->callStoredProcedure($query, "i", [$bookId], $mysqli);
+    $query = "CALL SP_GET_BOOKS_BY_TEACHER_CAREERS(?)";
+    $result = $db->callStoredProcedure($query, "i", [$teacherNumber], $mysqli);
+
+    if ($result->num_rows === 0) {
+        $mysqli->close();
+        echo json_encode(["status" => "success", "data" => []]);
+        return;
+    }
+
+    $books = [];
+    while ($row = $result->fetch_assoc()) {
+        $row['tags'] = !empty($row['tags']) ? explode(', ', $row['tags']) : [];
+        $books[] = $row;
+    }
 
     $mysqli->close();
-    echo json_encode(["status" => "success", "message" => "Book deactivated successfully"]);
+    echo json_encode(["status" => "success", "data" => $books]);
 } catch (Throwable $err) {
     $mysqli->close();
     http_response_code(500);
     echo json_encode([
         "status" => "failure",
-        "message" => "Error deactivating book: " . $err->getMessage(),
+        "message" => "Error fetching books: " . $err->getMessage(),
         "code" => 500
     ]);
 }
