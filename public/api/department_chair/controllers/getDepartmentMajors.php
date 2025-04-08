@@ -7,10 +7,6 @@ session_start();
 
 header('Content-Type: application/json');
 
-// TODO: ELIM IN PROD
-$_SESSION["ROLES"] = ["DEPARTMENT_CHAIR"];
-$_SESSION["TEACHER_NUMBER"] = 16;
-
 Request::isWrongRequestMethod('GET');
 if (!Request::haveRol('DEPARTMENT_CHAIR')) {
   return;

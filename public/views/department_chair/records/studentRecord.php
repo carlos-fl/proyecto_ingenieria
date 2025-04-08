@@ -40,7 +40,7 @@
               <a href="/views/department_chair/home/index.php" class="list-group-item list-group-item-action" aria-disabled="true">
                 <i class="fa-solid fa-user"></i></i> Perfil de Jefe
               </a>
-              <a href="/views/department_chair/academic_load/academicLoad.php" href="/views/department_chair/academic_load/academicLoad.php" class="list-group-item list-group-item-action disabled" aria-disabled="true">
+              <a href="/views/department_chair/academic_load/academicLoad.php" href="/views/department_chair/academic_load/academicLoad.php" class="list-group-item list-group-item-action">
                 <i class="fa-regular fa-rectangle-list"></i> Planificación académica
               </a>
               <a class="list-group-item list-group-item-action" aria-disabled="true">
@@ -132,6 +132,38 @@
         <div class="modal-footer">
           <button id="downloadStudentTableBtn" class="btn btn-success">Descargar Excel</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Nueva Sección -->
+  <div class="modal fade" id="classRecordModal" tabindex="-1" aria-labelledby="alumnosModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="alumnosModalLabel">Historial Académico</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="table-responsive table-overflow">
+            <table class="table table-dark table-striped mb-0" id="classRecordTable">
+              <thead>
+                <th>Código de Clase</th>
+                <th>Clase</th>
+                <th>UV</th>
+                <th>Año</th>
+                <th>PAC</th>
+                <th>Calificación</th>
+                <th>OBS</th>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+            <div id="classRecordTableInfo" class="text-secondary text-center"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
         </div>
       </div>
     </div>
