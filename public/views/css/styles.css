@@ -142,13 +142,13 @@ footer {
 .table-overflow{
     max-height: 15em;
     overflow-y: auto;
-  }
+}
   
   
-  .table-overflow thead{
+.table-overflow thead{
     position: sticky;
     top: 0;
-  }
+}
 
 
 .list-group-item {

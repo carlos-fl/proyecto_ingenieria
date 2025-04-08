@@ -136,13 +136,6 @@ hr {
   margin-left: 10px;
 }
 
-input {
-  width: 100%;
-  border: 1px solid #ccc;
-  padding: 5px;
-  border-radius: 3px;
-}
-
 .buttons {
   margin-top: 10px;
   display: flex;
@@ -179,17 +172,6 @@ table th{
 }
 
 #tableContainer thead{
-  position: sticky;
-  top: 0;
-}
-
-.table-overflow{
-  max-height: 15em;
-  overflow-y: auto;
-}
-
-
-.table-overflow thead{
   position: sticky;
   top: 0;
 }

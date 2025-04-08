@@ -37,13 +37,13 @@
           </div>
           <div id="sidebarMain" class="sidebar-mn">
             <div class="list-group">
-              <a href="/views/department_chair/home/index.php"class="list-group-item list-group-item-action" aria-disabled="true">
+              <a href="/views/department_chair/home/index.php" class="list-group-item list-group-item-action" aria-disabled="true">
                 <i class="fa-solid fa-user"></i></i> Perfil de Jefe
               </a>
-              <a class="list-group-item list-group-item-action disabled" aria-disabled="true">
+              <a href="/views/department_chair/academic_load/academicLoad.php" href="/views/department_chair/academic_load/academicLoad.php" class="list-group-item list-group-item-action disabled" aria-disabled="true">
                 <i class="fa-regular fa-rectangle-list"></i> Planificación académica
               </a>
-              <a class="list-group-item list-group-item-action disabled" aria-disabled="true">
+              <a class="list-group-item list-group-item-action" aria-disabled="true">
                 <i class="fa-solid fa-table-list"></i> Matrícula
               </a>
               <a href="#" class="list-group-item list-group-item-action bg-warning">

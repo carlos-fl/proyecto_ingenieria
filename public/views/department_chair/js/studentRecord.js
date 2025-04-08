@@ -1,16 +1,5 @@
 // Lógica para la vista studentRecord.php
-import {showPopUp, changeBorder, newTableData, newPrimaryBtn} from "../../js/modules/utlis.mjs"
-
-function showLoadingIcon(domObject){
-    // Show a loading component in a dom object
-    domObject.innerText = ""
-    domObject.innerHTML = `
-        <div class="spinner-border text-secondary">
-            <span class="sr-only">Loading...</span>
-        </div>
-        <div>Cargado Registros...</div>
-        `
-}
+import {showPopUp, changeBorder, newTableData, newPrimaryBtn, showLoadingIcon} from "../../js/modules/utlis.mjs"
 
 function showAcademicRecordModal(accountNumber, event){
     // Show a modal with the acadmic record of the student
@@ -23,8 +12,9 @@ function addStudentToTable(student, studentRecordTable){
     let studentName = newTableData(`${student["FIRST_NAME"]} ${student["LAST_NAME"]}`)
     let studentGPA = newTableData(student["GPA"])
     let academicRecord = newTableData("")
-    academicRecord.innerHTML = newPrimaryBtn("Enviar")
-    academicRecord.addEventListener("click", showAcademicRecordModal.bind(student["accountNumber"]))
+    let actionBtn = newPrimaryBtn("Ver Historial")
+    academicRecord.appendChild(actionBtn)
+    actionBtn.addEventListener("click", showAcademicRecordModal.bind(student["accountNumber"]))
     row.appendChild(accountNumber)
     row.appendChild(studentName)
     row.appendChild(studentGPA)
@@ -40,10 +30,10 @@ function searchByAccountNumber(accountNumberInput, studentRecordTable, tableInfo
         return
     }
     showLoadingIcon(tableInfo)
-    fetch(`/api/department_chair/controllers/studentRecordByAccountNumber?acountNumber="${accountNumber}"`)
+    fetch(`/api/department_chair/controllers/studentRecordByAccountNumber.php?accountNumber=${accountNumber}`)
     .then(response => response.json())
     .then(data => {
-        if (data === "failure"){
+        if (data.status === "failure"){
             // No se encontró un estudiante con ese número de cuenta
             showPopUp("No se encontró un estudiante con esa cuenta")
             changeBorder(accountNumberInput, "var(--bs-border-width)", "red");
@@ -51,15 +41,16 @@ function searchByAccountNumber(accountNumberInput, studentRecordTable, tableInfo
             return
         }
         let students = data.students
-        students.array.forEach(student => {
+        students.forEach(student => {
             addStudentToTable(student, studentRecordTable); 
         });
-
+        tableInfo.innerText = ""
     })
     .catch(error => {
         showPopUp("Hubo un error al buscar esa cuenta")
         tableInfo.innerText = "Hubo un error al buscar el estudiante con esta cuenta"
         changeBorder(accountNumberInput, "var(--bs-border-width)", "red");
+        console.log(error)
     })
 }
 

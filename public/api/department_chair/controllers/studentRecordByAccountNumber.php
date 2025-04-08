@@ -13,7 +13,7 @@ if (!Request::haveRol('DEPARTMENT_CHAIR')) {
 
 Request::isWrongRequestMethod('GET');
 
-$account = $_GET['account'];
+$account = $_GET['accountNumber'];
 
 if (!isset($account)) {
   http_response_code(400);
@@ -34,7 +34,7 @@ if ($studentRecordHeader["status"] == 'failure') {
   echo json_encode($studentRecordHeader);
   return;
 }
-echo json_encode($coordinatorServiceResponse);
+echo json_encode($studentRecordHeader);
 
 
 

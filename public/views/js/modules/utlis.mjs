@@ -242,3 +242,30 @@ export function newPrimaryBtn(content) {
     btn.className = "btn btn-primary btn-sm mx-2";
     return btn;
 }
+
+export function newDangerBtn(content) {
+    // Create a new Primary button HTML Element
+    let btn = document.createElement("button");
+    btn.innerText = content;
+    btn.className = "btn btn-danger btn-sm mx-2";
+    return btn;
+}
+
+export function disableElement(DOMElement){
+    DOMElement.setAttribute("disabled", "disabled")
+}
+
+export function enableElement(DOMElement){
+    DOMElement.removeAttribute("disabled")
+}
+
+export function showLoadingIcon(domObject){
+    // Show a loading component in a dom object
+    domObject.innerText = ""
+    domObject.innerHTML = `
+        <div class="spinner-border text-secondary">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <div>Cargado Registros...</div>
+        `
+}
