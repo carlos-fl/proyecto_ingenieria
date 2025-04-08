@@ -26,9 +26,12 @@ class DepartmentChairService {
         $mysqli = $db->getConnection();
         $query = "CALL SP_GET_DEPARTMENT_MAJORS(?)";
         try {
-            $result = (object) $db->callStoredProcedure($query, 'i', [$chairmanTeacherNumber], $mysqli);
+            $results = (object) $db->callStoredProcedure($query, 'i', [$chairmanTeacherNumber], $mysqli);
+            while ($row = $results->fetch_assoc()){
+                $result[] = $row;
+            }
             $mysqli->close();
-            return ["status" => "success", "majors" => $result->fetch_all(MYSQLI_ASSOC)];
+            return ["status" => "success", "majors" => $result];
         } catch(Throwable $err) {
             return ["status" => "failure", "code" => 500, "message" => $err->getMessage()];
         }
@@ -43,9 +46,12 @@ class DepartmentChairService {
         }
         $query = "CALL SP_GET_MAJOR_ACADEMIC_LOAD(?, ?)";
         try {
-            $result = (object) $db->callStoredProcedure($query, 'ii', [$majorId, $page], $mysqli);
+            $results = (object) $db->callStoredProcedure($query, 'ii', [$majorId, $page], $mysqli);
+            while ($row = $results->fetch_assoc()){
+                $result[] = $row;
+            }
             $mysqli->close();
-            return ["status" => "success", "load" => $result->fetch_all(MYSQLI_ASSOC)];
+            return ["status" => "success", "load" => $result];
         } catch(Throwable $err) {
             return ["status" => "failure", "code" => 500, "message" => $err->getMessage()];
         }
