@@ -142,4 +142,23 @@
         return new EnrollmentResponse('failure', error: new ErrorResponse(500, 'Server Error ' . $err->getMessage() . " $sectionID"));
       }
     }
+
+    public static function cancelClass(int $sectionID, int $studentID): EnrollmentResponse {
+      $db = Database::getDatabaseInstace();
+      $mysqli = $db->getConnection();
+      $query = "CALL SP_CANCEL_ENROLLED_CLASS(?, ?)";
+      try {
+
+        $res = $db->callStoredProcedure($query, 'ii', [$sectionID, $studentID], $mysqli);
+        if ($res->num_rows == 0) {
+          return new EnrollmentResponse('failure', error: new ErrorResponse(500, "Could not Update"));
+        }
+
+        $mysqli->close();
+        return new EnrollmentResponse("success $sectionID, $studentID");
+
+      } catch(Throwable $err) {
+        return new EnrollmentResponse('failure', error: new ErrorResponse(500, "Server Error " . $err->getMessage()));
+      }
+    }
   }
