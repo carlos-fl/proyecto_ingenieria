@@ -14,23 +14,46 @@ if (!isset($_FILES['file'], $_POST['title'], $_POST['author'], $_POST['idClass']
     return;
 }
 
-if (!in_array($_SESSION["ROL_ID"], [5, 6])) {
+$roles = $_SESSION["ROLES"];
+
+$hasTeacherAndCoordinator = in_array("TEACHERS", $roles) && in_array("COORDINATOR", $roles);
+$hasTeacherAndDepartmentChair = in_array("TEACHERS", $roles) && in_array("DEPARTMENT_CHAIR", $roles);
+
+if (!($hasTeacherAndCoordinator || $hasTeacherAndDepartmentChair)) {
     http_response_code(403);
-    echo json_encode(["status" => "failure", "message" => "Acceso denegado", "code" => 403]);
+    echo json_encode(["status" => "failure", "message" => "Access denied", "code" => 403]);
     return;
 }
 
 $title = $_POST['title'];
 $author = $_POST['author'];
 $idClass = (int) $_POST['idClass'];
-$majorId = isset($_POST['majorId']) ? (int) $_POST['majorId'] : null;
 $tags = isset($_POST['tags']) ? $_POST['tags'] : []; // array
 $file = $_FILES['file'];
-
-$uploadUrl = ContentManagement::saveFile($file);
+$teacherNumber = $_SESSION["TEACHER_NUMBER"];
 
 $db = Database::getDatabaseInstace();
 $mysqli = $db->getConnection();
+
+
+$stmt = $mysqli->prepare("SELECT MAJOR_ID FROM TBL_TEACHERS WHERE TEACHER_NUMBER = ?");
+$stmt->bind_param("i", $teacherNumber);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows === 0) {
+    $stmt->close();
+    $mysqli->close();
+    http_response_code(403);
+    echo json_encode(["status" => "failure", "message" => "No se encontró una carrera asociada al docente"]);
+    return;
+}
+
+$majorId = $result->fetch_assoc()['MAJOR_ID'];
+$stmt->close();
+
+
+$uploadUrl = ContentManagement::saveFile($file);
 
 try {
     $bookId = null;

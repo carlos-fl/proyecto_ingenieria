@@ -1,4 +1,4 @@
-let allBooks = []; // Global para guardar todos los libros
+let allBooks = [];
 
 document.addEventListener("DOMContentLoaded", () => {
   const gridContainer = document.querySelector(".books-container .grid");
@@ -43,7 +43,9 @@ function renderBooks(bookList) {
     const cardHTML = `
       <div class="g-col-6">
         <div class="card book-card" style="width: 18rem; cursor: pointer;">
-          <img src="../../assets/img/book.jpg" class="card-img-top" alt="${book.title}">
+          <img src="../../assets/img/book.jpg" class="card-img-top" alt="${
+            book.title
+          }">
           <div class="card-body">
             <h5 class="card-title">${book.title}</h5>
           </div>
@@ -67,12 +69,14 @@ function renderBooks(bookList) {
 // Eventos de hover y modal para cada tarjeta
 function applyCardEvents(bookList) {
   const cards = document.querySelectorAll(".book-card");
+
   cards.forEach((card, index) => {
     card.addEventListener("mouseenter", () => {
       card.classList.add("shadow-lg");
       card.style.transform = "scale(1.03)";
       card.style.transition = "transform 0.2s ease";
     });
+
     card.addEventListener("mouseleave", () => {
       card.classList.remove("shadow-lg");
       card.style.transform = "scale(1)";
@@ -90,7 +94,7 @@ function applyCardEvents(bookList) {
           .then((response) => {
             if (response.ok) {
               modalBody.innerHTML = `
-                <iframe src="${selectedBook.url}" width="100%" height="500px" style="border: none;"></iframe>
+                <iframe src="${selectedBook.url}" allowfullscreen></iframe>
               `;
             } else {
               modalBody.innerHTML = `
