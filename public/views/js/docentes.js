@@ -509,7 +509,7 @@ function initCoordinatorChairPrivileges(){
       coordinatorAnchor.innerText = "Ingresar como Coordinador"
       sidebarMain.appendChild(coordinatorAnchor)
     }
-    else if (roles.includes("DEPARTMENT CHAIR")){
+    else if (roles.includes("DEPARTMENT_CHAIR")){
       // Dibujar dinámicamente el anchor a la vista
       let chairAnchor = document.createElement("a")
       chairAnchor.href = "/views/department_chair/home/index.php"
