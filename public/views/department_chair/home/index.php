@@ -185,4 +185,5 @@
   <script src="/views/js/components/pop-up.js"></script>
   <script src="/views/js/components/log-out.js"></script>
   <script src="/views/js/components/reviewerModal.js"></script>
+  <script src="../js/home.js"></script>
 </html>
