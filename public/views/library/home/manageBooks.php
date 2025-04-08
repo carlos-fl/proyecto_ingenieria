@@ -1,8 +1,8 @@
 <?php
 session_start();
-echo '<pre>';
-print_r($_SESSION);
-echo '</pre>';
+if (empty($_SESSION)) {
+    header('Location: ../../library/login/libraryLogin.php');
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
