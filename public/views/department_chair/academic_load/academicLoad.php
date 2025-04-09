@@ -203,7 +203,28 @@
           </div>
           <div class="mt-3">
             <label for="start_time">Hora Inicial</label>
-            <input type="text" id="start_time" class="form-control">
+            <select type="text" id="start_time" class="form-select">
+              <option value="">Elija una hora inicial...</option>
+              <option value="7 00">0700</option>
+              <option value="8 00">0800</option>
+              <option value="9 00">0900</option>
+              <option value="10 00">1000</option>
+              <option value="11 00">1100</option>
+              <option value="12 00">1200</option>
+              <option value="13 00">1300</option>
+              <option value="14 00">1400</option>
+              <option value="15 00">1500</option>
+              <option value="16 00">1600</option>
+              <option value="17 00">1700</option>
+              <option value="18 00">1800</option>
+              <option value="19 00">1900</option>
+              <option value="20 00">2000</option>
+              <option value="21 00">2100</option>
+            </select>
+          </div>
+          <div class="mt-3">
+            <label for="edificio">Hora Final</label>
+            <select type="text" id="edificio" class="form-control" disabled></select>
           </div>
           <div class="mt-3">
             <label for="edificio">Edificio</label>

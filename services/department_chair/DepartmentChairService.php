@@ -105,4 +105,21 @@ class DepartmentChairService {
             return new StudentsResponse('failure', error: new ErrorResponse(500, "Server error " . $err->getMessage()));
         }
     }
+
+    public static function getMajorClasses($majorId){
+        $db = Database::getDatabaseInstace();
+        $mysqli = $db->getConnection();
+        $query = "CALL SP_GET_MAJOR_CLASSES(?)";
+        try {
+            $results = (object) $db->callStoredProcedure($query, 'i', [$majorId], $mysqli);
+            $result = [];
+            while ($row = $results->fetch_assoc()){
+                $result[] = $row;
+            }
+            $mysqli->close();
+            return ["status" => "success", "classes" => $result];
+        } catch(Throwable $err) {
+            return ["status" => "failure", "code" => 500, "message" => $err->getMessage()];
+        }
+    }
 }

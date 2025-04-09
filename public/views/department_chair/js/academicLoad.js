@@ -187,12 +187,45 @@ function exportLoadToExcel(majorSelect, event){
     })
 }
 
+function fetchMajorClasses(){
+    // Fetch las clases de un Major
+    let classesSelect = document.getElementById("class")
+    let majorAbr = document.getElementById("departmentMajor").value
+    classesSelect.innerHTML = `<option value="">Cargando Clases...</option>`
+    disableElement(classesSelect)
+    fetch(`/api/department_chair/controllers/getMajorClasses.php?major=${majorAbr}`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.status == "failure"){
+            showPopUp("La carrera no tiene clases")
+            classesSelect.innerHTML = `<option value="">La carrera no tiene clases</option>`
+            return
+        }
+        data.classes.forEach(elem => {
+            let option = document.createElement("option")
+            option.value = elem["CLASS_CODE"]
+            option.innerText = elem["CLASS_NAME"]
+            classesSelect.appendChild(option)
+        })
+        classesSelect.innerHTML = `<option value="">Elija una clase</option>`
+        enableElement(classesSelect)
+    })
+    .catch(error => {
+        showPopUp("No se pudieron cargar las clases")
+        classesSelect.innerHTML = `<option value="">No se pudieron cargar las clases...</option>`
+        console.log(error)
+    })
+}
+
 function newSectionModal(academicLoadMajorTitle, event){
     let newSectionModal = document.getElementById("newSectionModal")
     let modalTitle = newSectionModal.querySelector(".titleSuffix")
     modalTitle.innerText = academicLoadMajorTitle.innerText
     newSectionModal = new bootstrap.Modal(newSectionModal);
     newSectionModal.show();
+    fetchMajorClasses();
+    //fetchMajorTeachers();
+    //fetchBuildings();
 }
 
 function main(){
