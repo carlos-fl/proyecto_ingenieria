@@ -66,9 +66,9 @@ try {
         $token = ApplicantService::generateResubmissionToken();
         $link = $env['HOST'] . "/views/admissions/formResubmission/index.php?token=" . $token;
         $emailData = ["name" => $userName, "application_code" => $applicationCode, "commentary" => $commentary, "link" => $link];
-        ApplicantService::sendResubmissionEmail($userEmail, $token, $emailData);
+        $res = ApplicantService::sendResubmissionEmail($userEmail, $token, $emailData);
 
-        echo json_encode(["status" => "success"]);
+        echo json_encode(["status" => "success" . $res->error->errorMessage]);
     } else {
         throw new Exception("Database error: " . $stmt->error);
     }
