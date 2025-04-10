@@ -6,6 +6,7 @@
   include_once __DIR__ . '/../../utils/types/postResponse.php';
   include_once __DIR__ . '/../../utils/classes/EmailValidator.php';
   include_once __DIR__ . '/../../services/emailNotifications/EmailService.php';
+  include_once __DIR__ . '/types/EmailStatus.php';
 
   class ApplicantService {
     public static function getApplicantSubmittedForm(string $token): ApplicantResponse {
@@ -38,10 +39,10 @@
     }
 
 
-    private static function resubmission(string $email, string $token): bool {
+    private static function resubmission(string $email, string $token): EmailStatus {
 
       if (!EmailValidator::validate($email)) {
-        return false;
+        return new EmailStatus(false, new ErrorResponse(400, 'Incorrect email'));
       }
 
       $db = Database::getDatabaseInstace();
@@ -54,13 +55,13 @@
 
         $mysqli->close();
         if ($result) {
-          return true;
+          return new EmailStatus(true);
         }
 
-        return false;
+        return new EmailStatus(false, new ErrorResponse(500, 'Could not save resubmission'));
 
-      } catch(Throwable) {
-        return false;
+      } catch(Throwable $err) {
+        return new EmailStatus(false, new ErrorResponse(500, 'Server error ' . $err->getMessage()));
       }
     }
 
@@ -70,9 +71,12 @@
      * @param array $data
      * this is an associative array to parse the html
      */
-    public static function sendResubmissionEmail(string $email, string $token, array $data): void {
-      if (self::resubmission($email, $token)) {
+    public static function sendResubmissionEmail(string $email, string $token, array $data): EmailStatus {
+      $emailResubmission = self::resubmission($email, $token);
+      if ($emailResubmission->success) {
         EmailService::sendEmail($email, "Corregir Datos de Solicitud", $data, "applicationReject.html");
+        return $emailResubmission;
       }
+      return $emailResubmission;
     }
   }
