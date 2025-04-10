@@ -1,6 +1,6 @@
 import { formFields } from './formFields.mjs'
 import { Request } from '../../../js/modules/request.mjs'
-import { hideLoadingComponent, relocateWithErrorModal, showFailModal, showLoadingComponent } from '../../../js/modules/utlis.mjs'
+import { hideLoadingComponent, relocateWithErrorModal, showFailModal, showLoadingComponent, showPopUp } from '../../../js/modules/utlis.mjs'
 
 document.addEventListener('DOMContentLoaded', async () => {
   showLoadingComponent('loading')
@@ -38,7 +38,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (err) {
     hideLoadingComponent('loading')
     console.log(err)
-    //relocateWithErrorModal('/', 'correction-fail', 2000)
+    showPopUp('Token ya fue utilizado...')
+    setTimeout(() => {
+      window.location.replace('/')
+    }, 3000)
   }
 })
 

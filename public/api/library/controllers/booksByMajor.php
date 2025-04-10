@@ -14,18 +14,39 @@ if (!isset($_SESSION["ID_STUDENT"])) {
     return;
 }
 
+$page = isset($_GET["page"]) ? (int)$_GET["page"] : 1;
+$limit = 6;
+$offset = $limit * ($page - 1);
+
 $studentId = $_SESSION["ID_STUDENT"];
 
 $db = Database::getDatabaseInstace();
 $mysqli = $db->getConnection();
 
 try {
-    $query = "CALL SP_GET_BOOKS_BY_STUDENT_MAJOR(?)";
-    $result = $db->callStoredProcedure($query, "i", [$studentId], $mysqli);
+    // Necesitamos obtener el total de libros para calcular el total de páginas que necesitare el front
+    $countQuery = "
+        SELECT COUNT(*) AS total
+        FROM TBL_BOOKS b
+        WHERE b.MAJOR_ID IN (
+            SELECT MAJOR_ID FROM TBL_MAJORS_X_STUDENTS WHERE ID_STUDENT = ?
+        ) AND b.ACTIVE = TRUE
+    ";
+
+    $stmt = $mysqli->prepare($countQuery);
+    $stmt->bind_param("i", $studentId);
+    $stmt->execute();
+    $totalResult = $stmt->get_result();
+    $totalBooks = $totalResult->fetch_assoc()["total"];
+    $totalPages = ceil($totalBooks / $limit);
+    $stmt->close();
+
+    $query = "CALL SP_GET_BOOKS_BY_STUDENT_MAJOR(?, ?, ?)";
+    $result = $db->callStoredProcedure($query, "iii", [$studentId, $offset, $limit], $mysqli);
 
     if ($result->num_rows === 0) {
         $mysqli->close();
-        echo json_encode(["status" => "success", "data" => []]);
+        echo json_encode(["status" => "success", "data" => [], "totalPages" => $totalPages, "currentPage" => $page]);
         return;
     }
 
@@ -37,7 +58,12 @@ try {
 
     $mysqli->close();
 
-    echo json_encode(["status" => "success", "data" => $books]);
+    echo json_encode([
+        "status" => "success",
+        "data" => $books,
+        "totalPages" => $totalPages,
+        "currentPage" => $page
+    ]);
 
 } catch (Throwable $err) {
     $mysqli->close();
