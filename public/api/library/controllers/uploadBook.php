@@ -28,7 +28,7 @@ if (!($hasTeacherAndCoordinator || $hasTeacherAndDepartmentChair)) {
 $title = $_POST['title'];
 $author = $_POST['author'];
 $idClass = (int) $_POST['idClass'];
-$tags = isset($_POST['tags']) ? $_POST['tags'] : []; // array
+$tags = isset($_POST['tags_name']) ? $_POST['tags_name'] : []; // array
 $file = $_FILES['file'];
 $teacherNumber = $_SESSION["TEACHER_NUMBER"];
 
@@ -93,7 +93,6 @@ try {
 
     $mysqli->close();
     echo json_encode(["status" => "success", "bookId" => (int)$bookId]);
-
 } catch (Throwable $err) {
     $mysqli->close();
     http_response_code(500);
