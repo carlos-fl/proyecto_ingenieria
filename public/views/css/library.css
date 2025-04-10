@@ -107,3 +107,11 @@
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     text-align: center;
 }
+
+.modal-xl-custom {
+    max-width: 90vw !important;
+}
+
+.modal-body-custom {
+    height: 80vh;
+}
