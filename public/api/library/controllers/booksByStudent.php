@@ -1,4 +1,5 @@
 <?php
+
 include_once __DIR__ . '/../../../../utils/classes/Request.php';
 include_once __DIR__ . '/../../../../config/database/Database.php';
 
@@ -15,35 +16,16 @@ if (!isset($_SESSION["ID_STUDENT"])) {
 
 $studentId = $_SESSION["ID_STUDENT"];
 
-$page = isset($_GET["page"]) ? (int)$_GET["page"] : 1;
-$limit = 6;
-$offset = $limit * ($page - 1);
-
 $db = Database::getDatabaseInstace();
 $mysqli = $db->getConnection();
 
 try {
-    $countQuery = "
-        SELECT COUNT(DISTINCT b.BOOK_ID) AS total
-        FROM TBL_BOOKS b
-        INNER JOIN TBL_SECTIONS s ON s.ID_CLASS = b.ID_CLASS
-        INNER JOIN TBL_SECTIONS_X_STUDENTS sx ON sx.ID_SECTION = s.ID_SECTION
-        WHERE sx.ID_STUDENT = ? AND b.ACTIVE = TRUE
-    ";
-    $stmt = $mysqli->prepare($countQuery);
-    $stmt->bind_param("i", $studentId);
-    $stmt->execute();
-    $totalResult = $stmt->get_result();
-    $totalBooks = $totalResult->fetch_assoc()["total"];
-    $totalPages = ceil($totalBooks / $limit);
-    $stmt->close();
-
-    $query = "CALL SP_GET_BOOKS_BY_STUDENT(?, ?, ?)";
-    $result = $db->callStoredProcedure($query, "iii", [$studentId, $offset, $limit], $mysqli);
+    $query = "CALL SP_GET_BOOKS_BY_STUDENT(?)";
+    $result = $db->callStoredProcedure($query, "i", [$studentId], $mysqli);
 
     if ($result->num_rows === 0) {
         $mysqli->close();
-        echo json_encode(["status" => "success", "data" => [], "totalPages" => $totalPages, "currentPage" => $page]);
+        echo json_encode(["status" => "success", "data" => []]);
         return;
     }
 
@@ -55,12 +37,7 @@ try {
 
     $mysqli->close();
 
-    echo json_encode([
-        "status" => "success",
-        "data" => $books,
-        "totalPages" => $totalPages,
-        "currentPage" => $page
-    ]);
+    echo json_encode(["status" => "success", "data" => $books]);
 } catch (Throwable $err) {
     $mysqli->close();
     http_response_code(500);

@@ -2,7 +2,7 @@
 session_start();
 if (empty($_SESSION)) {
     header('Location: ../../library/login/libraryLogin.php');
-}
+  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -62,19 +62,19 @@ if (empty($_SESSION)) {
 
     <footer-unah></footer-unah>
 
-    <!-- Modal para visualizar PDF -->
-    <div class="modal fade" id="bookModal" tabindex="-1" aria-labelledby="bookModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl-custom">
-            <div class="modal-content rounded-4 shadow">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="bookModalLabel">Título del libro</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body p-0 bg-light modal-body-custom" id="modalPDFContainer">
-                </div>
-            </div>
-        </div>
+<!-- Modal para visualizar PDF -->
+<div class="modal fade" id="bookModal" tabindex="-1" aria-labelledby="bookModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content rounded-4 shadow">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="bookModalLabel">Título del libro</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body p-0 bg-light" id="modalPDFContainer">
+      </div>
     </div>
+  </div>
+</div>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.4/dist/js/bootstrap.min.js" integrity="sha384-Re460s1NeyAhufAM5JwfIGWosokaQ7CH15ti6W5Y4wC/m4eJ5opJ2ivohxVM05Wd" crossorigin="anonymous"></script>
