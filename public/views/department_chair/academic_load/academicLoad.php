@@ -180,23 +180,23 @@
                 <label for="lunes">Lunes</label>
               </div>
               <div class="input-group-text">
-                <input type="checkbox" class="form-check-input m-2" name="daysOfWeek" id="lunes" value="Mon">
+                <input type="checkbox" class="form-check-input m-2" name="daysOfWeek" id="lunes" value="Tue">
                 <label for="lunes">Martes</label>
               </div>
               <div class="input-group-text">
-                <input type="checkbox" class="form-check-input m-2" name="daysOfWeek" id="lunes" value="Mon">
+                <input type="checkbox" class="form-check-input m-2" name="daysOfWeek" id="lunes" value="Wed">
                 <label for="lunes">Miércoles</label>
               </div>
               <div class="input-group-text">
-                <input type="checkbox" class="form-check-input m-2" name="daysOfWeek" id="lunes" value="Mon">
+                <input type="checkbox" class="form-check-input m-2" name="daysOfWeek" id="lunes" value="Thu">
                 <label for="lunes">Jueves</label>
               </div>
               <div class="input-group-text">
-                <input type="checkbox" class="form-check-input m-2" name="daysOfWeek" id="lunes" value="Mon">
+                <input type="checkbox" class="form-check-input m-2" name="daysOfWeek" id="lunes" value="Fri">
                 <label for="lunes">Viernes</label>
               </div>
               <div class="input-group-text">
-                <input type="checkbox" class="form-check-input m-2" name="daysOfWeek" id="lunes" value="Mon">
+                <input type="checkbox" class="form-check-input m-2" name="daysOfWeek" id="lunes" value="Sat">
                 <label for="lunes">Sábado</label>
               </div>
             </div>
@@ -204,35 +204,34 @@
           <div class="mt-3">
             <label for="start_time">Hora Inicial</label>
             <select type="text" id="start_time" class="form-select">
-              <option value="">Elija una hora inicial...</option>
-              <option value="7 00">0700</option>
-              <option value="8 00">0800</option>
-              <option value="9 00">0900</option>
-              <option value="10 00">1000</option>
-              <option value="11 00">1100</option>
-              <option value="12 00">1200</option>
-              <option value="13 00">1300</option>
-              <option value="14 00">1400</option>
-              <option value="15 00">1500</option>
-              <option value="16 00">1600</option>
-              <option value="17 00">1700</option>
-              <option value="18 00">1800</option>
-              <option value="19 00">1900</option>
-              <option value="20 00">2000</option>
-              <option value="21 00">2100</option>
+              <option value="">Seleccione una hora inicial...</option>
+              <option value="700">0700</option>
+              <option value="800">0800</option>
+              <option value="900">0900</option>
+              <option value="1000">1000</option>
+              <option value="1100">1100</option>
+              <option value="1200">1200</option>
+              <option value="1300">1300</option>
+              <option value="1400">1400</option>
+              <option value="1500">1500</option>
+              <option value="1600">1600</option>
+              <option value="1700">1700</option>
+              <option value="1800">1800</option>
+              <option value="1900">1900</option>
+              <option value="2000">2000</option>
             </select>
           </div>
           <div class="mt-3">
             <label for="edificio">Hora Final</label>
-            <select type="text" id="edificio" class="form-control" disabled></select>
+            <select type="text" id="end_time" class="form-control" disabled></select>
           </div>
           <div class="mt-3">
-            <label for="edificio">Edificio</label>
-            <select type="text" id="edificio" class="form-select"></select>
+            <label for="building">Edificio</label>
+            <select type="text" id="building" class="form-select"></select>
           </div>
           <div class="mt-3">
             <label for="classroom">Aula</label>
-            <select type="text" id="classroom" class="form-select" disabled></select>
+            <select type="text" id="classroom" class="form-select"></select>
           </div>
           <div class="mt-3">
             <label for="cupos">Cupos</label>

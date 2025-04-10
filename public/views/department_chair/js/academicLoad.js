@@ -1,6 +1,6 @@
 // Lógica para la vista academicLoad.php
 
-import { cleanTableBody, disableElement, enableElement, exportTableToCSV, newDangerBtn, newPrimaryBtn, newTableData, showLoadingIcon, showPopUp } from "../../js/modules/utlis.mjs"
+import { changeBorder, cleanTableBody, disableElement, enableElement, exportTableToCSV, newDangerBtn, newPrimaryBtn, newTableData, showLoadingIcon, showPopUp } from "../../js/modules/utlis.mjs"
 
 function fetchDeparmentMajors(selectMajor){
     selectMajor.innerHTML = `<option value="">Cargando Carreras...</option>` 
@@ -201,18 +201,113 @@ function fetchMajorClasses(){
             classesSelect.innerHTML = `<option value="">La carrera no tiene clases</option>`
             return
         }
+        classesSelect.innerHTML = `<option value="">Seleccione una clase</option>`
         data.classes.forEach(elem => {
             let option = document.createElement("option")
             option.value = elem["CLASS_CODE"]
             option.innerText = elem["CLASS_NAME"]
             classesSelect.appendChild(option)
         })
-        classesSelect.innerHTML = `<option value="">Elija una clase</option>`
         enableElement(classesSelect)
     })
     .catch(error => {
         showPopUp("No se pudieron cargar las clases")
         classesSelect.innerHTML = `<option value="">No se pudieron cargar las clases...</option>`
+        console.log(error)
+    })
+}
+
+
+function fetchMajorTeachers(){
+    // Fetch las clases de un Major
+    let teacherSelect = document.getElementById("teacher")
+    let majorAbr = document.getElementById("departmentMajor").value
+    teacherSelect.innerHTML = `<option value="">Cargando Docentes...</option>`
+    disableElement(teacherSelect)
+    fetch(`/api/department_chair/controllers/getMajorTeachers.php?major=${majorAbr}`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.status == "failure"){
+            showPopUp("La carrera no tiene docentes")
+            teacherSelect.innerHTML = `<option value="">La carrera no tiene docentes</option>`
+            return
+        }
+        teacherSelect.innerHTML = `<option value="">Seleccione un docente</option>`
+        data.teachers.forEach(elem => {
+            let option = document.createElement("option")
+            option.value = elem["TEACHER_NUMBER"]
+            option.innerText = elem["NAME"]
+            teacherSelect.appendChild(option)
+        })
+        enableElement(teacherSelect)
+    })
+    .catch(error => {
+        showPopUp("No se pudieron cargar los docentes")
+        teacherSelect.innerHTML = `<option value="">No se pudieron cargar los docentes...</option>`
+        console.log(error)
+    })
+}
+
+function fetchDepartmentBuildings(){
+    // Fetch los edificios en los que tiene aulas un departamento
+    let buildingSelect = document.getElementById("building")
+    buildingSelect.innerHTML = `<option value="">Cargando edificios...</option>`
+    disableElement(buildingSelect)
+    fetch(`/api/department_chair/controllers/getDepartmentBuildings.php`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.status == "failure"){
+            showPopUp("El departamento no tiene aulas en ningún edificio")
+            buildingSelect.innerHTML = `<option value="">El departamento no tiene aulas en ningún edificio</option>`
+            return
+        }
+        buildingSelect.innerHTML = `<option value="">Seleccione un edificio</option>`
+        data.buildings.forEach(elem => {
+            let option = document.createElement("option")
+            option.value = elem["BUILDING_ID"]
+            option.innerText = elem["BUILDING_NAME"]
+            buildingSelect.appendChild(option)
+        })
+        enableElement(buildingSelect)
+    })
+    .catch(error => {
+        showPopUp("No se pudieron cargar los edificios")
+        buildingSelect.innerHTML = `<option value="">No se pudieron cargar los edificios...</option>`
+        console.log(error)
+    })
+}
+
+function fetchDeparmentBuildingClassrooms(classRoomSelect, event){
+    let buildingSelect = event.target
+    let building = buildingSelect.value
+    if (building === ""){
+        showPopUp("Elija un edificio porfavor")
+        classRoomSelect.innerHTML = ``
+        disableElement(classRoomSelect)
+        return
+    }
+    classRoomSelect.innerHTML = `<option value="">Cargando Aulas...</option>`
+    disableElement(classRoomSelect)
+    fetch(`/api/department_chair/controllers/getDepartmentClassrooms.php?building=${building}`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.status == "failure"){
+            showPopUp("El departamento no tiene aulas en este edificio")
+            classRoomSelect.innerHTML = `<option value="">El departamento no tiene aulas en este edificio</option>`
+            return
+        }
+        classRoomSelect.innerHTML = `<option value="">Seleccione un aula</option>`
+        data.classrooms.forEach(elem => {
+            let option = document.createElement("option")
+            option.value = elem["CLASSROOM_ID"]
+            option.innerText = elem["ROOM_NAME"]
+            classRoomSelect.appendChild(option)
+        })
+        enableElement(classRoomSelect)
+    })
+    .catch(error => {
+        showPopUp("No se pudieron cargar las aulas de este edificio")
+        classRoomSelect.innerHTML = `<option value="">No se pudieron cargar las aulas de este edificio...</option>`
         console.log(error)
     })
 }
@@ -224,8 +319,8 @@ function newSectionModal(academicLoadMajorTitle, event){
     newSectionModal = new bootstrap.Modal(newSectionModal);
     newSectionModal.show();
     fetchMajorClasses();
-    //fetchMajorTeachers();
-    //fetchBuildings();
+    fetchMajorTeachers();
+    fetchDepartmentBuildings();
 }
 
 function main(){
@@ -237,10 +332,13 @@ function main(){
     let academicLoadTable = document.getElementById("academicLoadTable")
     let academicLoadTableInfo = document.getElementById("table-info")
     let academicLoadMajorTitle = document.getElementById("academicLoadMajor")
+    let buildingSelect = document.getElementById("building")
+    let classRoomSelect = document.getElementById("classroom")
     fetchDeparmentMajors(selectMajor)
     selectMajor.addEventListener("change", majorSelected.bind(null, filterInput, filterSearchBtn, newSectionBtn, excelImportBtn, academicLoadTable, academicLoadTableInfo))
     excelImportBtn.addEventListener("click", exportLoadToExcel.bind(null, selectMajor))
     newSectionBtn.addEventListener("click", newSectionModal.bind(null, academicLoadMajorTitle))
+    buildingSelect.addEventListener("change", fetchDeparmentBuildingClassrooms.bind(null, classRoomSelect))
 }
 
 main()
