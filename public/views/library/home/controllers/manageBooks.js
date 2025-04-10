@@ -1,8 +1,56 @@
 let allBooks = [];
+let totalPages = 1;
+let currentPage = 1;
+let availableTags = [];
+let selectedTags = [];
 
-document.addEventListener("DOMContentLoaded", () => {
+// Función para mostrar alertas
+function showAlert(message, type = "success") {
+  const alertContainer = document.createElement("div");
+  alertContainer.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 end-0 m-3`;
+  alertContainer.style.zIndex = 1050;
+  alertContainer.role = "alert";
+  alertContainer.innerHTML = `
+    ${message}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  `;
+  document.body.appendChild(alertContainer);
+  setTimeout(() => {
+    const bsAlert = bootstrap.Alert.getOrCreateInstance(alertContainer);
+    bsAlert.close();
+  }, 5000);
+}
+
+// Función para mostrar el modal de confirmación de eliminación
+function confirmDeletion() {
+  return new Promise((resolve) => {
+    const confirmModalElement = document.getElementById("confirmModal");
+    const confirmModal = new bootstrap.Modal(confirmModalElement);
+    confirmModal.show();
+
+    const confirmDeleteButton = document.getElementById("confirmDeleteButton");
+    const newButton = confirmDeleteButton.cloneNode(true);
+    confirmDeleteButton.parentNode.replaceChild(newButton, confirmDeleteButton);
+
+    newButton.addEventListener("click", () => {
+      confirmModal.hide();
+      resolve(true);
+    });
+
+    confirmModalElement.addEventListener(
+      "hidden.bs.modal",
+      () => {
+        resolve(false);
+      },
+      { once: true }
+    );
+  });
+}
+
+// Función para obtener los libros con paginación
+function fetchBooks(page = 1) {
+  currentPage = page;
   const gridContainer = document.querySelector(".books-container .grid");
-
   gridContainer.innerHTML = `
     <div class="col-12 text-center my-5">
       <span class="spinner-border" role="status" aria-hidden="true"></span>
@@ -10,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
   `;
 
-  fetch("/api/library/controllers/booksByRol.php", {
+  fetch(`/api/library/controllers/booksByRol.php?page=${page}`, {
     method: "GET",
     credentials: "include",
   })
@@ -18,7 +66,9 @@ document.addEventListener("DOMContentLoaded", () => {
     .then((data) => {
       if (data.status === "success") {
         allBooks = data.data;
+        totalPages = data.totalPages;
         renderBooks(allBooks);
+        renderPagination(totalPages, currentPage);
       } else {
         console.error("Error en el endpoint:", data);
         gridContainer.innerHTML = `
@@ -36,14 +86,23 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       `;
     });
-});
+}
 
 // Función para renderizar los libros en el contenedor
 function renderBooks(bookList) {
   const gridContainer = document.querySelector(".books-container .grid");
   gridContainer.innerHTML = "";
 
-  bookList.forEach((book) => {
+  if (bookList.length === 0) {
+    gridContainer.innerHTML = `
+      <div class="col-12 text-center my-5">
+        <p>No se encontraron libros.</p>
+      </div>
+    `;
+    return;
+  }
+
+  bookList.forEach((book, index) => {
     const bookId = book.id || book.bookId;
     const cardHTML = `
       <div class="g-col-6">
@@ -58,16 +117,16 @@ function renderBooks(bookList) {
             <li class="list-group-item">${book.author}</li>
             <li class="list-group-item">${book.majorName}</li>
             <li class="list-group-item">${book.uploadDate}</li>
-            <li class="list-group-item">${
-              book.tags && book.tags.length > 0
-                ? book.tags.join(", ")
-                : "Sin etiquetas"
-            }</li>
+            <li class="list-group-item">
+              ${
+                book.tags && book.tags.length > 0
+                  ? book.tags.join(", ")
+                  : "Sin etiquetas"
+              }
+            </li>
           </ul>
           <div class="card-body">
-            <button class="btn btn-danger delete-book" data-book-id="${bookId}">
-              Eliminar libro
-            </button>
+            <button class="btn btn-danger delete-book" data-book-id="${bookId}">Eliminar libro</button>
           </div>
         </div>
       </div>
@@ -78,8 +137,71 @@ function renderBooks(bookList) {
   applyCardEvents();
 }
 
-// Función para aplicar eventos a cada tarjeta
-function applyCardEvents(bookList) {
+// Función para renderizar la paginación
+function renderPagination(totalPages, currentPage) {
+  const paginationContainerId = "paginationContainer";
+  let paginationContainer = document.getElementById(paginationContainerId);
+
+  if (paginationContainer) {
+    paginationContainer.remove();
+  }
+
+  paginationContainer = document.createElement("div");
+  paginationContainer.id = paginationContainerId;
+  paginationContainer.className = "w-100 d-flex justify-content-center my-4";
+
+  let paginationHTML = `<nav aria-label="Page navigation"><ul class="pagination">`;
+
+  const prevDisabled = currentPage === 1 ? "disabled" : "";
+  paginationHTML += `
+    <li class="page-item ${prevDisabled}">
+      <a class="page-link" href="#" aria-label="Anterior" data-page="${
+        currentPage - 1
+      }">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+  `;
+
+  for (let i = 1; i <= totalPages; i++) {
+    const activeClass = currentPage === i ? "active" : "";
+    paginationHTML += `
+      <li class="page-item ${activeClass}">
+        <a class="page-link" href="#" data-page="${i}">${i}</a>
+      </li>
+    `;
+  }
+
+  const nextDisabled = currentPage === totalPages ? "disabled" : "";
+  paginationHTML += `
+    <li class="page-item ${nextDisabled}">
+      <a class="page-link" href="#" aria-label="Siguiente" data-page="${
+        currentPage + 1
+      }">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  `;
+
+  paginationHTML += `</ul></nav>`;
+  paginationContainer.innerHTML = paginationHTML;
+
+  document.querySelector(".books-container").appendChild(paginationContainer);
+
+  const pageLinks = paginationContainer.querySelectorAll("a.page-link");
+  pageLinks.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const page = parseInt(link.getAttribute("data-page"));
+      if (page >= 1 && page <= totalPages && page !== currentPage) {
+        fetchBooks(page);
+      }
+    });
+  });
+}
+
+// Función para aplicar eventos en cada tarjeta
+function applyCardEvents() {
   const cards = document.querySelectorAll(".book-card");
 
   cards.forEach((card, index) => {
@@ -88,14 +210,15 @@ function applyCardEvents(bookList) {
       card.style.transform = "scale(1.03)";
       card.style.transition = "transform 0.2s ease";
     });
-
     card.addEventListener("mouseleave", () => {
       card.classList.remove("shadow-lg");
       card.style.transform = "scale(1)";
     });
 
-    card.addEventListener("click", () => {
-      const selectedBook = bookList[index];
+    card.addEventListener("click", (e) => {
+      if (e.target.closest(".delete-book")) return;
+
+      const selectedBook = allBooks[index];
       const modalTitle = document.getElementById("bookModalLabel");
       const modalBody = document.querySelector("#bookModal .modal-body");
 
@@ -106,7 +229,7 @@ function applyCardEvents(bookList) {
           .then((response) => {
             if (response.ok) {
               modalBody.innerHTML = `
-                <iframe src="${selectedBook.url}" allowfullscreen></iframe>
+                <iframe src="${selectedBook.url}" allowfullscreen style="width: 100%; height: 100%;"></iframe>
               `;
             } else {
               modalBody.innerHTML = `
@@ -136,26 +259,146 @@ function applyCardEvents(bookList) {
       modal.show();
     });
   });
+
+  const deleteButtons = document.querySelectorAll(".delete-book");
+  deleteButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const bookId = button.getAttribute("data-book-id");
+      if (!bookId) {
+        console.error("No se encontró el ID del libro.");
+        return;
+      }
+      confirmDeletion().then((confirmed) => {
+        if (!confirmed) return;
+        fetch("/api/library/controllers/deactivateBook.php", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          credentials: "include",
+          body: new URLSearchParams({ bookId: bookId }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "success") {
+              allBooks = allBooks.filter(
+                (book) => (book.id || book.bookId) != bookId
+              );
+              renderBooks(allBooks);
+              showAlert("Libro eliminado con éxito.", "success");
+            } else {
+              console.error("Error al eliminar el libro:", data);
+              showAlert("Error al eliminar el libro.", "danger");
+            }
+          })
+          .catch((error) => {
+            console.error("Error en la petición de eliminación:", error);
+            showAlert("Error en la petición de eliminación.", "danger");
+          });
+      });
+    });
+  });
 }
 
-// Evento para el formulario de búsqueda de libros
-document.getElementById("searchForm").addEventListener("submit", (e) => {
-  e.preventDefault();
-  const searchValue = document
-    .getElementById("searchInput")
-    .value.toLowerCase()
-    .trim();
+// Función para cargar las etiquetas
+function loadTags() {
+  fetch("/api/library/controllers/getTags.php")
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === "success") {
+        availableTags = data.data;
+      } else {
+        console.error("Error en el endpoint de etiquetas:", data.message);
+      }
+    })
+    .catch((error) => {
+      console.error("Error al obtener las etiquetas:", error);
+    });
+}
 
-  const filteredBooks = allBooks.filter((book) =>
-    book.title.toLowerCase().includes(searchValue)
+// búsqueda/agregado de etiqueta
+document.getElementById("tagInput").addEventListener("input", function () {
+  const inputValue = this.value.toLowerCase();
+  const suggestionsContainer = document.getElementById("tagSuggestions");
+  suggestionsContainer.innerHTML = "";
+
+  if (inputValue.trim() === "") return;
+  const matches = availableTags.filter((tag) =>
+    tag.tagName.toLowerCase().includes(inputValue)
   );
 
-  renderBooks(filteredBooks);
+  matches.forEach((tag) => {
+    const suggestionButton = document.createElement("button");
+    suggestionButton.type = "button";
+    suggestionButton.className = "list-group-item list-group-item-action";
+    suggestionButton.textContent = tag.tagName;
+    suggestionButton.addEventListener("click", function () {
+      addTag(tag);
+      document.getElementById("tagInput").value = "";
+      suggestionsContainer.innerHTML = "";
+    });
+    suggestionsContainer.appendChild(suggestionButton);
+  });
 });
 
-document.getElementById("bookModal").addEventListener("hidden.bs.modal", () => {
-  document.activeElement.blur();
+document.getElementById("tagInput").addEventListener("keypress", function (e) {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    let tagName = this.value.trim();
+    if (tagName === "") return;
+    const existingTag = availableTags.find(
+      (tag) => tag.tagName.toLowerCase() === tagName.toLowerCase()
+    );
+    if (existingTag) {
+      addTag(existingTag);
+    } else {
+      addTag({ tagId: null, tagName: tagName });
+    }
+    this.value = "";
+    document.getElementById("tagSuggestions").innerHTML = "";
+  }
 });
+
+// Función para agregar una etiqueta a la lista de seleccionadas
+function addTag(tag) {
+  if (
+    selectedTags.some(
+      (t) => t.tagName.toLowerCase() === tag.tagName.toLowerCase()
+    )
+  )
+    return;
+  selectedTags.push(tag);
+  renderSelectedTags();
+}
+
+// Función para eliminar una etiqueta de la lista
+function removeTag(tagName) {
+  selectedTags = selectedTags.filter(
+    (t) => t.tagName.toLowerCase() !== tagName.toLowerCase()
+  );
+  renderSelectedTags();
+}
+
+function renderSelectedTags() {
+  const selectedTagsContainer = document.getElementById("selectedTags");
+  selectedTagsContainer.innerHTML = "";
+  selectedTags.forEach((tag) => {
+    const badge = document.createElement("span");
+    badge.className = "badge bg-primary me-1 mb-1";
+    badge.style.fontSize = "1rem";
+    badge.textContent = tag.tagName;
+    const closeButton = document.createElement("button");
+    closeButton.type = "button";
+    closeButton.className = "btn-close btn-close-white btn-sm ms-1";
+    closeButton.style.fontSize = "0.6rem";
+    closeButton.addEventListener("click", function () {
+      removeTag(tag.tagName);
+    });
+    badge.appendChild(closeButton);
+    selectedTagsContainer.appendChild(badge);
+  });
+}
 
 // Función para cargar las clases
 function loadClasses() {
@@ -192,107 +435,13 @@ function loadClasses() {
     });
 }
 
-// Función para cargar las etiquetas
-function loadTags() {
-  const dropdownMenu = document.getElementById("tagsDropdownMenu");
-  dropdownMenu.innerHTML =
-    '<span class="dropdown-item-text">Cargando tags...</span>';
-
-  fetch("/api/library/controllers/getTags.php")
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.status === "success") {
-        dropdownMenu.innerHTML = "";
-        if (data.data.length > 0) {
-          data.data.forEach((tag) => {
-            const itemDiv = document.createElement("div");
-            itemDiv.className = "dropdown-item";
-
-            const checkboxDiv = document.createElement("div");
-            checkboxDiv.className = "form-check";
-
-            const checkbox = document.createElement("input");
-            checkbox.className = "form-check-input tag-checkbox";
-            checkbox.type = "checkbox";
-            checkbox.value = tag.tagId;
-            checkbox.id = `tag_${tag.tagId}`;
-
-            const label = document.createElement("label");
-            label.className = "form-check-label";
-            label.setAttribute("for", `tag_${tag.tagId}`);
-            label.textContent = tag.tagName;
-
-            checkboxDiv.appendChild(checkbox);
-            checkboxDiv.appendChild(label);
-            itemDiv.appendChild(checkboxDiv);
-            dropdownMenu.appendChild(itemDiv);
-          });
-        } else {
-          dropdownMenu.innerHTML =
-            '<span class="dropdown-item-text">No hay tags disponibles</span>';
-        }
-      } else {
-        console.error("Error en el endpoint de etiquetas:", data.message);
-        dropdownMenu.innerHTML =
-          '<span class="dropdown-item-text text-danger">Error al cargar tags</span>';
-      }
-    })
-    .catch((error) => {
-      console.error("Error al obtener las etiquetas:", error);
-      dropdownMenu.innerHTML =
-        '<span class="dropdown-item-text text-danger">Error al cargar tags</span>';
-    });
-}
-
-// Función para el resumen de etiquetas seleccionadas
-function updateSelectedTags() {
-  const selectedTagsDiv = document.getElementById("selectedTags");
-  const checked = document.querySelectorAll(
-    "#tagsDropdownMenu .tag-checkbox:checked"
-  );
-  let names = [];
-  checked.forEach((cb) => {
-    const label = cb.parentElement.querySelector("label");
-    if (label) names.push(label.textContent);
-  });
-  if (names.length > 0) {
-    selectedTagsDiv.textContent =
-      "Etiquetas seleccionadas: " + names.join(", ");
-  } else {
-    selectedTagsDiv.textContent = "";
-  }
-}
-
-document.addEventListener("change", function (event) {
-  if (event.target && event.target.classList.contains("tag-checkbox")) {
-    updateSelectedTags();
-  }
-});
-
-document
-  .getElementById("uploadModal")
-  .addEventListener("show.bs.modal", function () {
-    loadClasses();
-    loadTags();
-  });
-
-document.addEventListener("DOMContentLoaded", () => {
-  const currentDateInput = document.getElementById("currentDate");
-  const today = new Date().toISOString().split("T")[0];
-  currentDateInput.value = today;
-});
-
-// Envío del formulario
 document.getElementById("uploadForm").addEventListener("submit", function (e) {
   e.preventDefault();
 
   const formData = new FormData(this);
 
-  const checked = document.querySelectorAll(
-    "#tagsDropdownMenu .tag-checkbox:checked"
-  );
-  checked.forEach((cb) => {
-    formData.append("tags[]", cb.value);
+  selectedTags.forEach((tag) => {
+    formData.append("tags_name[]", tag.tagName);
   });
 
   fetch("/api/library/controllers/uploadBook.php", {
@@ -303,64 +452,59 @@ document.getElementById("uploadForm").addEventListener("submit", function (e) {
     .then((response) => response.json())
     .then((data) => {
       if (data.status === "success") {
-        alert("Libro subido exitosamente. ID: " + data.bookId);
+        showAlert("Libro subido exitosamente. ID: " + data.bookId, "success");
         e.target.reset();
-        document.getElementById("selectedTags").textContent = "";
+        document.getElementById("selectedTags").innerHTML = "";
         document.getElementById("currentDate").value = new Date()
           .toISOString()
           .split("T")[0];
       } else {
-        alert("Error: " + data.message);
+        showAlert("Error: " + data.message, "danger");
       }
     })
     .catch((error) => {
       console.error("Error en el envío:", error);
-      alert("Error al subir el libro.");
+      showAlert("Error al subir el libro.", "danger");
     });
 });
 
-// Agregar eventos de Eliminar libro
-function applyCardEvents() {
-  const deleteButtons = document.querySelectorAll(".delete-book");
+document.addEventListener("DOMContentLoaded", () => {
+  const currentDateInput = document.getElementById("currentDate");
+  const today = new Date().toISOString().split("T")[0];
+  currentDateInput.value = today;
+  fetchBooks(1);
+});
 
-  deleteButtons.forEach((button) => {
-    button.addEventListener("click", (e) => {
-      const bookId = e.currentTarget.getAttribute("data-book-id");
-      if (!bookId) {
-        console.error("No se encontró el ID del libro.");
-        return;
-      }
-
-      const confirmDelete = window.confirm(
-        "¿Estás seguro de eliminar este libro?"
-      );
-      if (!confirmDelete) return;
-
-      fetch("/api/library/controllers/deactivateBook.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        credentials: "include",
-        body: new URLSearchParams({ bookId: bookId }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.status === "success") {
-            allBooks = allBooks.filter(
-              (book) => (book.id || book.bookId) != bookId
-            );
-            renderBooks(allBooks);
-            alert("Libro eliminado con éxito.");
-          } else {
-            console.error("Error al eliminar el libro:", data);
-            alert("Error al eliminar el libro.");
-          }
-        })
-        .catch((error) => {
-          console.error("Error en la petición de eliminación:", error);
-          alert("Error en la petición de eliminación.");
-        });
-    });
+document
+  .getElementById("uploadModal")
+  .addEventListener("show.bs.modal", function () {
+    selectedTags = [];
+    document.getElementById("tagInput").value = "";
+    document.getElementById("tagSuggestions").innerHTML = "";
+    document.getElementById("selectedTags").innerHTML = "";
+    loadClasses();
+    loadTags();
   });
-}
+
+// Evento para el formulario de búsqueda
+document.getElementById("searchForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const searchValue = document
+    .getElementById("searchInput")
+    .value.toLowerCase()
+    .trim();
+
+  const filteredBooks = allBooks.filter((book) =>
+    book.title.toLowerCase().includes(searchValue)
+  );
+
+  renderBooks(filteredBooks);
+});
+
+document.getElementById("bookModal").addEventListener("hidden.bs.modal", () => {
+  document.activeElement.blur();
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  fetchBooks(1);
+});

@@ -74,13 +74,13 @@ if (empty($_SESSION)) {
 
     <!-- Modal para visualizar PDF -->
     <div class="modal fade" id="bookModal" tabindex="-1" aria-labelledby="bookModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-xl-custom">
             <div class="modal-content rounded-4 shadow">
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="bookModalLabel">Título del libro</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
-                <div class="modal-body p-0 bg-light">
+                <div class="modal-body p-0 bg-light modal-body-custom" id="modalPDFContainer">
                 </div>
             </div>
         </div>
@@ -116,14 +116,8 @@ if (empty($_SESSION)) {
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Etiquetas</label>
-                            <div class="dropdown">
-                                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="tagsDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Seleccione etiquetas
-                                </button>
-                                <div class="dropdown-menu" id="tagsDropdownMenu" style="max-height: 200px; overflow-y: auto;">
-                                    <span class="dropdown-item-text">Cargando tags...</span>
-                                </div>
-                            </div>
+                            <input type="text" class="form-control" id="tagInput" placeholder="Escribe para buscar o añadir una etiqueta">
+                            <div id="tagSuggestions" class="list-group mt-1"></div>
                             <div id="selectedTags" class="mt-2"></div>
                         </div>
                         <div class="mb-3">
@@ -135,6 +129,25 @@ if (empty($_SESSION)) {
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="submit" form="uploadForm" class="btn btn-primary">Subir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación de Eliminación -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="confirmModalLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar este libro?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" id="confirmDeleteButton" class="btn btn-danger">Eliminar</button>
                 </div>
             </div>
         </div>

@@ -1,6 +1,10 @@
 let allBooks = [];
+let totalPages = 1;
+let currentPage = 1;
 
-document.addEventListener("DOMContentLoaded", () => {
+// Función para realizar la búsqueda pasando la página correspondiente
+function fetchBooks(page = 1) {
+  currentPage = page;
   const gridContainer = document.querySelector(".books-container .grid");
   gridContainer.innerHTML = `
     <div class="col-12 text-center my-5">
@@ -9,12 +13,14 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
   `;
 
-  fetch("/api/library/controllers/booksByStudent.php")
+  fetch(`/api/library/controllers/booksByStudent.php?page=${page}`)
     .then((response) => response.json())
     .then((data) => {
       if (data.status === "success") {
         allBooks = data.data;
+        totalPages = data.totalPages;
         renderBooks(allBooks);
+        renderPagination(totalPages, currentPage);
       } else {
         console.error("Error en el endpoint:", data);
         gridContainer.innerHTML = `
@@ -32,12 +38,21 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       `;
     });
-});
+}
 
-// Función para renderizar libros
+// Función para renderizar los libros
 function renderBooks(bookList) {
   const gridContainer = document.querySelector(".books-container .grid");
   gridContainer.innerHTML = "";
+
+  if (bookList.length === 0) {
+    gridContainer.innerHTML = `
+      <div class="col-12 text-center my-5">
+        <p>No se encontraron libros.</p>
+      </div>
+    `;
+    return;
+  }
 
   bookList.forEach((book) => {
     const cardHTML = `
@@ -64,6 +79,69 @@ function renderBooks(bookList) {
   });
 
   applyCardEvents(bookList);
+}
+
+// Función para crear y renderizar la paginación
+function renderPagination(totalPages, currentPage) {
+  const paginationContainerId = "paginationContainer";
+  let paginationContainer = document.getElementById(paginationContainerId);
+
+  if (paginationContainer) {
+    paginationContainer.remove();
+  }
+
+  paginationContainer = document.createElement("div");
+  paginationContainer.id = paginationContainerId;
+  paginationContainer.className = "w-100 d-flex justify-content-center my-4";
+
+  let paginationHTML = `<nav aria-label="Page navigation"><ul class="pagination">`;
+
+  const prevDisabled = currentPage === 1 ? "disabled" : "";
+  paginationHTML += `
+    <li class="page-item ${prevDisabled}">
+      <a class="page-link" href="#" aria-label="Anterior" data-page="${
+        currentPage - 1
+      }">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+  `;
+
+  for (let i = 1; i <= totalPages; i++) {
+    const activeClass = currentPage === i ? "active" : "";
+    paginationHTML += `
+      <li class="page-item ${activeClass}">
+        <a class="page-link" href="#" data-page="${i}">${i}</a>
+      </li>
+    `;
+  }
+
+  const nextDisabled = currentPage === totalPages ? "disabled" : "";
+  paginationHTML += `
+    <li class="page-item ${nextDisabled}">
+      <a class="page-link" href="#" aria-label="Siguiente" data-page="${
+        currentPage + 1
+      }">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  `;
+
+  paginationHTML += `</ul></nav>`;
+  paginationContainer.innerHTML = paginationHTML;
+
+  document.querySelector(".books-container").appendChild(paginationContainer);
+
+  const pageLinks = paginationContainer.querySelectorAll("a.page-link");
+  pageLinks.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const page = parseInt(link.getAttribute("data-page"));
+      if (page >= 1 && page <= totalPages && page !== currentPage) {
+        fetchBooks(page);
+      }
+    });
+  });
 }
 
 // Eventos de hover y modal para cada tarjeta
@@ -93,9 +171,7 @@ function applyCardEvents(bookList) {
         fetch(selectedBook.url, { method: "HEAD" })
           .then((response) => {
             if (response.ok) {
-              modalBody.innerHTML = `
-                <iframe src="${selectedBook.url}" allowfullscreen></iframe>
-              `;
+              modalBody.innerHTML = `<iframe src="${selectedBook.url}" allowfullscreen></iframe>`;
             } else {
               modalBody.innerHTML = `
                 <div class="alert alert-warning text-center m-4" role="alert">
@@ -143,4 +219,8 @@ document.getElementById("searchForm").addEventListener("submit", (e) => {
 
 document.getElementById("bookModal").addEventListener("hidden.bs.modal", () => {
   document.activeElement.blur();
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  fetchBooks(1);
 });

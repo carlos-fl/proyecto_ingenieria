@@ -24,7 +24,6 @@ $db = Database::getDatabaseInstace();
 $mysqli = $db->getConnection();
 
 try {
-    // Necesitamos obtener el total de libros para calcular el total de páginas que necesitare el front
     $countQuery = "
         SELECT COUNT(*) AS total
         FROM TBL_BOOKS b
@@ -64,7 +63,6 @@ try {
         "totalPages" => $totalPages,
         "currentPage" => $page
     ]);
-
 } catch (Throwable $err) {
     $mysqli->close();
     http_response_code(500);
