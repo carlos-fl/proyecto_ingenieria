@@ -9,7 +9,7 @@ class DepartmentChairService {
         $mysqli = $db->getConnection();
         $query = "CALL SP_GET_ONE_STUDENT_BY_ACCOUNT_NUMBER(?)";
         try {
-            $result = (object) $db->callStoredProcedure($query, 'i', [$accountNumber], $mysqli);
+            $result = $db->callStoredProcedure($query, 'i', [$accountNumber], $mysqli);
             $mysqli->close();
         if ($result->num_rows == 0) {
             return ["status" => "failure", "code" => 404, "message" => "No se encontró el estudiante"];
@@ -26,7 +26,7 @@ class DepartmentChairService {
         $mysqli = $db->getConnection();
         $query = "CALL SP_GET_DEPARTMENT_MAJORS(?)";
         try {
-            $results = (object) $db->callStoredProcedure($query, 'i', [$chairmanTeacherNumber], $mysqli);
+            $results = $db->callStoredProcedure($query, 'i', [$chairmanTeacherNumber], $mysqli);
             $result = [];
             while ($row = $results->fetch_assoc()){
                 $result[] = $row;
@@ -47,7 +47,7 @@ class DepartmentChairService {
         }
         $query = "CALL SP_GET_MAJOR_ACADEMIC_LOAD(?, ?)";
         try {
-            $results = (object) $db->callStoredProcedure($query, 'ii', [$majorId, $page], $mysqli);
+            $results = $db->callStoredProcedure($query, 'ii', [$majorId, $page], $mysqli);
             $result = [];
             while ($row = $results->fetch_assoc()){
                 $result[] = $row;
@@ -72,7 +72,7 @@ class DepartmentChairService {
         }
         $query = "CALL SP_GET_MAJOR_ACADEMIC_LOAD_ALL(?)";
         try {
-            $result = (object) $db->callStoredProcedure($query, 'i', [$majorId], $mysqli);
+            $result = $db->callStoredProcedure($query, 'i', [$majorId], $mysqli);
             $mysqli->close();
             return ["status" => "success", "load" => $result->fetch_all(MYSQLI_ASSOC)];
         } catch(Throwable $err) {
@@ -85,7 +85,7 @@ class DepartmentChairService {
         $mysqli = $db->getConnection();
         $query = "CALL SP_GET_STUDENT_HISTORY_BY_ACCOUNT_NUMBER(?)";
         try {
-            $result = (object) $db->callStoredProcedure($query, 'i', [$accountNumber], $mysqli);
+            $result = $db->callStoredProcedure($query, 'i', [$accountNumber], $mysqli);
             $mysqli->close();
             if ($result->num_rows == 0) {
             return new StudentsResponse("failure", error: new ErrorResponse(404, 'Data Not Found')); 
@@ -128,7 +128,7 @@ class DepartmentChairService {
         $mysqli = $db->getConnection();
         $query = "CALL SP_GET_MAJOR_TEACHERS(?)";
         try {
-            $results = (object) $db->callStoredProcedure($query, 'i', [$majorId], $mysqli);
+            $results = $db->callStoredProcedure($query, 'i', [$majorId], $mysqli);
             $result = [];
             while ($row = $results->fetch_assoc()){
                 $result[] = $row;
@@ -145,7 +145,7 @@ class DepartmentChairService {
         $mysqli = $db->getConnection();
         $query = "CALL SP_GET_DEPARTMENT_BUILDINGS_BY_CHAIRMAN_CENTER(?)";
         try {
-            $results = (object) $db->callStoredProcedure($query, 'i', [$chairmanTeacherNumber], $mysqli);
+            $results = $db->callStoredProcedure($query, 'i', [$chairmanTeacherNumber], $mysqli);
             $result = [];
             while ($row = $results->fetch_assoc()){
                 $result[] = $row;
@@ -162,7 +162,7 @@ class DepartmentChairService {
         $mysqli = $db->getConnection();
         $query = "CALL SP_GET_DEPARTMENT_CLASSRROMS_BY_CHAIRMAN_CENTER_AND_BUILDING(?, ?)";
         try {
-            $results = (object) $db->callStoredProcedure($query, 'ii', [$chairmanTeacherNumber, $buildingId], $mysqli);
+            $results = $db->callStoredProcedure($query, 'ii', [$chairmanTeacherNumber, $buildingId], $mysqli);
             $result = [];
             while ($row = $results->fetch_assoc()){
                 $result[] = $row;
