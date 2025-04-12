@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 
 include_once __DIR__ . '/../../../../utils/classes/Request.php';
@@ -14,9 +13,11 @@ if (empty($_SESSION) || !isset($_SESSION["ID_STUDENT"])) {
     return;
 }
 
-$classId = isset($_GET["classId"]) ? (int)$_GET["classId"] : 0;
-if (!$classId) {
-    echo json_encode(new StudentResponse("failure", error: new ErrorResponse(400, "Missing or invalid classId")));
+$pacCode = isset($_GET["pacCode"]) ? (int) $_GET["pacCode"] : null;
+$typeAbbreviation = isset($_GET["type"]) ? strtoupper(trim($_GET["type"])) : null;
+
+if (!$pacCode || !$typeAbbreviation) {
+    echo json_encode(new StudentResponse("failure", error: new ErrorResponse(400, "Missing PAC code or type abbreviation")));
     return;
 }
 
@@ -24,17 +25,20 @@ $db = Database::getDatabaseInstace();
 $mysqli = $db->getConnection();
 
 try {
-    $query = "CALL SP_GET_SECTIONS_BY_CLASS(?)";
-    $result = $db->callStoredProcedure($query, "i", [$classId], $mysqli);
+    $query = "CALL SP_GET_ACTIVE_PROCESS_BY_PAC_AND_TYPE(?, ?)";
+    $result = $db->callStoredProcedure($query, "is", [$pacCode, $typeAbbreviation], $mysqli);
 
-    $sections = [];
-    while ($row = $result->fetch_assoc()) {
-        $sections[] = $row;
+    if ($result->num_rows === 0) {
+        $mysqli->close();
+        echo json_encode(new StudentResponse("failure", error: new ErrorResponse(404, "No active process found")));
+        return;
     }
 
+    $process = $result->fetch_assoc();
     $mysqli->close();
 
-    echo json_encode(new StudentResponse("success", $sections));
+    echo json_encode(new StudentResponse("success", $process));
+
 } catch (Throwable $err) {
     $mysqli->close();
     echo json_encode(new StudentResponse("failure", error: new ErrorResponse(500, $err->getMessage())));
