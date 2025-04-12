@@ -7,7 +7,6 @@ export const formFields = [
   { el: document.getElementById("gender"), name: "GENDER" },
   { el: document.getElementById("regional-center"), name: "CENTER_ID" },
   { el: document.getElementById("main-career"), name: "MAJOR_CODE" },
-  { el: document.getElementById("secondary-career"), name: "SECOND_MAJOR_CODE" },
-  { el: document.getElementById("file-upload"), name: "certificate" },
+  { el: document.getElementById("secondary-career"), name: "SECOND_MAJOR_CODE" }
 ]
 

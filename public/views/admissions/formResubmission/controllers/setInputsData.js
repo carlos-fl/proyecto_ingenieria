@@ -39,9 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     hideLoadingComponent('loading')
     console.log(err)
     showPopUp('Token ya fue utilizado...')
-    setTimeout(() => {
-      window.location.replace('/')
-    }, 3000)
+    
   }
 })
 
