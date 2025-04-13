@@ -25,7 +25,9 @@ $db = Database::getDatabaseInstace();
 $mysqli = $db->getConnection();
 
 try {
+
     $query = "CALL SP_GET_AVAILABLE_DEPARTMENTS(?, ?)";
+
     $result = $db->callStoredProcedure($query, "ii", [$studentId, $majorId], $mysqli);
 
     $departments = [];

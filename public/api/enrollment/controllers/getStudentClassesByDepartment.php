@@ -28,6 +28,7 @@ try {
     $query = "CALL SP_GET_AVAILABLE_CLASSES_BY_DEPARTMENT(?, ?)";
     $result = $db->callStoredProcedure($query, "ii", [$studentId, $majorId], $mysqli);
 
+
     $classes = [];
     while ($row = $result->fetch_assoc()) {
         $classes[] = $row;
