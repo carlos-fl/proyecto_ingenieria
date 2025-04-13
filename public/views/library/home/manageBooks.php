@@ -125,6 +125,17 @@ if (empty($_SESSION)) {
                             <input class="form-control" type="date" id="currentDate" name="currentDate" readonly>
                         </div>
                     </form>
+                    <div id="uploadStatus" style="display: none; text-align: center; margin-top: 15px;">
+                        <p>Subiendo archivo, por favor espere...</p>
+                        <div class="spinner" style="
+                border: 4px solid rgba(0, 0, 0, 0.1);
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                border-left-color: #09f;
+                animation: spin 1s linear infinite;
+                margin: 0 auto;"></div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
