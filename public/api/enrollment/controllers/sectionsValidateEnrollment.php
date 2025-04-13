@@ -26,7 +26,7 @@ $db = Database::getDatabaseInstace();
 $mysqli = $db->getConnection();
 
 try {
-    $query = "CALL SP_VALIDATE_ENROLLMENT_ELIGIBILITY(?, ?)";
+    $query = "CALL SP_VALIDATE_SECTION_ELIGIBILITY(?, ?)";
     $db->callStoredProcedure($query, "ii", [$studentId, $sectionId], $mysqli);
     $mysqli->close();
 
