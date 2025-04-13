@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     showPopUp('Token ya fue utilizado...')
     setTimeout(() => {
       window.location.replace('/')
-    }, 3000)
+    }, 3000) 
   }
 })
 
