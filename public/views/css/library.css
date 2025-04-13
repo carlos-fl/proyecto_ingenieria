@@ -115,3 +115,9 @@
 .modal-body-custom {
     height: 80vh;
 }
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
