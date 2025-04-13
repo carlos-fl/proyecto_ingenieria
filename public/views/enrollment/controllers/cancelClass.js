@@ -20,7 +20,7 @@ async function cancelClass(event, sectionID) {
     const body = { section: sectionID }
     await Request.fetch(URL, 'POST', body)
     hideLoadingComponent('loading')
-    showPopUp('Clase cancelada')
+    showPopUp('Clase cancelada', 'success-popup', '/views/assets/img/checkmark.png')
     updateTable()
   } catch(err) {
     console.log(err)
