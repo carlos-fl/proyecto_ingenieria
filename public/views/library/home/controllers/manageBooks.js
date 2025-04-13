@@ -51,6 +51,7 @@ function confirmDeletion() {
 function fetchBooks(page = 1) {
   currentPage = page;
   const gridContainer = document.querySelector(".books-container .grid");
+
   gridContainer.innerHTML = `
     <div class="col-12 text-center my-5">
       <span class="spinner-border" role="status" aria-hidden="true"></span>
@@ -435,8 +436,12 @@ function loadClasses() {
     });
 }
 
+// Evento para subir libro
 document.getElementById("uploadForm").addEventListener("submit", function (e) {
   e.preventDefault();
+
+  const uploadStatus = document.getElementById("uploadStatus");
+  uploadStatus.style.display = "block";
 
   const formData = new FormData(this);
 
@@ -451,6 +456,8 @@ document.getElementById("uploadForm").addEventListener("submit", function (e) {
   })
     .then((response) => response.json())
     .then((data) => {
+      uploadStatus.style.display = "none";
+
       if (data.status === "success") {
         showAlert("Libro subido exitosamente. ID: " + data.bookId, "success");
         e.target.reset();
@@ -463,6 +470,7 @@ document.getElementById("uploadForm").addEventListener("submit", function (e) {
       }
     })
     .catch((error) => {
+      uploadStatus.style.display = "none";
       console.error("Error en el envío:", error);
       showAlert("Error al subir el libro.", "danger");
     });
