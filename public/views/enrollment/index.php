@@ -37,7 +37,7 @@
       <div>
         <h6 style="color: var(--primary-color)">Clases matriculadas</h6>
       </div>
-      <div class="overflow-auto h-50">
+      <div class="overflow-auto h-100">
         <d-table tag-id="enroll-table" table-row='["UV", "clase", "hora inicio", "hora final"]' class="w-100 rounded"></d-table>
       </div>
     </div>
@@ -76,6 +76,8 @@
         message="">
     </pop-up>
 
+  <d-modal tag-id="major-modal" modal-body-id="content-major" modal-id="modal-d" arial-label-led-by="Modal-major" header-title="Escoge la carrera" arial-label="enrollment-major" hidden="false"></d-modal>
+
   <modal-success tag-id="success-modal" modal-id="modal-d" arial-label-led-by="Modal" header-title="Clase matriculada Éxitosamente" arial-label="enrollment" hidden="false"></modal-success>
 
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
@@ -93,8 +95,8 @@
   <script src="../js/components/pop-up.js"></script>
   <script type="module" src="./controllers/enrolledClasses.js"></script>
   <script type="module" src="./controllers/verifyActiveEnrollment.js"></script>
-  <script type="module" src="./controllers/fillDepartments.js"></script>
   <script type="module" src="./controllers/selectClass.js"></script>
   <script type="module" src="./controllers/enrol.js"></script>
+  <script type="module" src="./controllers/setStudentMajor.js"></script>
 </body>
 </html>

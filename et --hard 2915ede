@@ -1,0 +1,546 @@
+* [33m896aebc[m[33m ([m[1;36mHEAD -> [m[1;32mdev/views-enrollment[m[33m, [m[1;31morigin/dev/views-enrollment[m[33m)[m resolve conflicts
+* [33m2915ede[m UX improvements in the library
+* [33m2d6f19e[m finish
+* [33mf0c83d6[m Get departments, process, class and sections
+* [33mb6b5bb1[m fixing details in enrollment
+[31m|[m *   [33mbf5c750[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge pull request #89 from DaroGard/main
+[31m|[m [32m|[m[33m\[m  
+[31m|[m [32m|[m * [33m9365f58[m UX improvements in the library
+[31m|[m * [33m|[m   [33m8bce10d[m Merge pull request #88 from Jerh21/endpointsEnrollments
+[31m|[m [34m|[m[35m\[m [33m\[m  
+[31m|[m [34m|[m * [33m|[m [33mf35a6c4[m change name ValidateEnrrollment to sectionsValidateEnrollement, implement util EnrollmentValidator
+[31m|[m [34m|[m * [33m|[m [33meb34aaa[m Fix validateEnrollment
+[31m|[m [34m|[m * [33m|[m [33m617877b[m Get departments, process, class and sections
+[31m|[m [34m|[m [33m|[m[33m/[m  
+[31m|[m * [33m|[m   [33m52bfe0e[m Merge pull request #87 from carlos-fl/main
+[31m|[m [33m|[m[31m\[m [33m\[m  
+[31m|[m [33m|[m[31m/[m [33m/[m  
+[31m|[m[31m/[m[33m|[m [33m/[m   
+[31m|[m [33m|[m[33m/[m    
+* [33m|[m [33mc2e4a81[m[33m ([m[1;32mmain[m[33m)[m fixed token error, and added redirection
+* [33m|[m [33m630e484[m fix token error
+[33m|[m[33m/[m  
+* [33m5648516[m Eliminated object type cast
+*   [33macf1625[m Merge pull request #86 from DaroGard/main
+[1;32m|[m[1;33m\[m  
+[1;32m|[m * [33mba7ac89[m Library fixes
+* [1;33m|[m [33meeb0df7[m Merge branch 'main' of https://github.com/MoralesGuillermo/Sistema_Registro_UNAH
+[1;34m|[m[1;33m\[m[1;33m|[m 
+[1;34m|[m *   [33m340152e[m Merge pull request #85 from carlos-fl/main
+[1;34m|[m [1;36m|[m[31m\[m  
+[1;34m|[m [1;36m|[m * [33m7dea01c[m fixed resubmissions
+[1;34m|[m [1;36m|[m[1;36m/[m  
+[1;34m|[m *   [33mfaad509[m Merge pull request #83 from Jerh21/endpointsLibrary
+[1;34m|[m [32m|[m[33m\[m  
+[1;34m|[m [32m|[m * [33m92b008c[m Books support pagination
+* [32m|[m [33m|[m [33mc81649b[m Academic Load progress
+[32m|[m[32m/[m [33m/[m  
+* [33m|[m [33mb175955[m Revert "Merge pull request #84 from DaroGard/main"
+* [33m|[m   [33md4bf890[m Merge pull request #84 from DaroGard/main
+[33m|[m[35m\[m [33m\[m  
+[33m|[m [35m|[m[33m/[m  
+[33m|[m[33m/[m[35m|[m   
+[33m|[m * [33ma7d36a9[m Library fixes
+[33m|[m[33m/[m  
+* [33m8a541e7[m Class Selection back end population
+* [33mde791d1[m Minor correction in $result array
+* [33m78d45d6[m Change mysqli::fetch_all for mysqli::fetch_assoc. Function unsupported on the server
+* [33m6e1331d[m Dynamic chairman profile
+*   [33m608fa03[m Merge pull request #82 from carlos-fl/dev/matricula
+[36m|[m[1;31m\[m  
+[36m|[m * [33ma7e6bc0[m[33m ([m[1;31morigin/dev/matricula[m[33m, [m[1;32mdev/matricula[m[33m)[m cancel class
+* [1;31m|[m   [33mb7ed6fe[m Merge pull request #81 from DaroGard/main
+[1;32m|[m[1;33m\[m [1;31m\[m  
+[1;32m|[m * [1;31m|[m [33mfd34c51[m add pruebapdf.pdf
+[1;32m|[m * [1;31m|[m [33md7c7f4e[m Remove debug message on manageBooks.php
+[1;32m|[m [1;31m|[m[1;31m/[m  
+* [1;31m/[m [33mf13b41b[m Final touches in student records
+[1;31m|[m[1;31m/[m  
+* [33m18296ca[m Minor correction in role
+*   [33mc7b3041[m Merge branch 'main' of https://github.com/MoralesGuillermo/Sistema_Registro_UNAH
+[1;34m|[m[1;35m\[m  
+[1;34m|[m * [33mfc0f193[m Rename libraryLogin.php to libraryLogin.php folder name change
+* [1;35m|[m [33m5ce8df4[m Access as department Chair
+[1;35m|[m[1;35m/[m  
+*   [33m1d796f1[m Merge branch 'main' of https://github.com/MoralesGuillermo/Sistema_Registro_UNAH
+[1;36m|[m[31m\[m  
+[1;36m|[m *   [33m6e4cf54[m Merge pull request #80 from carlos-fl/dev/matricula
+[1;36m|[m [32m|[m[33m\[m  
+[1;36m|[m [32m|[m * [33m5b03f21[m enrollment
+[1;36m|[m * [33m|[m   [33m82575dc[m Merge pull request #79 from DaroGard/main
+[1;36m|[m [33m|[m[35m\[m [33m\[m  
+[1;36m|[m [33m|[m [35m|[m[33m/[m  
+[1;36m|[m [33m|[m[33m/[m[35m|[m   
+[1;36m|[m [33m|[m * [33m14a6bc0[m Library login for students, teachers, coordinators and managers, upload PDF, delete PDF, read PDF (?), CSS improvements.
+[1;36m|[m [33m|[m[33m/[m  
+* [33m/[m [33m89b87f4[m Implemented academic load Department Chair
+[33m|[m[33m/[m  
+*   [33m4f5305e[m Merge pull request #78 from DaroGard/main
+[36m|[m[1;31m\[m  
+[36m|[m * [33m84ab5f0[m Library view, bring books per student, access to library with validated student.
+[36m|[m[36m/[m  
+* [33mb86d0fc[m Implemented student record visualization for Department Chair
+*   [33mfccbbc9[m Merge pull request #77 from DaroGard/main
+[1;32m|[m[1;33m\[m  
+[1;32m|[m * [33m73755eb[m Students corrections
+[1;32m|[m[1;32m/[m  
+*   [33m0856d5f[m Merge pull request #76 from DaroGard/main
+[1;34m|[m[1;35m\[m  
+[1;34m|[m * [33mf7bf848[m chat in real time, restructuring of functions.
+[1;34m|[m[1;34m/[m  
+* [33m11badf9[m Implemented backup file in major change and center change requests
+* [33mb316146[m Disable sendBtn when sending data in student's requests
+* [33m891be7d[m Eliminated session static assignment
+* [33m4fa3774[m Change class cancel request href in student's index.php
+* [33md1c4e7c[m Implemented Class Cancel Request Functionality
+* [33m1061d56[m Eliminated debug var
+* [33m5a30f9a[m Init session for academic load
+*   [33me5fd740[m Merge pull request #75 from DaroGard/main
+[1;36m|[m[31m\[m  
+[1;36m|[m * [33m51755b9[m students css fix
+* [31m|[m   [33m059122a[m Merge pull request #74 from carlos-fl/dev/coordinator-student-history
+[31m|[m[33m\[m [31m\[m  
+[31m|[m [33m|[m[31m/[m  
+[31m|[m[31m/[m[33m|[m   
+[31m|[m * [33mf2a5935[m[33m ([m[1;31morigin/dev/coordinator-student-history[m[33m, [m[1;32mdev/coordinator-student-history[m[33m)[m fixing some errors
+[31m|[m[31m/[m  
+*   [33m2c9e88c[m Merge pull request #73 from DaroGard/main
+[34m|[m[35m\[m  
+[34m|[m * [33m121b5bb[m Modals Fix
+[34m|[m[34m/[m  
+*   [33mf25846a[m Merge pull request #71 from carlos-fl/dev/coordinator-student-history
+[36m|[m[1;31m\[m  
+[36m|[m * [33m21a4630[m finish last details
+[36m|[m * [33m946bbcb[m Students contacts, chat
+[36m|[m * [33mfc29382[m finish funcionality for coordinator
+* [1;31m|[m   [33md7d400c[m Merge pull request #72 from DaroGard/main
+[1;31m|[m[1;33m\[m [1;31m\[m  
+[1;31m|[m [1;33m|[m[1;31m/[m  
+[1;31m|[m[1;31m/[m[1;33m|[m   
+[1;31m|[m * [33m80e9f44[m Students contacts, chat
+* [1;33m|[m [33mb9a54e9[m Implemented Coordinator role swap in Docentes.php
+* [1;33m|[m [33m611b755[m Merge pull request #70 from DaroGard/main
+[1;34m|[m[1;33m\[m[1;33m|[m 
+[1;34m|[m * [33mbd8b911[m Section fix, Request redirection
+[1;34m|[m[1;34m/[m  
+* [33m15cb389[m Implemented Center Change Request Functionality
+*   [33m96949cd[m Merge pull request #69 from DaroGard/main
+[1;36m|[m[31m\[m  
+[1;36m|[m * [33m6e0c7e0[m Students login and info drawing
+[1;36m|[m[1;36m/[m  
+* [33mfbe96af[m Implemented Major Change student request
+*   [33m3bff88d[m Merge pull request #68 from Jerh21/StudentsTest
+[32m|[m[33m\[m  
+[32m|[m * [33m5ca0005[m Student chat with contacts
+* [33m|[m [33me396c22[m Merge pull request #67 from Jerh21/StudentsTest
+[34m|[m[33m\[m[33m|[m 
+[34m|[m * [33mb1b8305[m Better student session and new endpoint getProfile of student
+[34m|[m * [33m4d4d922[m Actualizacion test students, agregado el auth
+[34m|[m[34m/[m  
+*   [33m8d4b53e[m Merge pull request #66 from DaroGard/main
+[36m|[m[1;31m\[m  
+[36m|[m * [33m1421d37[m Student view V1.0
+[36m|[m[36m/[m  
+* [33m10f0b04[m Created major change view
+*   [33m8003a45[m Merge pull request #65 from Jerh21/StudentsTest
+[1;32m|[m[1;33m\[m  
+[1;32m|[m * [33mfba148e[m Implementacion de algunos servicios de Student
+* [1;33m|[m   [33m8e7ef18[m Merge pull request #64 from carlos-fl/dev/coordinator-home
+[1;33m|[m[1;35m\[m [1;33m\[m  
+[1;33m|[m [1;35m|[m[1;33m/[m  
+[1;33m|[m[1;33m/[m[1;35m|[m   
+[1;33m|[m [1;35m|[m * [33m830bac2[m[33m ([m[1;32mcoordinator[m[33m)[m finish funcionality for coordinator
+[1;33m|[m [1;35m|[m[1;35m/[m  
+[1;33m|[m * [33m4db9672[m[33m ([m[1;31morigin/dev/coordinator-home[m[33m, [m[1;32mdev/coordinator-home[m[33m)[m added php for authentication
+[1;33m|[m * [33m6e68b17[m change css in coordinator home
+[1;33m|[m *   [33m9d72fc2[m Merge branch 'main' into dev/coordinator-home
+[1;33m|[m [31m|[m[1;33m\[m  
+[1;33m|[m [31m|[m[1;33m/[m  
+[1;33m|[m[1;33m/[m[31m|[m   
+* [31m|[m   [33m1aadfc0[m Merge pull request #63 from DaroGard/main
+[33m|[m[34m\[m [31m\[m  
+[33m|[m * [31m|[m [33mf5b01b7[m Student view
+[33m|[m[33m/[m [31m/[m  
+* [31m|[m   [33m0d9afdd[m Merge branch 'main' of https://github.com/MoralesGuillermo/Sistema_Registro_UNAH
+[35m|[m[36m\[m [31m\[m  
+[35m|[m * [31m|[m [33m20eab91[m Update index.php
+[35m|[m * [31m|[m   [33m079b6b0[m Merge pull request #62 from carlos-fl/fix/updates
+[35m|[m [1;31m|[m[1;32m\[m [31m\[m  
+[35m|[m * [1;32m\[m [31m\[m   [33mdf47674[m Merge pull request #61 from carlos-fl/fix/updates
+[35m|[m [1;33m|[m[1;34m\[m [1;32m\[m [31m\[m  
+* [1;33m|[m [1;34m|[m [1;32m|[m [31m|[m [33m999c673[m Finished upload Grades functionality
+[1;34m|[m [1;33m|[m [1;34m|[m [1;32m|[m * [33m612fbb1[m added views for coordinator
+[1;34m|[m [1;33m|[m [1;34m|[m [1;32m|[m[1;32m/[m  
+[1;34m|[m [1;33m|[m [1;34m|[m * [33mf8d2075[m[33m ([m[1;31morigin/fix/updates[m[33m, [m[1;32mfix/updates[m[33m)[m minor changes
+[1;34m|[m [1;33m|[m [1;34m|[m[1;34m/[m  
+[1;34m|[m [1;33m|[m * [33mc7e2258[m fix redirect login admin exam results
+[1;34m|[m [1;33m|[m[1;33m/[m  
+[1;34m|[m * [33md469a74[m Merge pull request #60 from DaroGard/main
+[1;34m|[m[1;34m/[m[1;36m|[m 
+[1;34m|[m * [33m79a9592[m rejectApplication fix
+[1;34m|[m[1;34m/[m  
+*   [33m11b6516[m Merge pull request #59 from DaroGard/main
+[31m|[m[32m\[m  
+[31m|[m * [33mcd86bae[m Corrections in approved and reject
+[31m|[m[31m/[m  
+*   [33m5dd2367[m Merge pull request #58 from carlos-fl/fix/updates
+[33m|[m[34m\[m  
+[33m|[m * [33mf1eec5e[m fix upload results, fix how images now are shown
+[33m|[m[33m/[m  
+*   [33mb56ceba[m Merge pull request #57 from DaroGard/main
+[35m|[m[36m\[m  
+[35m|[m *   [33mf270c74[m Merge branch 'MoralesGuillermo:main' into main
+[35m|[m [1;31m|[m[1;32m\[m  
+[35m|[m * [1;32m|[m [33m3911619[m number regex fix
+* [1;32m|[m [1;32m|[m [33m72469d5[m Implemented OBS column in upload grades format and validation
+[1;32m|[m [1;32m|[m[1;32m/[m  
+[1;32m|[m[1;32m/[m[1;32m|[m   
+* [1;32m|[m [33m7e25e83[m Teacher Number server check
+* [1;32m|[m [33m7eac846[m Merge pull request #56 from DaroGard/main
+[1;33m|[m[1;32m\[m[1;32m|[m 
+[1;33m|[m * [33m7ffa00e[m getPendingCount fix
+[1;33m|[m[1;33m/[m  
+*   [33mecb122e[m Merge pull request #55 from DaroGard/main
+[1;35m|[m[1;36m\[m  
+[1;35m|[m * [33m2076b81[m Administration corrections, construction of career requirements.
+[1;35m|[m[1;35m/[m  
+* [33m36f5a24[m Elim employee number in fetch to get sections
+* [33m19139b3[m Update docentes.js send employeeNumber
+* [33m27abf59[m Update teacherSections.php revert
+* [33m0fb4870[m Update teacherSections.php
+* [33md26a55a[m Update teacherSections.php
+* [33m8aaf3ef[m Update teacherSections.php
+*   [33mfc805a2[m Merge pull request #54 from MoralesGuillermo/MoralesGuillermo-patch-2
+[31m|[m[32m\[m  
+[31m|[m * [33m09b82ac[m Update teacherSections.php
+[31m|[m[31m/[m  
+*   [33m2c282ad[m Merge pull request #53 from carlos-fl/fix/updates
+[33m|[m[34m\[m  
+[33m|[m * [33mcb9b1c6[m reenvio de solicitudes
+* [34m|[m   [33m9abe922[m Merge pull request #52 from MoralesGuillermo/docentes
+[35m|[m[36m\[m [34m\[m  
+[35m|[m * [34m\[m   [33m8efd06f[m Merge branch 'main' of https://github.com/MoralesGuillermo/Sistema_Registro_UNAH into docentes
+[35m|[m [1;31m|[m[35m\[m [34m\[m  
+[35m|[m [1;31m|[m[35m/[m [34m/[m  
+[35m|[m[35m/[m[1;31m|[m [34m|[m   
+* [1;31m|[m [34m|[m   [33maee868b[m Merge pull request #51 from DaroGard/main
+[1;33m|[m[1;34m\[m [1;31m\[m [34m\[m  
+[1;33m|[m * [1;31m|[m [34m|[m [33ma08e94b[m Requests by ReviewerID
+[1;33m|[m [34m|[m [1;31m|[m[34m/[m  
+[1;33m|[m [34m|[m[34m/[m[1;31m|[m   
+* [34m|[m [1;31m|[m   [33m4b1be63[m Merge pull request #50 from LLTKOJI/pr_reviewers
+[34m|[m[1;36m\[m [34m\[m [1;31m\[m  
+[34m|[m [1;36m|[m[34m/[m [1;31m/[m  
+[34m|[m[34m/[m[1;36m|[m [1;31m|[m   
+[34m|[m * [1;31m|[m [33m7bb2f92[m Actualizacion de Endpoitns de Reviewers
+[34m|[m[34m/[m [1;31m/[m  
+* [1;31m|[m   [33m1fbf926[m Merge pull request #49 from Jerh21/EndpointsHam
+[31m|[m[32m\[m [1;31m\[m  
+[31m|[m * [1;31m|[m [33ma202cb2[m Endpoint Creacion Teacher
+* [32m|[m [1;31m|[m   [33mf984e57[m Merge pull request #48 from DaroGard/main
+[33m|[m[34m\[m [32m\[m [1;31m\[m  
+[33m|[m * [32m|[m [1;31m|[m [33m232d61d[m Added spiral for loading requests and saving requests to localstorage.
+* [34m|[m [32m|[m [1;31m|[m   [33m713d7b1[m Merge pull request #47 from carlos-fl/fix/reviewer
+[34m|[m[36m\[m [34m\[m [32m\[m [1;31m\[m  
+[34m|[m [36m|[m[34m/[m [32m/[m [1;31m/[m  
+[34m|[m[34m/[m[36m|[m [32m|[m [1;31m|[m   
+[34m|[m * [32m|[m [1;31m|[m [33m2fcbea7[m[33m ([m[1;31morigin/fix/reviewer[m[33m, [m[1;32mfix/reviewer[m[33m)[m fix login reviewer and admin assign reviewer home rendering data
+[34m|[m * [32m|[m [1;31m|[m [33m8d1b444[m[33m ([m[1;31morigin/dev/upload-exam-results[m[33m, [m[1;32mdev/upload-exam-results[m[33m)[m finish upload exam results
+[34m|[m * [32m|[m [1;31m|[m [33m7643836[m views upload exam results and created modal component for reviewer
+[34m|[m[34m/[m [32m/[m [1;31m/[m  
+[34m|[m [32m|[m * [33m0b16e6e[m FE upload grades file valtidation
+[34m|[m [32m|[m * [33m0358616[m Implemented video deletion and upload
+[34m|[m [32m|[m *   [33m3a9db0a[m Merge pull request #45 from MoralesGuillermo/main
+[34m|[m [32m|[m [1;31m|[m[34m\[m  
+[34m|[m [32m|[m[34m_[m[1;31m|[m[34m/[m  
+[34m|[m[34m/[m[32m|[m [1;31m|[m   
+* [32m|[m [1;31m|[m   [33mb0f42ba[m Merge pull request #44 from MoralesGuillermo/docentes
+[1;33m|[m[1;31m\[m [32m\[m [1;31m\[m  
+[1;33m|[m [1;31m|[m [32m|[m[1;31m/[m  
+[1;33m|[m [1;31m|[m[1;31m/[m[32m|[m   
+[1;33m|[m * [32m|[m [33m08c50a6[m Made pop up always on top of all elements
+* [1;34m|[m [32m|[m [33mea9bd38[m Merge pull request #43 from MoralesGuillermo/docentes
+[1;35m|[m[1;34m\[m[1;34m|[m [32m|[m 
+[1;35m|[m * [32m|[m [33me13455d[m Advanced in teacher see/delete/upload video. Updated endpoint to current db
+* [1;36m|[m [32m|[m   [33m2b4cf14[m Merge pull request #42 from DaroGard/main
+[31m|[m[32m\[m [1;36m\[m [32m\[m  
+[31m|[m * [1;36m|[m [32m|[m [33m89c3c5f[m Endpoints: getPendingCount.php and updateApplicationStatus.php + View: assignmentReviewer.php, .cc and .js
+[31m|[m[31m/[m [1;36m/[m [32m/[m  
+* [1;36m|[m [32m|[m   [33m8bcb48a[m Merge pull request #41 from carlos-fl/dev/admin-profile-component
+[32m|[m[34m\[m [1;36m\[m [32m\[m  
+[32m|[m [34m|[m[32m_[m[1;36m|[m[32m/[m  
+[32m|[m[32m/[m[34m|[m [1;36m|[m   
+[32m|[m * [1;36m|[m [33mb7f18c1[m[33m ([m[1;31morigin/dev/admin-profile-component[m[33m, [m[1;32mdev/admin-profile-component[m[33m)[m created user-profile component
+[32m|[m * [1;36m|[m [33mb8aedf6[m[33m ([m[1;32mdev/modify-application[m[33m)[m modified error and success modal utils to be able to customize the modal time
+[32m|[m * [1;36m|[m [33m21b7b06[m update form data view
+[32m|[m * [1;36m|[m [33mb4f1d62[m view to see results tested and finished. Fix error modal and success modal
+[32m|[m[32m/[m [1;36m/[m  
+* [1;36m|[m [33m8e87eec[m Merge pull request #40 from MoralesGuillermo/docentes
+[35m|[m[1;36m\[m[1;36m|[m 
+[35m|[m * [33mc718eb0[m Logica implementada para traer los datos de una sección del docente, siendo que el sectionId se encuentre encriptado. Creada clase para encripatación de cadenas
+* [36m|[m   [33mcb93b76[m Merge pull request #39 from DaroGard/main
+[1;31m|[m[1;32m\[m [36m\[m  
+[1;31m|[m * [36m|[m [33mf1d3bc9[m Corrections for admission applications
+* [1;32m|[m [36m|[m   [33mc3a5fcb[m Merge pull request #38 from carlos-fl/dev/admissions-see-ressults
+[1;32m|[m[1;34m\[m [1;32m\[m [36m\[m  
+[1;32m|[m [1;34m|[m[1;32m/[m [36m/[m  
+[1;32m|[m[1;32m/[m[1;34m|[m [36m|[m   
+[1;32m|[m * [36m|[m [33m2dc1ee9[m[33m ([m[1;31morigin/dev/admissions-see-ressults[m[33m, [m[1;32mdev/admissions-see-ressults[m[33m)[m finish see results view
+[1;32m|[m * [36m|[m [33mb4afadc[m vista ver resultados
+[1;32m|[m[1;32m/[m [36m/[m  
+* [36m|[m   [33m86920e4[m Merge pull request #37 from DaroGard/main
+[1;35m|[m[1;36m\[m [36m\[m  
+[1;35m|[m * [36m|[m [33m4ad17fd[m Update inscripciones.js
+[1;35m|[m * [36m|[m [33m102c6c6[m Corrections for inscription
+[1;35m|[m[1;35m/[m [36m/[m  
+* [36m|[m [33m576369b[m Merge pull request #36 from MoralesGuillermo/docentes
+[31m|[m[36m\[m[36m|[m 
+[31m|[m * [33m88afd10[m Implementación de retorno del número de empleado para el docente
+[31m|[m * [33m4f5fbaa[m Implementado mostrar clases de docente dinámicamente, docente ya puede ver alumnos por sección y ya se muestra modal para subir notas
+* [32m|[m [33m4a59ca2[m Merge pull request #35 from MoralesGuillermo/docentes
+[33m|[m[32m\[m[32m|[m 
+[33m|[m * [33me217c54[m Patch- Solved some bugs in teacherSections.php. Undefined variables, get teacher number and teacherService.php import
+[33m|[m[33m/[m  
+* [33m20da1b3[m Implementación de funcionalida de login de docentes. Cambio de failLoginHandler como utilidad
+* [33me701179[m Actualizado endpoint al que se conectaba el loginDocente.php, corrección en js que importa para lógica, eliminado de js embebido y eliminado de duracion de pop up
+* [33mb5bfe6c[m Eliminated extra session id data. Didn't let response be parsed to json
+* [33m0767815[m Load user user data to localStorage
+*   [33m5302847[m Merge pull request #34 from carlos-fl/main
+[35m|[m[36m\[m  
+[35m|[m *   [33mda6dde3[m Merge branch 'MoralesGuillermo:main' into main
+[35m|[m [1;31m|[m[35m\[m  
+[35m|[m [1;31m|[m[35m/[m  
+[35m|[m[35m/[m[1;31m|[m   
+* [1;31m|[m [33meeccacd[m Revert "Carga de datos de la sesión a localstorage"
+* [1;31m|[m [33mec113ed[m Revert "Patch: Actualización de la ruta del action de loginDocentes.php"
+* [1;31m|[m [33mcd1408e[m Patch: Actualización de la ruta del action de loginDocentes.php
+* [1;31m|[m [33m3487fef[m Carga de datos de la sesión a localstorage
+[1;32m|[m * [33m30d27e8[m added missing imports
+[1;32m|[m *   [33mf2546a9[m Merge branch 'MoralesGuillermo:main' into main
+[1;32m|[m [1;33m|[m[1;32m\[m  
+[1;32m|[m [1;33m|[m[1;32m/[m  
+[1;32m|[m[1;32m/[m[1;33m|[m   
+* [1;33m|[m [33mfa38316[m Added s to admissionsSent
+[1;34m|[m *   [33m2e4e4a7[m Merge branch 'MoralesGuillermo:main' into main
+[1;34m|[m [1;35m|[m[1;34m\[m  
+[1;34m|[m [1;35m|[m[1;34m/[m  
+[1;34m|[m[1;34m/[m[1;35m|[m   
+* [1;35m|[m [33m52e5dea[m Patch: Email service paths
+[1;36m|[m *   [33m6d087d3[m Merge branch 'MoralesGuillermo:main' into main
+[1;36m|[m [31m|[m[1;36m\[m  
+[1;36m|[m [31m|[m[1;36m/[m  
+[1;36m|[m[1;36m/[m[31m|[m   
+* [31m|[m [33mfcacf42[m Patch: Eliminated uneccesary echo
+[32m|[m *   [33m3e28b76[m Merge branch 'MoralesGuillermo:main' into main
+[32m|[m [33m|[m[32m\[m  
+[32m|[m [33m|[m[32m/[m  
+[32m|[m[32m/[m[33m|[m   
+* [33m|[m   [33m95b5110[m Merge pull request #33 from carlos-fl/test/admssions
+[35m|[m[36m\[m [33m\[m  
+[35m|[m * [33m|[m [33mbb3cdaf[m[33m ([m[1;31morigin/test/admssions[m[33m)[m deleted no utf-8 chars
+[35m|[m * [33m|[m [33m8e13d4a[m fix frontend sending data
+[35m|[m [36m|[m [33m|[m * [33m67f161f[m[33m ([m[1;32mtest/admssions[m[33m)[m deleted no utf-8 chars
+[35m|[m [36m|[m [33m|[m * [33m446a8c0[m fix frontend sending data
+[35m|[m [36m|[m [33m|[m[33m/[m  
+[35m|[m [36m|[m *   [33mae4c1eb[m Merge branch 'MoralesGuillermo:main' into main
+[35m|[m [36m|[m [1;32m|[m[35m\[m  
+[35m|[m [36m|[m[35m_[m[1;32m|[m[35m/[m  
+[35m|[m[35m/[m[36m|[m [1;32m|[m   
+* [36m|[m [1;32m|[m [33m2a6572f[m Added main execution in docente.js
+[1;33m|[m [36m|[m * [33m0b0529d[m Merge branch 'MoralesGuillermo:main' into main
+[1;33m|[m [36m|[m[36m/[m[1;33m|[m 
+[1;33m|[m [36m|[m[1;33m/[m  
+[1;33m|[m[1;33m/[m[36m|[m   
+* [36m|[m [33m6894d41[m Carga de datos de la solicitud a la pantalla
+[1;35m|[m * [33m8e04303[m Update ContentManagement.php
+[1;35m|[m *   [33mb888bb0[m Merge branch 'MoralesGuillermo:main' into main
+[1;35m|[m [1;36m|[m[1;35m\[m  
+[1;35m|[m [1;36m|[m[1;35m/[m  
+[1;35m|[m[1;35m/[m[1;36m|[m   
+* [1;36m|[m   [33m2cd5049[m Merge branch 'main' of https://github.com/MoralesGuillermo/Sistema_Registro_UNAH
+[32m|[m[33m\[m [1;36m\[m  
+[32m|[m * [1;36m\[m   [33mc56229a[m Merge pull request #32 from LLTKOJI/CrisEndpoints
+[32m|[m [34m|[m[35m\[m [1;36m\[m  
+[32m|[m [34m|[m * [1;36m|[m [33m48a50c5[m  Actualización de endpoints en el módulo de Admisiones y Revisores.
+[32m|[m * [35m|[m [1;36m|[m   [33m712e81a[m Merge pull request #31 from Jerh21/EndpointsHam
+[32m|[m [36m|[m[1;31m\[m [35m\[m [1;36m\[m  
+[32m|[m [36m|[m * [35m|[m [1;36m|[m [33m211bb7e[m Pruebas de correo al publicar resultados
+[32m|[m [36m|[m * [35m|[m [1;36m|[m [33m07b093c[m ReviwersExams sube el archivo csv
+* [36m|[m [1;31m|[m [35m|[m [1;36m|[m [33macc098b[m Implemented revision de examenes
+[36m|[m[36m/[m [1;31m/[m [35m/[m [1;36m/[m  
+* [1;31m|[m [35m|[m [1;36m|[m [33m015e451[m Made fetch to endpoint using form-data
+* [1;31m|[m [35m|[m [1;36m|[m [33m31735df[m Created DNI and phone number regex validators
+* [1;31m|[m [35m|[m [1;36m|[m [33m90e90ab[m Created showPopUp util
+* [1;31m|[m [35m|[m [1;36m|[m [33mdacc98f[m Changed pop up padding from ps-3 to ps-2
+* [1;31m|[m [35m|[m [1;36m|[m [33m4817169[m Patch: Corrected relative paths in navbar
+* [1;31m|[m [35m|[m [1;36m|[m [33m7107b94[m Patch: Bug correction in pop up emailInput and passwordInput
+* [1;31m|[m [35m|[m [1;36m|[m [33m207f064[m Swap in to of in for loops
+* [1;31m|[m [35m|[m [1;36m|[m [33m4bc7255[m Cambio del position del pop up
+* [1;31m|[m [35m|[m [1;36m|[m [33m90bbcb9[m Deleted redundant file
+* [1;31m|[m [35m|[m [1;36m|[m [33md8e1878[m Lógica asíncrona para el login de los revisores de solicitudes
+* [1;31m|[m [35m|[m [1;36m|[m [33m3d95e06[m Lógica asíncrona para inscribirse a la UNAH
+* [1;31m|[m [35m|[m [1;36m|[m [33m09e6059[m Agregado utf8 para lectura de cadenas con tíldes
+[35m|[m [1;31m|[m[35m/[m [1;36m/[m  
+[35m|[m[35m/[m[1;31m|[m [1;36m|[m   
+[35m|[m [1;31m|[m * [33m88c3b47[m Update deploy.yaml
+[35m|[m [1;31m|[m[35m/[m  
+[35m|[m[35m/[m[1;31m|[m   
+* [1;31m|[m   [33mc847e11[m Merge pull request #30 from DaroGard/main
+[1;32m|[m[1;33m\[m [1;31m\[m  
+[1;32m|[m * [1;31m|[m [33m865a608[m Changes to the exam reviewer view and corrections in admission applications.
+* [1;33m|[m [1;31m|[m   [33m30bdf35[m Merge pull request #29 from Jerh21/EndpointsHam
+[1;33m|[m[1;31m\[m [1;33m\[m [1;31m\[m  
+[1;33m|[m [1;31m|[m[1;33m/[m [1;31m/[m  
+[1;33m|[m[1;33m/[m[1;31m|[m [1;31m/[m   
+[1;33m|[m [1;31m|[m[1;31m/[m    
+[1;33m|[m * [33md892fc0[m adminsEmployees funcional y correccion createAdmis
+[1;33m|[m[1;33m/[m  
+*   [33mc22ef82[m Merge pull request #28 from Jerh21/EndpointsHam
+[1;36m|[m[31m\[m  
+[1;36m|[m *   [33mdcf1482[m Merge branch 'main' into EndpointsHam
+[1;36m|[m [32m|[m[1;36m\[m  
+[1;36m|[m [32m|[m[1;36m/[m  
+[1;36m|[m[1;36m/[m[32m|[m   
+* [32m|[m   [33m7b0528f[m Merge pull request #27 from DaroGard/main
+[34m|[m[35m\[m [32m\[m  
+[34m|[m * [32m|[m [33m4983e12[m QA Improvements
+[34m|[m * [32m|[m [33mf212769[m Adjustments to teacher views, reconstruction of exam results and review views, and logins for students, teachers, and reviewers.
+* [35m|[m [32m|[m   [33m83d0e7d[m Merge pull request #26 from carlos-fl/dev/content-management
+[36m|[m[1;31m\[m [35m\[m [32m\[m  
+[36m|[m * [35m|[m [32m|[m [33m4da8be8[m[33m ([m[1;31morigin/dev/content-management[m[33m, [m[1;32mdev/content-management[m[33m)[m created a content management class for uploaded files
+[36m|[m * [35m|[m [32m|[m [33mdd0cbad[m[33m ([m[1;31morigin/fix/get-section-info[m[33m, [m[1;32mtest/testing[m[33m, [m[1;32mfix/get-section-info[m[33m)[m added documentation of teacher auth to auth.md
+[36m|[m * [35m|[m [32m|[m [33m4c18961[m added documentation of teacher auth to auth.md
+* [1;31m|[m [35m|[m [32m|[m   [33m11486c9[m Merge pull request #25 from LLTKOJI/actualizcion=endpoints
+[1;32m|[m[1;33m\[m [1;31m\[m [35m\[m [32m\[m  
+[1;32m|[m * [1;31m|[m [35m|[m [32m|[m [33m984c724[m Actualización de endpoints para admisiones, solicitantes y revisores
+[1;32m|[m [35m|[m [1;31m|[m[35m/[m [32m/[m  
+[1;32m|[m [35m|[m[35m/[m[1;31m|[m [32m|[m   
+* [35m|[m [1;31m|[m [32m|[m   [33m2de643e[m Merge pull request #23 from carlos-fl/dev/auth-docentes-logout
+[35m|[m[1;31m\[m [35m\[m [1;31m\[m [32m\[m  
+[35m|[m [1;31m|[m[35m/[m [1;31m/[m [32m/[m  
+[35m|[m[35m/[m[1;31m|[m [1;31m/[m [32m/[m   
+[35m|[m [1;31m|[m[1;31m/[m [32m/[m    
+[35m|[m * [32m|[m [33mec72b53[m[33m ([m[1;31morigin/dev/auth-docentes-logout[m[33m, [m[1;32mdev/auth-docentes-logout[m[33m)[m made logout and fixing auth
+[35m|[m [1;35m|[m * [33m4b3ff2b[m endpoints actualizados Spring 3
+[35m|[m [1;35m|[m[35m/[m  
+[35m|[m[35m/[m[1;35m|[m   
+* [1;35m|[m [33mb295850[m Merge pull request #20 from carlos-fl/dev/teacher-endpoints-1-4-6
+[1;36m|[m[1;35m\[m[1;35m|[m 
+[1;36m|[m * [33mefdc351[m[33m ([m[1;31morigin/dev/teacher-endpoints-1-4-6[m[33m, [m[1;32mdev/teacher-endpoints-1-4-6[m[33m)[m endpoints for teacher module
+* [31m|[m [33mb13dcc5[m Implementación de fetch en la vista de docentes. Comunicación con endpoints de datos de ver datos del docente, get secciones de docente, get detalle de sección y cerrar sesión
+* [31m|[m [33md1cca8c[m Patched paths in navbar links
+* [31m|[m [33me30aae1[m Updated  log-out.js to fetch logout endpoint in backend
+* [31m|[m [33m639a7b2[m Creación de componente para botón de Log-out del sistema.
+* [31m|[m [33m72e2944[m Update deploy.yaml
+* [31m|[m   [33m9f26e77[m Merge pull request #19 from carlos-fl/patch-3
+[32m|[m[33m\[m [31m\[m  
+[32m|[m * [31m|[m [33m5df6db7[m[33m ([m[1;31morigin/patch-3[m[33m)[m Update deploy.yaml
+[32m|[m[32m/[m [31m/[m  
+* [31m|[m   [33m3c298bf[m Merge pull request #18 from carlos-fl/patch-2
+[34m|[m[35m\[m [31m\[m  
+[34m|[m * [31m|[m [33m8938fd1[m[33m ([m[1;31morigin/patch-2[m[33m)[m Update deploy.yaml
+[34m|[m[34m/[m [31m/[m  
+* [31m|[m   [33ma5ca8cd[m Merge pull request #17 from carlos-fl/patch-1
+[36m|[m[1;31m\[m [31m\[m  
+[36m|[m * [31m|[m [33mb83f4ab[m[33m ([m[1;31morigin/patch-1[m[33m)[m Update deploy.yaml
+[36m|[m[36m/[m [31m/[m  
+* [31m|[m [33ma40fdf9[m Merge pull request #16 from carlos-fl/dev/teacher-endpoints-1-4-6
+[1;32m|[m[31m\[m[31m|[m 
+[1;32m|[m * [33m3c049d2[m services teachers
+* [1;33m|[m [33m191aaf1[m Merge pull request #15 from carlos-fl/main
+[1;34m|[m[1;33m\[m[1;33m|[m 
+[1;34m|[m * [33m23d70c9[m[33m ([m[1;32mfix/deploy[m[33m)[m added env EC2_HOST to deploy.yaml
+[1;34m|[m * [33me192ffe[m change deploy.yaml
+[1;34m|[m[1;34m/[m  
+*   [33mc177c53[m Merge pull request #14 from carlos-fl/fix/fixing-endpoints-with-data
+[1;36m|[m[31m\[m  
+[1;36m|[m *   [33m212ed06[m[33m ([m[1;31morigin/fix/fixing-endpoints-with-data[m[33m)[m Merge branch 'main' into fix/fixing-endpoints-with-data
+[1;36m|[m [32m|[m[1;36m\[m  
+[1;36m|[m [32m|[m[1;36m/[m  
+[1;36m|[m[1;36m/[m[32m|[m   
+* [32m|[m   [33me2078c3[m Merge pull request #13 from carlos-fl/docs/auth-resources
+[34m|[m[35m\[m [32m\[m  
+[34m|[m * [32m|[m [33m7c08256[m[33m ([m[1;31morigin/docs/auth-resources[m[33m, [m[1;32mdocs/auth-resources[m[33m)[m added github workflows to deploy app
+[34m|[m [35m|[m * [33meb28184[m[33m ([m[1;32mfix/fixing-endpoints-with-data[m[33m)[m fix auth and resources endpoints
+[34m|[m [35m|[m[34m/[m  
+[34m|[m[34m/[m[35m|[m   
+* [35m|[m [33m5afa1a8[m Se agregó el evento login-form:success
+* [35m|[m [33m07faee6[m Creación de componentes navbar.js y footer.js. Se implementaron los componentes en las vistas del sistema. Se modificaron rutas y estilos relacionados a login y docentes
+* [35m|[m   [33m41e569d[m Merge pull request #12 from DaroGard/new-views
+[36m|[m[1;31m\[m [35m\[m  
+[36m|[m * [35m|[m [33mf1e2cb9[m Nuevas vistas, mejora de vistas, correcion de rutas
+[36m|[m[36m/[m [35m/[m  
+* [35m|[m [33mef4045a[m Deleted unnecessary admin views and admin js controllers
+* [35m|[m [33m81d667e[m Deleted extra views folder on project root
+* [35m|[m [33mcf18316[m Creación de Web Components de Login y Pop Up
+* [35m|[m [33m598c0f6[m Merge pull request #11 from carlos-fl/fix/project-file-structure
+[1;32m|[m[35m\[m[35m|[m 
+[1;32m|[m * [33mc2d8c5b[m[33m ([m[1;31morigin/fix/project-file-structure[m[33m)[m change project directories structure. added views and controllers to public directory
+* [1;33m|[m [33mbd81941[m Revert "Merge pull request #10 from carlos-fl/feature/testing-auth-resources"
+* [1;33m|[m   [33mae186cd[m Merge pull request #10 from carlos-fl/feature/testing-auth-resources
+[1;33m|[m[1;35m\[m [1;33m\[m  
+[1;33m|[m [1;35m|[m[1;33m/[m  
+[1;33m|[m[1;33m/[m[1;35m|[m   
+[1;33m|[m * [33md9848ba[m[33m ([m[1;31morigin/feature/testing-auth-resources[m[33m)[m testing endpoints for auth and resources
+* [1;35m|[m   [33m6570efc[m Merge pull request #9 from LLTKOJI/main
+[1;35m|[m[31m\[m [1;35m\[m  
+[1;35m|[m [31m|[m[1;35m/[m  
+[1;35m|[m[1;35m/[m[31m|[m   
+[1;35m|[m * [33m515912c[m Endpoints 6 a 15
+[1;35m|[m *   [33mf69bce8[m Merge branch 'main' of https://github.com/LLTKOJI/Sistema_Registro_UNAH
+[1;35m|[m [32m|[m[33m\[m  
+[1;35m|[m [32m|[m * [33m345f233[m endpoints 6 - 11
+[1;35m|[m * [33m|[m [33mcdfcdf9[m endpoints 6 - 11
+[1;35m|[m [33m|[m[33m/[m  
+* [33m|[m   [33m8b35ea1[m Merge pull request #8 from carlos-fl/feature/email-service
+[34m|[m[35m\[m [33m\[m  
+[34m|[m * [33m|[m [33m4dc520a[m[33m ([m[1;31morigin/feature/email-service[m[33m)[m modified readme file to have more information
+[34m|[m * [33m|[m [33m06a0b7a[m created service to send emails notifications using swaks
+[34m|[m * [33m|[m [33mcfd4550[m created service to send emails notifications using swaks
+[34m|[m * [33m|[m [33mc1e81b2[m created service to send emails notifications using swaks
+[34m|[m * [33m|[m   [33m3c2c10f[m Merge branch 'MoralesGuillermo:main' into main
+[34m|[m [36m|[m[1;31m\[m [33m\[m  
+[34m|[m * [1;31m\[m [33m\[m   [33m8b4c2c7[m Merge branch 'MoralesGuillermo:main' into main
+[34m|[m [1;32m|[m[1;33m\[m [1;31m\[m [33m\[m  
+* [1;32m|[m [1;33m\[m [1;31m\[m [33m\[m   [33mab4f509[m Merge pull request #7 from DaroGard/new-views
+[1;34m|[m[1;35m\[m [1;32m\[m [1;33m\[m [1;31m\[m [33m\[m  
+[1;34m|[m * [1;32m|[m [1;33m|[m [1;31m|[m [33m|[m [33mfa5a415[m Cambios en enlaces final
+* [1;35m|[m [1;32m|[m [1;33m|[m [1;31m|[m [33m|[m [33m1254c4e[m Merge pull request #6 from DaroGard/new-views
+[1;36m|[m[1;35m\[m[1;35m|[m [1;32m|[m [1;33m|[m [1;31m|[m [33m|[m 
+[1;36m|[m * [1;32m|[m [1;33m|[m [1;31m|[m [33m|[m [33mf070712[m Cambios en enlaces
+* [31m|[m [1;32m|[m [1;33m|[m [1;31m|[m [33m|[m [33m10845af[m Merge pull request #5 from DaroGard/new-views
+[32m|[m[31m\[m[31m|[m [1;32m|[m [1;33m|[m [1;31m|[m [33m|[m 
+[32m|[m * [1;32m|[m [1;33m|[m [1;31m|[m [33m|[m [33mb3b3515[m Cambios en enlaces
+* [33m|[m [1;32m|[m [1;33m|[m [1;31m|[m [33m|[m [33mbe0d9ec[m Cambios en los enlaces en index.php
+* [33m|[m [1;32m|[m [1;33m|[m [1;31m|[m [33m|[m [33m285a0a2[m Creadas peticiones asíncronas en vista adminLogin. Creada lógica para el cargado de datos de adminProfile. Se agregó CSS y HTML necesario para esto
+* [33m|[m [1;32m|[m [1;33m|[m [1;31m|[m [33m|[m [33m9f403ea[m Merge pull request #4 from DaroGard/new-views
+[33m|[m[33m\[m[33m|[m [1;32m|[m [1;33m|[m [1;31m|[m [33m|[m 
+[33m|[m [33m|[m[33m_[m[1;32m|[m[33m_[m[1;33m|[m[33m_[m[1;31m|[m[33m/[m  
+[33m|[m[33m/[m[33m|[m [1;32m|[m [1;33m|[m [1;31m|[m   
+[33m|[m * [1;32m|[m [1;33m|[m [1;31m|[m [33m855fa4e[m Vistas home, admisiones y revisores
+[33m|[m[33m/[m [1;32m/[m [1;33m/[m [1;31m/[m  
+* [1;32m|[m [1;33m|[m [1;31m/[m [33m72343c0[m Created Administrator views
+[1;31m|[m [1;32m|[m[1;31m_[m[1;33m|[m[1;31m/[m  
+[1;31m|[m[1;31m/[m[1;32m|[m [1;33m|[m   
+* [1;32m|[m [1;33m|[m   [33me03de2a[m Merge pull request #3 from carlos-fl/feature/admissions-endpoints-1-5
+[1;33m|[m[1;31m\[m [1;32m\[m [1;33m\[m  
+[1;33m|[m [1;31m|[m[1;33m_[m[1;32m|[m[1;33m/[m  
+[1;33m|[m[1;33m/[m[1;31m|[m [1;32m|[m   
+[1;33m|[m * [1;32m|[m [33m1c7971c[m[33m ([m[1;31morigin/feature/admissions-endpoints-1-5[m[33m)[m finished enpoints 1-5 of admissions module
+[1;33m|[m [1;32m|[m[1;32m/[m  
+[1;33m|[m * [33m77a0e55[m updated auth services. applicantAuth was not working
+[1;33m|[m * [33m9b570ff[m finished three methods for auth
+[1;33m|[m * [33m1f1d69a[m modified loginRequest object to initialize attributes with a constructor
+* [1;31m|[m [33m232e0e0[m Merge pull request #2 from carlos-fl/main
+[1;32m|[m[1;31m\[m[1;31m|[m 
+[1;32m|[m * [33m68be318[m created utils types and classes to validate email and passwords modified Environment and Database classes. created auth for admin with controller
+* [1;33m|[m [33m4e6b3cc[m Merge pull request #1 from carlos-fl/main
+[1;34m|[m[1;33m\[m[1;33m|[m 
+[1;34m|[m * [33m0caaa6b[m creation of Database and Environment classes
+[1;34m|[m * [33ma45e5f3[m created Database and Environment class
+[1;34m|[m[1;34m/[m  
+* [33m78a903f[m Update readme.md
+* [33m11f432f[m Update readme.md
+* [33ma0584ac[m Update readme.md
+* [33m76dafd0[m Create readme.md for documentación
+* [33m312b9d9[m Initial commit

@@ -18,6 +18,7 @@ class Modal extends HTMLElement {
     this.ariaLabelLedBy = this.getAttribute("arial-label-led-by")
     this.hidden = this.getAttribute("hidden")
     this.headerTitle = this.getAttribute("header-title")
+    this.modalBodyID = this.getAttribute('modal-body-id')
     this.render()
   }
 
@@ -58,7 +59,7 @@ class Modal extends HTMLElement {
                     <h5 class="modal-title" id=${ this.ariaLabelLedBy }>${ this.headerTitle }</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div id="modal-body" class="modal-body d-flex justify-content-center align-items-center">
+                <div id="${this.modalBodyID ?? 'modal-body'}" class="modal-body d-flex justify-content-center align-items-center">
                     ${ modalBody } 
                 </div>
             </div>
