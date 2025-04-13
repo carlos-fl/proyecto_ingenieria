@@ -50,4 +50,5 @@ class EnrollmentValidator
 
         return null; // Elegible
     }
+>>>>>>> b6b5bb1 (fixing details in enrollment)
 }
