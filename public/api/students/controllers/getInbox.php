@@ -7,35 +7,50 @@ include_once __DIR__ . '/../../../../services/students/types/StudentResponse.php
 session_start();
 Request::isWrongRequestMethod('GET');
 
-if (empty($_SESSION)) {
+if (empty($_SESSION) || !isset($_SESSION["ID_STUDENT"])) {
     echo json_encode(new StudentResponse("failure", error: new ErrorResponse(401, "Unauthorized")));
     return;
 }
 
-$studentId = $_SESSION["ID_STUDENT"] ?? null;
-
-if (!$studentId) {
-    echo json_encode(new StudentResponse("failure", error: new ErrorResponse(401, "Unauthorized")));
-    return;
-}
+$studentId = $_SESSION["ID_STUDENT"];
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$limit = 10;
+$offset = $limit * ($page - 1);
 
 $db = Database::getDatabaseInstace();
 $mysqli = $db->getConnection();
 
-$query = "CALL SP_GET_INBOX_MESSAGES(?)";
+// Primero contar cuántos chats únicos hay
+$countQuery = "
+    SELECT COUNT(DISTINCT IF(SENDER_ID = ?, RECEIVER_ID, SENDER_ID)) AS total
+    FROM TBL_MESSAGES
+    WHERE ? IN (SENDER_ID, RECEIVER_ID)
+";
+$stmt = $mysqli->prepare($countQuery);
+$stmt->bind_param("ii", $studentId, $studentId);
+$stmt->execute();
+$totalResult = $stmt->get_result();
+$totalMessages = $totalResult->fetch_assoc()["total"];
+$totalPages = ceil($totalMessages / $limit);
+$stmt->close();
 
-try {
-    $inboxResult = (object) $db->callStoredProcedure($query, "i", [$studentId], $mysqli);
 
-    if ($inboxResult->num_rows == 0) {
-        echo json_encode(new StudentResponse("failure", error: new ErrorResponse(404, "No inbox messages found")));
-        return;
-    }
+// Obtener los chats paginados
+$query = "CALL SP_GET_INBOX_MESSAGES(?, ?, ?)";
+$result = $db->callStoredProcedure($query, "iii", [$studentId, $offset, $limit], $mysqli);
 
-    $inboxData = $inboxResult->fetch_all(MYSQLI_ASSOC);
+if ($result->num_rows === 0) {
     $mysqli->close();
-
-    echo json_encode(new StudentResponse("success", $inboxData));
-} catch (Throwable $err) {
-    echo json_encode(new StudentResponse("failure", error: new ErrorResponse(500, $err->getMessage())));
+    echo json_encode(new StudentResponse("success", []));
+    return;
 }
+
+$chats = $result->fetch_all(MYSQLI_ASSOC);
+$mysqli->close();
+
+echo json_encode([
+    "status" => "success",
+    "data" => $chats,
+    "totalPages" => $totalPages,
+    "currentPage" => $page
+]);

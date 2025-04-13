@@ -289,6 +289,7 @@ if (empty($_SESSION)) {
             </button>
             <div class="collapse mt-3" id="addContactCollapse">
               <div class="card card-body">
+                <div id="friendRequestMessage"></div>
                 <div class="mb-3">
                   <label for="contactEmailInput" class="form-label">Correo institucional</label>
                   <input type="email" class="form-control" id="contactEmailInput" placeholder="correo@institucion.edu">
@@ -388,9 +389,12 @@ if (empty($_SESSION)) {
           <div id="errorMessages" style="display: none;">
             <p class="text-danger">Error al cargar los mensajes.</p>
           </div>
-          <div class="list-group" id="messageList">
-            <!-- Los mensajes se agregarán aquí dinámicamente -->
-          </div>
+          <!-- Contenedor para chats privados -->
+          <div class="list-group" id="messageList"></div>
+          <hr>
+          <!-- Contenedor para chats grupales -->
+          <div class="list-group" id="groupMessageList"></div>
+          <div id="paginationContainer" class="mt-3"></div>
         </div>
       </div>
     </div>
@@ -420,31 +424,29 @@ if (empty($_SESSION)) {
     </div>
   </div>
 
-<!-- Modal Lista de Grupos -->
-<div class="modal fade" id="groupsModal" tabindex="-1" aria-labelledby="groupsModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="groupsModalLabel">Mis Grupos</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body">
-        <!-- Mensaje de Cargando Grupos... -->
-        <div id="groupsLoading" class="text-center" style="height: 200px; line-height: 200px;">
-          Cargando Grupos...
+  <!-- Modal Lista de Grupos -->
+  <div class="modal fade" id="groupsModal" tabindex="-1" aria-labelledby="groupsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="groupsModalLabel">Mis Grupos</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
-        <!-- Lista de grupos (inicialmente oculta) -->
-        <div id="groupsList" class="list-group hidden" style="max-height: 400px; overflow-y: auto;">
-          <!-- Se llenará dinámicamente -->
+        <div class="modal-body">
+          <div id="groupsLoading" class="text-center" style="height: 200px; line-height: 200px;">
+            Cargando Grupos...
+          </div>
+          <div id="groupsList" class="list-group hidden" style="max-height: 400px; overflow-y: auto;">
+          </div>
+          <div id="groupPagination" class="mt-3 text-center hidden">
+          </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
 
   <!-- Modal Chat Grupal -->
   <div class="modal fade" id="groupChatModal" tabindex="-1" aria-labelledby="groupChatModalLabel" aria-hidden="true">
@@ -471,11 +473,9 @@ if (empty($_SESSION)) {
                 <small class="text-light">10:05 AM - Enviado</small>
               </div>
             </div>
-            <!-- Se agregarán más mensajes -->
           </div>
         </div>
         <div class="modal-footer">
-          <!-- Input para escribir mensajes -->
           <div class="input-group">
             <input type="text" class="form-control" placeholder="Escribe un mensaje" aria-label="Mensaje" id="groupMessageInput">
             <button class="btn btn-primary" type="button" onclick="sendGroupMessage()">Enviar</button>
@@ -485,6 +485,43 @@ if (empty($_SESSION)) {
     </div>
   </div>
 
+  <!-- Modal de Confirmación -->
+  <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmationModalLabel">Confirmar acción</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body" id="confirmationMessage">
+          ¿Estás seguro de que deseas eliminar este contacto?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelButton" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="confirmButton">Aceptar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensaje animado de éxito -->
+  <div id="successMessage" class="fade-out-message">
+    <div class="message-content">
+      Contacto eliminado correctamente.
+    </div>
+  </div>
+
+  <!-- Toast para notificaciones -->
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <strong class="me-auto" id="toastHeader"></strong>
+        <small class="text-muted">ahora</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+      </div>
+      <div class="toast-body" id="toastBody"></div>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
     integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"

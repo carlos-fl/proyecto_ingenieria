@@ -14,38 +14,42 @@ if (empty($_SESSION) || !isset($_SESSION["ID_STUDENT"])) {
 }
 
 $studentId = (int) $_SESSION["ID_STUDENT"];
-$receiverId = $_GET['receiverId'] ?? null;
-$receiverType = isset($_GET['receiverType']) ? strtoupper($_GET['receiverType']) : null;
-$lastMessageId = isset($_GET['lastMessageId']) ? (int) $_GET['lastMessageId'] : null;
+$page = isset($_GET["page"]) ? max(1, (int) $_GET["page"]) : 1;
 $limit = 20;
-
-if (!$receiverId || !is_numeric($receiverId) || !in_array($receiverType, ['STUDENT', 'GROUP'])) {
-    echo json_encode(new StudentResponse("failure", error: new ErrorResponse(400, "Missing or invalid parameters")));
-    return;
-}
-
-$receiverId = (int) $receiverId;
+$offset = $limit * ($page - 1);
 
 $db = Database::getDatabaseInstace();
 $mysqli = $db->getConnection();
 
 try {
-    $query = "CALL SP_GET_CONVERSATION(?, ?, ?, ?, ?)";
-    $params = [$studentId, $receiverId, $receiverType, $lastMessageId, $limit];
-    $result = $db->callStoredProcedure($query, "iisii", $params, $mysqli);
+    $countQuery = "
+        SELECT COUNT(*) AS total
+        FROM TBL_CONTACTS c
+        WHERE c.FRIEND_ID = ? AND c.STATUS = 'PENDING'
+    ";
+    $stmt = $mysqli->prepare($countQuery);
+    $stmt->bind_param("i", $studentId);
+    $stmt->execute();
+    $totalResult = $stmt->get_result();
+    $totalRequests = $totalResult->fetch_assoc()["total"];
+    $totalPages = ceil($totalRequests / $limit);
+    $stmt->close();
 
-    $messages = [];
+    $query = "CALL SP_GET_PENDING_REQUESTS(?, ?, ?)";
+    $result = $db->callStoredProcedure($query, "iii", [$studentId, $offset, $limit], $mysqli);
+
+    $requests = [];
     while ($row = $result->fetch_assoc()) {
-        $messages[] = $row;
+        $requests[] = $row;
     }
 
-    $hasMore = count($messages) === $limit;
-
     $mysqli->close();
+
     echo json_encode([
         "status" => "success",
-        "data" => $messages,
-        "hasMore" => $hasMore
+        "data" => $requests,
+        "totalPages" => $totalPages,
+        "currentPage" => $page
     ]);
 } catch (Throwable $err) {
     $mysqli->close();

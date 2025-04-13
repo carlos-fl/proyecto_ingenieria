@@ -1,6 +1,8 @@
 let chatPollTimeout = null;
 let chatListPollTimeout = null;
 let isFetchingChat = false;
+let currentPage = 1;
+let totalPages = 1;
 
 document.addEventListener("DOMContentLoaded", () => {
   const chatModalElem = document.getElementById("chatModal");
@@ -73,16 +75,17 @@ function loadChats() {
   const messageList = document.getElementById("messageList");
   const loadingIndicator = document.getElementById("loadingMessages");
   const errorMessage = document.getElementById("errorMessages");
-
-  if (chatListPollTimeout) {
-    clearTimeout(chatListPollTimeout);
-  }
+  const paginationContainer = document.getElementById("paginationContainer");
 
   loadingIndicator.style.display = "block";
   messageList.innerHTML = "";
   errorMessage.style.display = "none";
 
-  fetch("/api/students/controllers/getInbox.php")
+  if (chatListPollTimeout) {
+    clearTimeout(chatListPollTimeout);
+  }
+
+  fetch(`/api/students/controllers/getInbox.php?page=${currentPage}`)
     .then((response) => response.json())
     .then((data) => {
       loadingIndicator.style.display = "none";
@@ -94,34 +97,35 @@ function loadChats() {
         return;
       }
 
-      if (data.data.length === 0) {
-        messageList.innerHTML =
-          '<p class="text-muted">No hay mensajes disponibles.</p>';
-      } else {
-        messageList.innerHTML = "";
-        data.data.forEach((chat) => {
-          const contactName = chat.name || "Desconocido";
-          const contactEmail = chat.email || "No disponible";
-          const lastMessage = chat.lastMessage || "No hay mensajes previos";
-          const lastMessageDate = chat.lastMessageDate
-            ? new Date(chat.lastMessageDate).toLocaleString()
-            : "Fecha desconocida";
+      messageList.innerHTML = "";
+      data.data.forEach((chat) => {
+        const contactName = chat.full_name || "Desconocido";
+        const contactEmail = chat.institutional_email || "No disponible";
+        const lastMessage = chat.last_message || "No hay mensajes previos";
+        const lastMessageDate = chat.last_message_date
+          ? new Date(chat.last_message_date).toLocaleString()
+          : "Fecha desconocida";
 
-          const chatHTML = `
-            <a href="#" class="list-group-item list-group-item-action" onclick="openChatFromMessages('${contactName}', '${chat.chatId}')">
-              <div class="d-flex w-100 justify-content-between">
-                <div>
-                  <h6 class="mb-1">${contactName}</h6>
-                  <p class="mb-1 small">Cuenta: ${contactEmail}</p>
-                </div>
-                <small class="text-muted">${lastMessageDate}</small>
+        const chatHTML = `
+          <a href="#" class="list-group-item list-group-item-action" onclick="openChatFromMessages('${contactName}', '${chat.chat_id}')">
+            <div class="d-flex w-100 justify-content-between">
+              <div>
+                <h6 class="mb-1">${contactName}</h6>
+                <p class="mb-1 small">Cuenta: ${contactEmail}</p>
               </div>
-              <p class="mb-1">${lastMessage}</p>
-            </a>
-          `;
-          messageList.innerHTML += chatHTML;
-        });
-      }
+              <small class="text-muted">${lastMessageDate}</small>
+            </div>
+            <p class="mb-1">${lastMessage}</p>
+          </a>
+        `;
+        messageList.innerHTML += chatHTML;
+      });
+
+      totalPages = data.totalPages;
+      updatePagination();
+
+      loadGroupChats(currentPage);
+
       chatListPollTimeout = setTimeout(loadChats, 5000);
     })
     .catch((error) => {
@@ -130,6 +134,72 @@ function loadChats() {
       errorMessage.textContent = "Error al obtener los mensajes.";
       chatListPollTimeout = setTimeout(loadChats, 5000);
     });
+}
+
+// Función para cargar los chats grupales
+function loadGroupChats(page) {
+  const groupMessageList = document.getElementById("groupMessageList");
+
+  fetch(`/api/students/controllers/getGroupInbox.php?page=${page}`)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === "success") {
+        groupMessageList.innerHTML = "";
+        data.data.forEach((group) => {
+          const groupName = group.groupName || "Grupo Desconocido";
+          const lastMessage = group.lastMessage || "No hay mensajes previos";
+          const lastMessageDate = group.lastMessageDate
+            ? new Date(group.lastMessageDate).toLocaleString()
+            : "Fecha desconocida";
+
+          const groupHTML = `
+            <a href="#" class="list-group-item list-group-item-action" onclick="openGroupChat('${groupName}', '${group.groupId}')">
+              <div class="d-flex w-100 justify-content-between">
+                <div>
+                  <h6 class="mb-1">${groupName}</h6>
+                </div>
+                <small class="text-muted">${lastMessageDate}</small>
+              </div>
+              <p class="mb-1">${lastMessage}</p>
+            </a>
+          `;
+          groupMessageList.innerHTML += groupHTML;
+        });
+      } else {
+        console.error("Error al cargar los grupos", data.error);
+      }
+    })
+    .catch((err) => console.error("Error en la carga de grupos", err));
+}
+
+// Función para actualizar los controles de paginación
+function updatePagination() {
+  const paginationContainer = document.getElementById("paginationContainer");
+
+  paginationContainer.innerHTML = "";
+  if (currentPage > 1) {
+    const prevButton = document.createElement("button");
+    prevButton.className = "btn btn-outline-primary";
+    prevButton.textContent = "Anterior";
+    prevButton.onclick = () => changePage(currentPage - 1);
+    paginationContainer.appendChild(prevButton);
+  }
+
+  if (currentPage < totalPages) {
+    const nextButton = document.createElement("button");
+    nextButton.className = "btn btn-outline-primary";
+    nextButton.textContent = "Siguiente";
+    nextButton.onclick = () => changePage(currentPage + 1);
+    paginationContainer.appendChild(nextButton);
+  }
+}
+
+// Función para cambiar de página
+function changePage(page) {
+  if (page >= 1 && page <= totalPages) {
+    currentPage = page;
+    loadChats();
+  }
 }
 
 // Función para cargar los mensajes de un chat
@@ -152,9 +222,18 @@ function loadChat(contactName, contactId) {
     clearTimeout(chatPollTimeout);
   }
 
-  fetch(
-    `/api/students/controllers/getConversation.php?otherStudentId=${contactId}`
-  )
+  let lastMessageId = null;
+  const firstMessageElem = chatMessages.querySelector("[data-message-id]");
+  if (firstMessageElem) {
+    lastMessageId = firstMessageElem.getAttribute("data-message-id");
+  }
+
+  let url = `/api/students/controllers/getConversation.php?receiverId=${contactId}&receiverType=STUDENT`;
+  if (lastMessageId) {
+    url += `&lastMessageId=${lastMessageId}`;
+  }
+
+  fetch(url)
     .then((response) => response.json())
     .then((data) => {
       isFetchingChat = false;
@@ -166,28 +245,32 @@ function loadChat(contactName, contactId) {
         return;
       }
 
-      chatMessages.innerHTML = "";
+      if (!lastMessageId) {
+        chatMessages.innerHTML = "";
+      }
+
       data.data.forEach((message) => {
         const isFromLoggedUser =
-          message.SENDER_ID.toString() !== contactId.toString();
+          message.senderId.toString() !== contactId.toString();
         const alignmentClass = isFromLoggedUser
           ? "justify-content-end"
           : "justify-content-start";
         const bubbleClass = isFromLoggedUser ? "me" : "other";
 
-        const messageHTML = `
-          <div class="d-flex ${alignmentClass} mb-2 fade-in">
-            <div class="chat-bubble ${bubbleClass}">
-              <p class="mb-1">${message.message}</p>
-              <small class="text-muted">${new Date(
-                message.sentAt
-              ).toLocaleString()} - ${message.READ_STATUS}</small>
-            </div>
-          </div>
-        `;
-        chatMessages.innerHTML += messageHTML;
-      });
+        const messageId = message.messageId || 0;
 
+        const messageHTML = `
+        <div data-message-id="${messageId}" class="d-flex ${alignmentClass} mb-2 fade-in">
+          <div class="chat-bubble ${bubbleClass}">
+            <p class="mb-1">${message.message}</p>
+            <small class="text-muted">${new Date(
+              message.sentAt
+            ).toLocaleString()} - ${message.readStatus}</small>
+          </div>
+        </div>
+        `;
+        chatMessages.innerHTML = messageHTML + chatMessages.innerHTML;
+      });
       if (isAtBottom) {
         chatMessages.scrollTo({
           top: chatMessages.scrollHeight,
@@ -196,7 +279,6 @@ function loadChat(contactName, contactId) {
       } else {
         chatMessages.scrollTop = previousScrollTop;
       }
-
       chatPollTimeout = setTimeout(() => {
         loadChat(contactName, contactId);
       }, 4000);
@@ -270,14 +352,116 @@ function sendMessage() {
   }
 }
 
-// Función para simular el envío de un mensaje en el chat grupal
+// Función para cargar los mensajes de un chat grupal
+function loadGroupChat(groupName, groupId) {
+  if (isFetchingChat) return;
+  isFetchingChat = true;
+
+  const chatMessages = document.getElementById("chatMessages");
+  chatMessages.classList.add("updating");
+
+  const threshold = 20;
+  const isAtBottom =
+    chatMessages.scrollHeight -
+      chatMessages.clientHeight -
+      chatMessages.scrollTop <
+    threshold;
+  const previousScrollTop = chatMessages.scrollTop;
+
+  if (chatPollTimeout) {
+    clearTimeout(chatPollTimeout);
+  }
+
+  let lastMessageId = null;
+  const firstMessageElem = chatMessages.querySelector("[data-message-id]");
+  if (firstMessageElem) {
+    lastMessageId = firstMessageElem.getAttribute("data-message-id");
+  }
+
+  let url = `/api/students/controllers/getConversation.php?receiverId=${groupId}&receiverType=GROUP`;
+  if (lastMessageId) {
+    url += `&lastMessageId=${lastMessageId}`;
+  }
+
+  fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      isFetchingChat = false;
+      chatMessages.classList.remove("updating");
+
+      if (data.status === "failure") {
+        chatMessages.innerHTML =
+          "<p class='text-muted'>No hay mensajes disponibles.</p>";
+        return;
+      }
+
+      if (!lastMessageId) {
+        chatMessages.innerHTML = "";
+      }
+
+      data.data.forEach((message) => {
+        const isFromLoggedUser =
+          message.senderId.toString() !== groupId.toString();
+        const alignmentClass = isFromLoggedUser
+          ? "justify-content-end"
+          : "justify-content-start";
+        const bubbleClass = isFromLoggedUser ? "me" : "other";
+
+        const messageId = message.messageId || 0;
+        const senderName = message.senderName || "Desconocido";
+
+        const messageHTML = `
+          <div data-message-id="${messageId}" class="d-flex ${alignmentClass} mb-2 fade-in">
+            <div class="chat-bubble ${bubbleClass}">
+              <p class="mb-1">${senderName}: ${message.message}</p>
+              <small class="text-muted">${new Date(
+                message.sentAt
+              ).toLocaleString()} - ${message.readStatus}</small>
+            </div>
+          </div>
+        `;
+        chatMessages.innerHTML = messageHTML + chatMessages.innerHTML;
+      });
+
+      if (isAtBottom) {
+        chatMessages.scrollTo({
+          top: chatMessages.scrollHeight,
+          behavior: "smooth",
+        });
+      } else {
+        chatMessages.scrollTop = previousScrollTop;
+      }
+
+      chatPollTimeout = setTimeout(() => {
+        loadGroupChat(groupName, groupId);
+      }, 4000);
+    })
+    .catch((error) => {
+      isFetchingChat = false;
+      chatMessages.classList.remove("updating");
+      chatMessages.innerHTML =
+        "<p class='text-danger'>Error al cargar los mensajes.</p>";
+      console.error("Error al obtener los mensajes:", error);
+      chatPollTimeout = setTimeout(() => {
+        loadGroupChat(groupName, groupId);
+      }, 5000);
+    });
+}
+
+// Función para enviar un mensaje en el chat grupal
 function sendGroupMessage() {
+  const modal = document.getElementById("groupChatModal");
+  const groupId = modal.getAttribute("data-group-id");
+  const groupName = modal.getAttribute("data-group-name");
+
   var messageInput = document.getElementById("groupMessageInput");
   var messageText = messageInput.value.trim();
+
   if (messageText !== "") {
     var chatContainer = document.querySelector(
       "#groupChatModal .chat-container"
     );
+
     var messageBubble = document.createElement("div");
     messageBubble.className = "d-flex justify-content-end mb-2";
     messageBubble.innerHTML = `
@@ -288,5 +472,35 @@ function sendGroupMessage() {
     chatContainer.appendChild(messageBubble);
     messageInput.value = "";
     chatContainer.scrollTop = chatContainer.scrollHeight;
+
+    const messageData = {
+      receiverId: groupId,
+      receiverType: "GROUP",
+      content: messageText,
+    };
+
+    fetch("/api/students/controllers/sendMessage.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(messageData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          loadGroupChat(groupName, groupId);
+        } else {
+          console.error("Error al enviar mensaje:", data.error);
+        }
+      })
+      .catch((error) => {
+        console.error("Error al enviar el mensaje:", error);
+      });
   }
 }
+
+const modal = document.getElementById("groupChatModal");
+modal.addEventListener("hidden.bs.modal", () => {
+  document.activeElement.blur();
+});
