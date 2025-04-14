@@ -43,7 +43,7 @@
       $db = Database::getDatabaseInstace();
       $mysqli = $db->getConnection();
 
-      $query = "CALL SP_GET_TEACHER_CURRENT_SECTIONS(?)";
+      $query = "CALL SP_GET_CURRENT_SECTIONS(?)";
       try {
         $sections = (object) $db->callStoredProcedure($query, "s", [$userId], $mysqli);
 
@@ -161,29 +161,15 @@
       }
     }
 
-    public static function getSectionInfo(int $sectionID, string $userId): SectionResponse {
+    public static function getSectionInfo(int $sectionID, string $userId): SectionResponse | array {
       $db = Database::getDatabaseInstace();
       $mysqli = $db->getConnection(); 
-
-      if (!self::hasSection($sectionID, $userId)) {
-        return new SectionResponse("failure", error: new ErrorResponse(404, "No se encontró la sección" ));
-      }
-
-      $query = "CALL SP_GET_SECTION_INFO(?)";
-      $section = $db->callStoredProcedure($query, "i", [$sectionID], $mysqli);
-
-      if ($section->num_rows == 0) {
-        return new SectionResponse("failure", error: new ErrorResponse(404, "Not Data Found"));
-      }
 
       try {
         $query = "CALL SP_GET_STUDENTS_IN_SECTION(?)";
         $students = $db->callStoredProcedure($query, "i", [$sectionID], $mysqli);
         $students = $students->fetch_all(1);
-        $section = $section->fetch_assoc();
-        $sectionData = new SectionData($section['CLASS_NAME'], $section['CLASS_CODE'], $section['SECTION_CODE'], $students, json_decode($section['DAYS_OF_WEEK']), $section['ID_SECTION']);
-  
-        return new SectionResponse("success", $sectionData);
+        return ["status" => "success", "students" => $students];
       } catch(Throwable $err) {
         return new SectionResponse("failure", error: new ErrorResponse(500, $err->getMessage()));
       }

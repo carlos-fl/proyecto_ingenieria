@@ -79,7 +79,7 @@ function loadShowSectionData(event) {
       let studentTableBody = studentTable.querySelector("tbody");;
       let counter = 1;
       studentTableBody.innerHTML = ""
-      for (let student of data.data.students) {
+      for (let student of data.students) {
         let row = document.createElement("tr");
         let rowCount = newTableData(counter);
         let studentAccountNumber = newTableData(student["STUDENT_ACCOUNT_NUMBER"], "studentFirstName"); 

@@ -29,11 +29,6 @@
   $decryptedSectionId = $encryption->decrypt($sectionId, $iv);
   $sectionServiceResponse = TeacherService::getSectionInfo((int) $decryptedSectionId, (int) $userId);
 
-  if ($sectionServiceResponse->status == 'failure') {
-    setErrorResponse($sectionServiceResponse); 
-    return;
-  }
-
   http_response_code(200);
   echo json_encode($sectionServiceResponse);
 
