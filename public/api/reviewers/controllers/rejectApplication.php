@@ -68,7 +68,7 @@ try {
         $emailData = ["name" => $userName, "application_code" => $applicationCode, "commentary" => $commentary, "link" => $link];
         $res = ApplicantService::sendResubmissionEmail($userEmail, $token, $emailData);
 
-        echo json_encode(["status" => "success", "res" => $res]);
+        echo json_encode(["status" => "success", "res" => $res, "token" => $token]);
     } else {
         throw new Exception("Database error: " . $stmt->error);
     }
