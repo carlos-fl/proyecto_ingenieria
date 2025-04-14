@@ -14,27 +14,26 @@ if (empty($_SESSION) || !isset($_SESSION["ID_STUDENT"])) {
 }
 
 $request = json_decode(file_get_contents("php://input"));
+$currentCreatorId = (int) $_SESSION["ID_STUDENT"];
 
-$senderId = (int) $_SESSION["ID_STUDENT"];
-$receiverId = isset($request->receiverId) ? (int) $request->receiverId : null;
-$receiverType = strtoupper(trim($request->receiverType ?? ''));
-$content = trim($request->content ?? '');
+$groupId = isset($request->groupId) ? (int) $request->groupId : null;
+$newOwnerId = isset($request->newOwnerId) ? (int) $request->newOwnerId : null;
 
-if (!$receiverId || empty($content) || !in_array($receiverType, ['STUDENT', 'GROUP'])) {
-    echo json_encode(new StudentResponse("failure", error: new ErrorResponse(400, "Missing or invalid required fields")));
+if (!$groupId || !$newOwnerId) {
+    echo json_encode(new StudentResponse("failure", error: new ErrorResponse(400, "Missing required parameters")));
     return;
 }
 
 $db = Database::getDatabaseInstace();
 $mysqli = $db->getConnection();
 
-$query = "CALL SP_SEND_MESSAGE(?, ?, ?, ?)";
-
 try {
-    $db->callStoredProcedure($query, "iiss", [$senderId, $receiverId, $receiverType, $content], $mysqli);
+    $query = "CALL SP_TRANSFER_GROUP_OWNERSHIP(?, ?, ?)";
+    $db->callStoredProcedure($query, "iii", [$groupId, $currentCreatorId, $newOwnerId], $mysqli);
+
     $mysqli->close();
+
     echo json_encode(new StudentResponse("success"));
 } catch (Throwable $err) {
-    $mysqli->close();
     echo json_encode(new StudentResponse("failure", error: new ErrorResponse(500, $err->getMessage())));
 }

@@ -1,506 +1,265 @@
-let chatPollTimeout = null;
-let chatListPollTimeout = null;
-let isFetchingChat = false;
-let currentPage = 1;
-let totalPages = 1;
+document.addEventListener("DOMContentLoaded", function () {
+  let currentChat = null;
 
-document.addEventListener("DOMContentLoaded", () => {
-  const chatModalElem = document.getElementById("chatModal");
-  const chatModalInstance = new bootstrap.Modal(chatModalElem);
+  let pollingTimeout = null;
 
-  chatModalElem.addEventListener("hidden.bs.modal", () => {
-    if (chatPollTimeout) {
-      clearTimeout(chatPollTimeout);
-      chatPollTimeout = null;
-    }
-    document.body.focus();
-  });
+  // Función para cargar bandeja de chats
+  function loadMessageList(page = 1) {
+    page = page && page > 0 ? page : 1;
 
-  // Función para abrir el chat desde la lista de mensajes
-  window.openChatFromMessages = function (contactName, contactId) {
-    const chatMessages = document.getElementById("chatMessages");
-    chatMessages.innerHTML = "";
-    loadChat(contactName, contactId);
+    const loading = document.getElementById("loadingMessages");
+    const error = document.getElementById("errorMessages");
+    loading.style.display = "block";
+    error.style.display = "none";
 
-    const chatContactName = document.getElementById("chatContactName");
-    chatContactName.innerText = contactName;
-    chatContactName.setAttribute("data-contact-id", contactId);
-
-    chatModalInstance.show();
-  };
-
-  // Función para abrir el chat desde contactos
-  window.openChatFromContacts = function (contactName, contactId) {
-    const chatMessages = document.getElementById("chatMessages");
-    chatMessages.innerHTML = "";
-    loadChat(contactName, contactId);
-
-    const chatContactName = document.getElementById("chatContactName");
-    chatContactName.innerText = contactName;
-    chatContactName.setAttribute("data-contact-id", contactId);
-
-    const contactsModalElem = document.getElementById("contactsModal");
-    const contactsModal = bootstrap.Modal.getInstance(contactsModalElem);
-
-    document.body.focus();
-
-    if (contactsModal) {
-      contactsModalElem.addEventListener("hidden.bs.modal", function handler() {
-        contactsModalElem.removeEventListener("hidden.bs.modal", handler);
-        const backdrop = document.querySelector(".modal-backdrop");
-        if (backdrop) {
-          backdrop.remove();
-        }
-        chatModalInstance.show();
-      });
-      contactsModal.hide();
-    } else {
-      chatModalInstance.show();
-    }
-  };
-
-  const messageInput = document.getElementById("messageInput");
-  messageInput.addEventListener("keypress", function (e) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      sendMessage();
-    }
-  });
-
-  loadChats();
-});
-
-// Función para cargar la lista de chats
-function loadChats() {
-  const messageList = document.getElementById("messageList");
-  const loadingIndicator = document.getElementById("loadingMessages");
-  const errorMessage = document.getElementById("errorMessages");
-  const paginationContainer = document.getElementById("paginationContainer");
-
-  loadingIndicator.style.display = "block";
-  messageList.innerHTML = "";
-  errorMessage.style.display = "none";
-
-  if (chatListPollTimeout) {
-    clearTimeout(chatListPollTimeout);
-  }
-
-  fetch(`/api/students/controllers/getInbox.php?page=${currentPage}`)
-    .then((response) => response.json())
-    .then((data) => {
-      loadingIndicator.style.display = "none";
-
-      if (data.status === "failure") {
-        errorMessage.style.display = "block";
-        errorMessage.textContent =
-          "Error al cargar los chats: " + data.error.message;
-        return;
-      }
-
-      messageList.innerHTML = "";
-      data.data.forEach((chat) => {
-        const contactName = chat.full_name || "Desconocido";
-        const contactEmail = chat.institutional_email || "No disponible";
-        const lastMessage = chat.last_message || "No hay mensajes previos";
-        const lastMessageDate = chat.last_message_date
-          ? new Date(chat.last_message_date).toLocaleString()
-          : "Fecha desconocida";
-
-        const chatHTML = `
-          <a href="#" class="list-group-item list-group-item-action" onclick="openChatFromMessages('${contactName}', '${chat.chat_id}')">
-            <div class="d-flex w-100 justify-content-between">
-              <div>
-                <h6 class="mb-1">${contactName}</h6>
-                <p class="mb-1 small">Cuenta: ${contactEmail}</p>
-              </div>
-              <small class="text-muted">${lastMessageDate}</small>
-            </div>
-            <p class="mb-1">${lastMessage}</p>
-          </a>
-        `;
-        messageList.innerHTML += chatHTML;
-      });
-
-      totalPages = data.totalPages;
-      updatePagination();
-
-      loadGroupChats(currentPage);
-
-      chatListPollTimeout = setTimeout(loadChats, 5000);
-    })
-    .catch((error) => {
-      loadingIndicator.style.display = "none";
-      errorMessage.style.display = "block";
-      errorMessage.textContent = "Error al obtener los mensajes.";
-      chatListPollTimeout = setTimeout(loadChats, 5000);
-    });
-}
-
-// Función para cargar los chats grupales
-function loadGroupChats(page) {
-  const groupMessageList = document.getElementById("groupMessageList");
-
-  fetch(`/api/students/controllers/getGroupInbox.php?page=${page}`)
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.status === "success") {
-        groupMessageList.innerHTML = "";
-        data.data.forEach((group) => {
-          const groupName = group.groupName || "Grupo Desconocido";
-          const lastMessage = group.lastMessage || "No hay mensajes previos";
-          const lastMessageDate = group.lastMessageDate
-            ? new Date(group.lastMessageDate).toLocaleString()
-            : "Fecha desconocida";
-
-          const groupHTML = `
-            <a href="#" class="list-group-item list-group-item-action" onclick="openGroupChat('${groupName}', '${group.groupId}')">
-              <div class="d-flex w-100 justify-content-between">
-                <div>
-                  <h6 class="mb-1">${groupName}</h6>
-                </div>
-                <small class="text-muted">${lastMessageDate}</small>
-              </div>
-              <p class="mb-1">${lastMessage}</p>
-            </a>
-          `;
-          groupMessageList.innerHTML += groupHTML;
-        });
-      } else {
-        console.error("Error al cargar los grupos", data.error);
-      }
-    })
-    .catch((err) => console.error("Error en la carga de grupos", err));
-}
-
-// Función para actualizar los controles de paginación
-function updatePagination() {
-  const paginationContainer = document.getElementById("paginationContainer");
-
-  paginationContainer.innerHTML = "";
-  if (currentPage > 1) {
-    const prevButton = document.createElement("button");
-    prevButton.className = "btn btn-outline-primary";
-    prevButton.textContent = "Anterior";
-    prevButton.onclick = () => changePage(currentPage - 1);
-    paginationContainer.appendChild(prevButton);
-  }
-
-  if (currentPage < totalPages) {
-    const nextButton = document.createElement("button");
-    nextButton.className = "btn btn-outline-primary";
-    nextButton.textContent = "Siguiente";
-    nextButton.onclick = () => changePage(currentPage + 1);
-    paginationContainer.appendChild(nextButton);
-  }
-}
-
-// Función para cambiar de página
-function changePage(page) {
-  if (page >= 1 && page <= totalPages) {
-    currentPage = page;
-    loadChats();
-  }
-}
-
-// Función para cargar los mensajes de un chat
-function loadChat(contactName, contactId) {
-  if (isFetchingChat) return;
-  isFetchingChat = true;
-
-  const chatMessages = document.getElementById("chatMessages");
-  chatMessages.classList.add("updating");
-
-  const threshold = 20;
-  const isAtBottom =
-    chatMessages.scrollHeight -
-      chatMessages.clientHeight -
-      chatMessages.scrollTop <
-    threshold;
-  const previousScrollTop = chatMessages.scrollTop;
-
-  if (chatPollTimeout) {
-    clearTimeout(chatPollTimeout);
-  }
-
-  let lastMessageId = null;
-  const firstMessageElem = chatMessages.querySelector("[data-message-id]");
-  if (firstMessageElem) {
-    lastMessageId = firstMessageElem.getAttribute("data-message-id");
-  }
-
-  let url = `/api/students/controllers/getConversation.php?receiverId=${contactId}&receiverType=STUDENT`;
-  if (lastMessageId) {
-    url += `&lastMessageId=${lastMessageId}`;
-  }
-
-  fetch(url)
-    .then((response) => response.json())
-    .then((data) => {
-      isFetchingChat = false;
-      chatMessages.classList.remove("updating");
-
-      if (data.status === "failure") {
-        chatMessages.innerHTML =
-          "<p class='text-muted'>No hay mensajes disponibles.</p>";
-        return;
-      }
-
-      if (!lastMessageId) {
-        chatMessages.innerHTML = "";
-      }
-
-      data.data.forEach((message) => {
-        const isFromLoggedUser =
-          message.senderId.toString() !== contactId.toString();
-        const alignmentClass = isFromLoggedUser
-          ? "justify-content-end"
-          : "justify-content-start";
-        const bubbleClass = isFromLoggedUser ? "me" : "other";
-
-        const messageId = message.messageId || 0;
-
-        const messageHTML = `
-        <div data-message-id="${messageId}" class="d-flex ${alignmentClass} mb-2 fade-in">
-          <div class="chat-bubble ${bubbleClass}">
-            <p class="mb-1">${message.message}</p>
-            <small class="text-muted">${new Date(
-              message.sentAt
-            ).toLocaleString()} - ${message.readStatus}</small>
-          </div>
-        </div>
-        `;
-        chatMessages.innerHTML = messageHTML + chatMessages.innerHTML;
-      });
-      if (isAtBottom) {
-        chatMessages.scrollTo({
-          top: chatMessages.scrollHeight,
-          behavior: "smooth",
-        });
-      } else {
-        chatMessages.scrollTop = previousScrollTop;
-      }
-      chatPollTimeout = setTimeout(() => {
-        loadChat(contactName, contactId);
-      }, 4000);
-    })
-    .catch((error) => {
-      isFetchingChat = false;
-      chatMessages.classList.remove("updating");
-      chatMessages.innerHTML =
-        "<p class='text-danger'>Error al cargar los mensajes.</p>";
-      console.error("Error al obtener los mensajes:", error);
-      chatPollTimeout = setTimeout(() => {
-        loadChat(contactName, contactId);
-      }, 5000);
-    });
-}
-
-// Función para enviar el mensaje
-function sendMessage() {
-  const messageInput = document.getElementById("messageInput");
-  const messageText = messageInput.value.trim();
-
-  if (messageText !== "") {
-    const chatMessages = document.getElementById("chatMessages");
-    const messageBubble = document.createElement("div");
-    messageBubble.className = "d-flex justify-content-end mb-2 fade-in";
-    messageBubble.innerHTML = `
-      <div class="chat-bubble me">
-        <p class="mb-1">${messageText}</p>
-        <small class="text-light">Ahora - Enviado</small>
-      </div>
-    `;
-    chatMessages.appendChild(messageBubble);
-    messageInput.value = "";
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-
-    const contactElement = document.getElementById("chatContactName");
-    const contactId = contactElement.getAttribute("data-contact-id");
-    const contactName = contactElement.innerText;
-
-    if (!contactId) {
-      console.error("No se encontró un ID de contacto válido.");
-      return;
-    }
-
-    const receiverType = "STUDENT";
-    const messageData = {
-      receiverId: contactId,
-      receiverType: receiverType,
-      content: messageText,
-    };
-
-    fetch("/api/students/controllers/sendMessage.php", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(messageData),
-    })
+    // Cargar Mensajes Privados
+    fetch(`/api/students/controllers/getInbox.php?page=${page}`)
       .then((response) => response.json())
       .then((data) => {
+        loading.style.display = "none";
+
         if (data.status === "success") {
-          loadChats();
-          loadChat(contactName, contactId);
+          const messageList = document.getElementById("messageList");
+          messageList.innerHTML = "";
+
+          data.data.forEach((chat) => {
+            const item = document.createElement("button");
+            item.className =
+              "btn text-start w-100 border rounded-3 mb-2 p-3 shadow-sm bg-white hover-shadow";
+            item.style.whiteSpace = "normal";
+
+            item.innerHTML = `
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="fw-semibold fs-6 text-primary">${
+                  chat.full_name
+                }</div>
+                <small class="text-muted">${chat.institutional_email}</small>
+              </div>
+              <div class="text-muted text-truncate mt-1">${
+                chat.last_message || "Sin mensajes"
+              }</div>
+            `;
+
+            item.addEventListener("click", () => {
+              openChatModal(chat.chat_id, chat.full_name);
+            });
+
+            messageList.appendChild(item);
+          });
         } else {
-          console.error("Error al enviar mensaje:", data.error);
+          error.style.display = "block";
         }
       })
-      .catch((error) => {
-        console.error("Error al enviar el mensaje:", error);
-      });
-  }
-}
-
-// Función para cargar los mensajes de un chat grupal
-function loadGroupChat(groupName, groupId) {
-  if (isFetchingChat) return;
-  isFetchingChat = true;
-
-  const chatMessages = document.getElementById("chatMessages");
-  chatMessages.classList.add("updating");
-
-  const threshold = 20;
-  const isAtBottom =
-    chatMessages.scrollHeight -
-      chatMessages.clientHeight -
-      chatMessages.scrollTop <
-    threshold;
-  const previousScrollTop = chatMessages.scrollTop;
-
-  if (chatPollTimeout) {
-    clearTimeout(chatPollTimeout);
-  }
-
-  let lastMessageId = null;
-  const firstMessageElem = chatMessages.querySelector("[data-message-id]");
-  if (firstMessageElem) {
-    lastMessageId = firstMessageElem.getAttribute("data-message-id");
-  }
-
-  let url = `/api/students/controllers/getConversation.php?receiverId=${groupId}&receiverType=GROUP`;
-  if (lastMessageId) {
-    url += `&lastMessageId=${lastMessageId}`;
-  }
-
-  fetch(url)
-    .then((response) => response.json())
-    .then((data) => {
-      isFetchingChat = false;
-      chatMessages.classList.remove("updating");
-
-      if (data.status === "failure") {
-        chatMessages.innerHTML =
-          "<p class='text-muted'>No hay mensajes disponibles.</p>";
-        return;
-      }
-
-      if (!lastMessageId) {
-        chatMessages.innerHTML = "";
-      }
-
-      data.data.forEach((message) => {
-        const isFromLoggedUser =
-          message.senderId.toString() !== groupId.toString();
-        const alignmentClass = isFromLoggedUser
-          ? "justify-content-end"
-          : "justify-content-start";
-        const bubbleClass = isFromLoggedUser ? "me" : "other";
-
-        const messageId = message.messageId || 0;
-        const senderName = message.senderName || "Desconocido";
-
-        const messageHTML = `
-          <div data-message-id="${messageId}" class="d-flex ${alignmentClass} mb-2 fade-in">
-            <div class="chat-bubble ${bubbleClass}">
-              <p class="mb-1">${senderName}: ${message.message}</p>
-              <small class="text-muted">${new Date(
-                message.sentAt
-              ).toLocaleString()} - ${message.readStatus}</small>
-            </div>
-          </div>
-        `;
-        chatMessages.innerHTML = messageHTML + chatMessages.innerHTML;
+      .catch((err) => {
+        console.error("Error al cargar mensajes privados", err);
+        loading.style.display = "none";
+        error.style.display = "block";
       });
 
-      if (isAtBottom) {
-        chatMessages.scrollTo({
-          top: chatMessages.scrollHeight,
-          behavior: "smooth",
-        });
-      } else {
-        chatMessages.scrollTop = previousScrollTop;
+    // Cargar Mensajes Grupales
+    fetch(`/api/students/controllers/getGroupInbox.php?page=${page}`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Datos de chats grupales:", data);
+        if (data.status === "success") {
+          const groupMessageList = document.getElementById("groupMessageList");
+          groupMessageList.innerHTML = "";
+
+          data.data.forEach((group) => {
+            const item = document.createElement("button");
+            item.className =
+              "btn text-start w-100 border rounded-3 mb-2 p-3 shadow-sm bg-light hover-shadow";
+            item.style.whiteSpace = "normal";
+
+            item.innerHTML = `
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="fw-semibold fs-6 text-dark">${group.groupName}</div>
+                <small class="text-muted">${group.membersCount} miembros</small>
+              </div>
+              <div class="text-muted text-truncate mt-1">${
+                group.lastMessage || "Sin mensajes"
+              }</div>
+            `;
+
+            item.addEventListener("click", () => {
+              openGroupChatModal(group.groupId, group.groupName);
+            });
+
+            groupMessageList.appendChild(item);
+          });
+        } else {
+          console.error("La respuesta de chats grupales no es exitosa.", data);
+        }
+      })
+      .catch((err) => {
+        console.error("Error al cargar mensajes grupales", err);
+      });
+  }
+
+  // Función modal de chat individual y carga la conversación.
+  function openChatModal(receiverId, contactName) {
+    currentChat = { receiverId: receiverId, receiverType: "STUDENT" };
+
+    document.getElementById("chatContactName").textContent = contactName;
+
+    document.getElementById("messageInput").value = "";
+    document.getElementById("chatMessages").innerHTML = "";
+
+    const chatModal = new bootstrap.Modal(document.getElementById("chatModal"));
+    chatModal.show();
+
+    loadConversation();
+
+    document.getElementById("messageInput").onkeydown = function (event) {
+      if (event.key === "Enter") {
+        sendMessage();
+        event.preventDefault();
       }
+    };
+  }
 
-      chatPollTimeout = setTimeout(() => {
-        loadGroupChat(groupName, groupId);
-      }, 4000);
-    })
-    .catch((error) => {
-      isFetchingChat = false;
-      chatMessages.classList.remove("updating");
-      chatMessages.innerHTML =
-        "<p class='text-danger'>Error al cargar los mensajes.</p>";
-      console.error("Error al obtener los mensajes:", error);
-      chatPollTimeout = setTimeout(() => {
-        loadGroupChat(groupName, groupId);
-      }, 5000);
-    });
-}
+  // Función modal de chat grupal
+  function openGroupChatModal(groupId, groupName) {
+    currentChat = { receiverId: groupId, receiverType: "GROUP" };
 
-// Función para enviar un mensaje en el chat grupal
-function sendGroupMessage() {
-  const modal = document.getElementById("groupChatModal");
-  const groupId = modal.getAttribute("data-group-id");
-  const groupName = modal.getAttribute("data-group-name");
+    document.getElementById("groupChatName").textContent = groupName;
 
-  var messageInput = document.getElementById("groupMessageInput");
-  var messageText = messageInput.value.trim();
+    document.getElementById("groupMessageInput").value = "";
+    document.getElementById("groupChatMessages").innerHTML = "";
 
-  if (messageText !== "") {
-    var chatContainer = document.querySelector(
-      "#groupChatModal .chat-container"
+    const groupChatModal = new bootstrap.Modal(
+      document.getElementById("groupChatModal")
     );
+    groupChatModal.show();
 
-    var messageBubble = document.createElement("div");
-    messageBubble.className = "d-flex justify-content-end mb-2";
-    messageBubble.innerHTML = `
-        <div class="p-2 bg-primary text-white rounded" style="max-width: 70%;">
-          <p class="mb-1">${messageText}</p>
-          <small class="text-light">Ahora - Enviado</small>
-        </div>`;
-    chatContainer.appendChild(messageBubble);
-    messageInput.value = "";
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+    loadConversation();
 
-    const messageData = {
-      receiverId: groupId,
-      receiverType: "GROUP",
-      content: messageText,
+    document.getElementById("groupMessageInput").onkeydown = function (event) {
+      if (event.key === "Enter") {
+        sendGroupMessage();
+        event.preventDefault();
+      }
     };
+  }
 
+  // Función Cargar conversación
+  function loadConversation(lastMessageId = null) {
+    if (!currentChat) return;
+
+    const receiverId = currentChat.receiverId;
+    const receiverType = currentChat.receiverType;
+    let url = `/api/students/controllers/getConversation.php?receiverId=${receiverId}&receiverType=${receiverType}`;
+    if (lastMessageId) {
+      url += `&lastMessageId=${lastMessageId}`;
+    }
+
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          const container =
+            receiverType === "STUDENT"
+              ? document.getElementById("chatMessages")
+              : document.getElementById("groupChatMessages");
+          if (!lastMessageId) {
+            container.innerHTML = "";
+          }
+          data.data.reverse().forEach((message) => {
+            const messageDiv = document.createElement("div");
+            messageDiv.className =
+              "chat-message " +
+              (message.senderId == loggedUserId ? "mine" : "their");
+            messageDiv.textContent = message.message;
+            container.appendChild(messageDiv);
+          });
+          container.scrollTop = container.scrollHeight;
+        }
+      })
+      .catch((error) => console.error("Error al cargar conversación", error))
+      .finally(() => {
+        pollingTimeout = setTimeout(loadConversation, 2000);
+      });
+  }
+
+  // Función detener el refresco periódico
+  function stopPolling() {
+    clearTimeout(pollingTimeout);
+    currentChat = null;
+  }
+
+  // Función envio de mensaje en  chat individual
+  function sendMessage() {
+    const input = document.getElementById("messageInput");
+    const content = input.value.trim();
+    if (!content || !currentChat) return;
+    const payload = {
+      receiverId: currentChat.receiverId,
+      receiverType: currentChat.receiverType,
+      content: content,
+    };
     fetch("/api/students/controllers/sendMessage.php", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(messageData),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
-          loadGroupChat(groupName, groupId);
+          input.value = "";
+          loadConversation();
         } else {
-          console.error("Error al enviar mensaje:", data.error);
+          alert("Error al enviar el mensaje.");
         }
       })
-      .catch((error) => {
-        console.error("Error al enviar el mensaje:", error);
-      });
+      .catch((error) => console.error("Error al enviar mensaje:", error));
   }
-}
 
-const modal = document.getElementById("groupChatModal");
-modal.addEventListener("hidden.bs.modal", () => {
-  document.activeElement.blur();
+  // Función envio de mensaje en chat grupal
+  function sendGroupMessage() {
+    const input = document.getElementById("groupMessageInput");
+    const content = input.value.trim();
+    if (!content || !currentChat) return;
+    const payload = {
+      receiverId: currentChat.receiverId,
+      receiverType: currentChat.receiverType,
+      content: content,
+    };
+    fetch("/api/students/controllers/sendMessage.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          input.value = "";
+          loadConversation();
+        } else {
+          alert("Error al enviar mensaje de grupo.");
+        }
+      })
+      .catch((error) =>
+        console.error("Error al enviar mensaje de grupo:", error)
+      );
+  }
+
+  document
+    .getElementById("messageListModal")
+    .addEventListener("show.bs.modal", loadMessageList);
+
+  function openChatFromContacts(contactName, studentId) {
+    openChatModal(studentId, contactName);
+  }
+
+  function openGroupChat(groupName, groupId) {
+    openGroupChatModal(groupId, groupName);
+  }
+
+  window.stopPolling = stopPolling;
+  window.sendMessage = sendMessage;
+  window.sendGroupMessage = sendGroupMessage;
+  window.openChatModal = openChatModal;
+  window.openGroupChatModal = openGroupChatModal;
+  window.openChatFromContacts = openChatFromContacts;
+  window.openGroupChat = openGroupChat;
 });

@@ -14,24 +14,22 @@ if (empty($_SESSION) || !isset($_SESSION["ID_STUDENT"])) {
 }
 
 $request = json_decode(file_get_contents("php://input"));
+$studentId = (int) $_SESSION["ID_STUDENT"];
+$groupId = isset($request->groupId) ? (int) $request->groupId : null;
+$memberIdentifier = trim($request->memberIdentifier ?? '');
 
-$senderId = (int) $_SESSION["ID_STUDENT"];
-$receiverId = isset($request->receiverId) ? (int) $request->receiverId : null;
-$receiverType = strtoupper(trim($request->receiverType ?? ''));
-$content = trim($request->content ?? '');
-
-if (!$receiverId || empty($content) || !in_array($receiverType, ['STUDENT', 'GROUP'])) {
-    echo json_encode(new StudentResponse("failure", error: new ErrorResponse(400, "Missing or invalid required fields")));
+if (!$groupId || !$memberIdentifier) {
+    echo json_encode(new StudentResponse("failure", error: new ErrorResponse(400, "Missing group ID or member identifier")));
     return;
 }
 
 $db = Database::getDatabaseInstace();
 $mysqli = $db->getConnection();
 
-$query = "CALL SP_SEND_MESSAGE(?, ?, ?, ?)";
-
 try {
-    $db->callStoredProcedure($query, "iiss", [$senderId, $receiverId, $receiverType, $content], $mysqli);
+    $query = "CALL SP_ADD_GROUP_MEMBERS(?, ?, ?)";
+    $db->callStoredProcedure($query, "iis", [$groupId, $studentId, $memberIdentifier], $mysqli);
+
     $mysqli->close();
     echo json_encode(new StudentResponse("success"));
 } catch (Throwable $err) {
