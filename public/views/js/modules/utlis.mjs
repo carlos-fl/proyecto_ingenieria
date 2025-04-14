@@ -202,7 +202,7 @@ export function cleanTableBody(table){
  * @param {blob} blob 
  * blob file
  */ 
-export function downlodFile(fileName, blob) {
+export function downloadFile(fileName, blob) {
     let downloadLink = document.createElement("a");
     downloadLink.download = fileName;
     downloadLink.href = window.URL.createObjectURL(blob);
