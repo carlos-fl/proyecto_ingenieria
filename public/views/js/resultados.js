@@ -39,13 +39,13 @@ function loadResults(filteredResults) {
       }
 
       try {
-        showLoadingComponent('loading')
+        //showLoadingComponent('loading')
         const ENDPOINT = "/api/auth/controllers/applicantAuth.php"
         const body = { applicantCode: searchValue.value.trim() }
         console.log(body)
         const examResults = await Request.fetch(ENDPOINT, 'POST', body);
         console.log(examResults)
-        hideLoadingComponent('loading')
+        //hideLoadingComponent('loading')
         if (examResults.status === "failure") {
           showPopUp("No se encontraron Resultados")
           console.log(examResults)
