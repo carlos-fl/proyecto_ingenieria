@@ -54,6 +54,7 @@ function loadResults(filteredResults) {
 
       } catch(err) {
         showPopUp("No se encontraron Resultados")
+        console.log(err)
       }
 
       searchValue.value = ''
