@@ -51,7 +51,8 @@ function loadResults(filteredResults) {
         }
 
         loadResults(examResults);
-        showModal('d-modal')
+        const modal = document.getElementById('d-modal')
+        modal.show()
 
       } catch(err) {
         showPopUp("No se encontraron Resultados")
