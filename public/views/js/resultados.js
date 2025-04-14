@@ -57,7 +57,7 @@ function loadResults(filteredResults) {
         modal.show()
 
       } catch(err) {
-        showPopUp("No se encontraron Resultados")
+        showPopUp("SU MADRE")
         console.log(err)
       }
 
