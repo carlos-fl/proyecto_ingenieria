@@ -73,6 +73,9 @@ if (empty($_SESSION)) {
               <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#groupsModal">
                 <i class="fa-regular fa-handshake"></i> Grupos
               </a>
+              <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#notificationsModal">
+                <i class="fa-regular fa-bell"></i> Notificaciones
+              </a>
             </div>
           </div>
           <div class="sidebar-ft">
@@ -272,16 +275,6 @@ if (empty($_SESSION)) {
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
-          <!-- Sección para crear grupos -->
-          <div class="mb-4">
-            <h6 class="mb-2">Crear Grupo</h6>
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Nombre del Grupo" aria-label="Group Name" id="groupNameInput">
-              <button class="btn btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#createGroupModal">
-                Crear Grupo
-              </button>
-            </div>
-          </div>
           <!-- Sección para agregar contacto -->
           <div class="mb-4">
             <button class="btn btn-outline-success w-100" type="button" data-bs-toggle="collapse" data-bs-target="#addContactCollapse" aria-expanded="false" aria-controls="addContactCollapse">
@@ -390,10 +383,11 @@ if (empty($_SESSION)) {
             <p class="text-danger">Error al cargar los mensajes.</p>
           </div>
           <!-- Contenedor para chats privados -->
-          <div class="list-group" id="messageList"></div>
+          <div class="list-group mb-3" id="messageList"></div>
           <hr>
           <!-- Contenedor para chats grupales -->
-          <div class="list-group" id="groupMessageList"></div>
+          <div class="list-group mb-3" id="groupMessageList"></div>
+          <!-- Paginación (según se requiera) -->
           <div id="paginationContainer" class="mt-3"></div>
         </div>
       </div>
@@ -406,12 +400,11 @@ if (empty($_SESSION)) {
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="chatModalLabel">Mensaje con <span id="chatContactName">Nombre contacto</span></h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar" onclick="stopPolling()"></button>
         </div>
         <div class="modal-body">
           <!-- Contenedor de mensajes -->
-          <div class="chat-container" style="max-height: 400px; overflow-y: auto;" id="chatMessages">
-          </div>
+          <div class="chat-container border p-3" style="max-height: 400px; overflow-y: auto;" id="chatMessages"></div>
         </div>
         <div class="modal-footer">
           <!-- Input para escribir mensajes -->
@@ -433,6 +426,17 @@ if (empty($_SESSION)) {
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
+          <!-- Sección para crear grupos -->
+          <div class="mb-4">
+            <h6 class="mb-2">Crear Grupo</h6>
+            <div class="input-group mb-2">
+              <input type="text" class="form-control" placeholder="Nombre del Grupo" aria-label="Group Name" id="groupNameInput">
+              <button class="btn btn-outline-primary" type="button" id="createGroupBtn">
+                Crear Grupo
+              </button>
+            </div>
+            <div id="groupFeedback"></div>
+          </div>
           <div id="groupsLoading" class="text-center" style="height: 200px; line-height: 200px;">
             Cargando Grupos...
           </div>
@@ -454,26 +458,10 @@ if (empty($_SESSION)) {
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="groupChatModalLabel">Chat grupal: <span id="groupChatName">Nombre del Grupo</span></h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar" onclick="stopPolling()"></button>
         </div>
         <div class="modal-body">
-          <!-- Contenedor de mensajes -->
-          <div class="chat-container" style="max-height: 400px; overflow-y: auto;">
-            <!-- Ejemplo de mensaje recibido -->
-            <div class="d-flex mb-2">
-              <div class="p-2 bg-light rounded" style="max-width: 70%;">
-                <p class="mb-1">Hola a todos, ¿cómo están?</p>
-                <small class="text-muted">10:00 AM - Visto</small>
-              </div>
-            </div>
-            <!-- Ejemplo de mensaje enviado -->
-            <div class="d-flex justify-content-end mb-2">
-              <div class="p-2 bg-primary text-white rounded" style="max-width: 70%;">
-                <p class="mb-1">¡Muy bien, gracias!</p>
-                <small class="text-light">10:05 AM - Enviado</small>
-              </div>
-            </div>
-          </div>
+          <div id="groupChatMessages" class="chat-container border p-3" style="max-height: 400px; overflow-y: auto;"></div>
         </div>
         <div class="modal-footer">
           <div class="input-group">
@@ -523,6 +511,94 @@ if (empty($_SESSION)) {
     </div>
   </div>
 
+  <!-- Modal Notificaciones -->
+  <div class="modal fade" id="notificationsModal" tabindex="-1" aria-labelledby="notificationsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="notificationsModalLabel">Notificaciones</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs" id="notificationsTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="friendRequests-tab" data-bs-toggle="tab" data-bs-target="#friendRequests" type="button" role="tab" aria-controls="friendRequests" aria-selected="true">
+                Solicitudes de Amistad
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="otherNotifications-tab" data-bs-toggle="tab" data-bs-target="#otherNotifications" type="button" role="tab" aria-controls="otherNotifications" aria-selected="false">
+                Otras notificaciones
+              </button>
+            </li>
+          </ul>
+          <div class="tab-content mt-3" id="notificationsTabContent">
+            <div class="tab-pane fade show active" id="friendRequests" role="tabpanel" aria-labelledby="friendRequests-tab">
+              <div id="friendRequestsContent">
+                <p>Cargando solicitudes...</p>
+              </div>
+              <nav>
+                <ul class="pagination justify-content-center" id="friendRequestsPagination">
+                </ul>
+              </nav>
+            </div>
+            <div class="tab-pane fade" id="otherNotifications" role="tabpanel" aria-labelledby="otherNotifications-tab">
+              <p>En construccion...</p>
+            </div>
+          </div>
+          <div id="notificationMessage" class="mt-3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de confirmación de borrado -->
+  <div class="modal fade" id="confirmDeleteGroupModal" tabindex="-1" aria-labelledby="confirmDeleteGroupModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmDeleteGroupModalLabel">Confirmar Eliminación</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          ¿Estás seguro de que deseas eliminar el grupo <strong id="groupNameInModal">este grupo</strong>? Esta acción no se puede deshacer.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" id="confirmDeleteGroupBtn" class="btn btn-danger">
+            <span id="deleteSpinner" class="spinner-border spinner-border-sm d-none me-1" role="status" aria-hidden="true"></span>
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Agregar Miembros -->
+<div class="modal fade" id="addMembersModal" tabindex="-1" aria-labelledby="addMembersModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addMembersModalLabel">Agregar Miembros al Grupo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <div id="contactsFeedback" class="mb-3"></div>
+        <div id="contactsLoading" class="text-center" style="height: 200px; line-height: 200px;">
+          Cargando contactos…
+        </div>
+        <div id="contactsList" class="list-group hidden" style="max-height: 400px; overflow-y: auto;"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <div id="toastContainer" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;"></div>
+
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
     integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
     crossorigin="anonymous"></script>
@@ -536,6 +612,9 @@ if (empty($_SESSION)) {
   <script src="./controllers/info.js"></script>
   <script src="./controllers/chats.js"></script>
   <script src="./controllers/contacts.js"></script>
+  <script>
+    const loggedUserId = "<?php echo trim($_SESSION['ID_STUDENT']); ?>";
+  </script>
 
 </body>
 

@@ -6,7 +6,6 @@ include_once __DIR__ . '/../../../../services/students/types/StudentResponse.php
 
 session_start();
 Request::isWrongRequestMethod('POST');
-header("Content-Type: application/json");
 
 if (empty($_SESSION) || !isset($_SESSION["ID_STUDENT"])) {
     echo json_encode(new StudentResponse("failure", error: new ErrorResponse(401, "Unauthorized")));
@@ -14,25 +13,23 @@ if (empty($_SESSION) || !isset($_SESSION["ID_STUDENT"])) {
 }
 
 $request = json_decode(file_get_contents("php://input"));
+$studentId = (int) $_SESSION["ID_STUDENT"];
+$groupId = isset($request->groupId) ? (int) $request->groupId : null;
+$memberId = isset($request->memberId) ? (int) $request->memberId : null;
 
-$senderId = (int) $_SESSION["ID_STUDENT"];
-$receiverId = isset($request->receiverId) ? (int) $request->receiverId : null;
-$receiverType = strtoupper(trim($request->receiverType ?? ''));
-$content = trim($request->content ?? '');
-
-if (!$receiverId || empty($content) || !in_array($receiverType, ['STUDENT', 'GROUP'])) {
-    echo json_encode(new StudentResponse("failure", error: new ErrorResponse(400, "Missing or invalid required fields")));
+if (!$groupId || !$memberId) {
+    echo json_encode(new StudentResponse("failure", error: new ErrorResponse(400, "Missing groupId or memberId")));
     return;
 }
 
 $db = Database::getDatabaseInstace();
 $mysqli = $db->getConnection();
 
-$query = "CALL SP_SEND_MESSAGE(?, ?, ?, ?)";
-
 try {
-    $db->callStoredProcedure($query, "iiss", [$senderId, $receiverId, $receiverType, $content], $mysqli);
+    $query = "CALL SP_REMOVE_GROUP_MEMBER(?, ?, ?)";
+    $db->callStoredProcedure($query, "iii", [$groupId, $memberId, $studentId], $mysqli);
     $mysqli->close();
+
     echo json_encode(new StudentResponse("success"));
 } catch (Throwable $err) {
     $mysqli->close();
