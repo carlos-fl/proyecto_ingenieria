@@ -23,7 +23,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch(err) {
     console.log(err)
     hideLoadingComponent('loading')
-    showPopUp('Error en el servidor')
+    showPopUp('Matricula no activa')
+    setTimeout(() => {
+      window.location.replace('/')
+      }, 3000)
     
   }
 })
