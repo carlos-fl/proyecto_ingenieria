@@ -31,8 +31,6 @@
     <d-table id="tb" body-id="table-body-results" table-row='["Examen", "Fecha", "Calificación", "Numero de Solicitud"]'></d-table>
   </d-modal>
 
-  <loading-modal loading-id="loading" modal-id="loading-modal"></loading-modal>
-
 <!-- pop up to show errors -->
   <pop-up
     id="popUp"

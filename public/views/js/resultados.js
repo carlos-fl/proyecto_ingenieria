@@ -39,21 +39,26 @@ function loadResults(filteredResults) {
       }
 
       try {
-        showLoadingComponent('loading')
+        //showLoadingComponent('loading')
         const ENDPOINT = "/api/auth/controllers/applicantAuth.php"
         const body = { applicantCode: searchValue.value.trim() }
+        console.log(body)
         const examResults = await Request.fetch(ENDPOINT, 'POST', body);
-        hideLoadingComponent('loading')
+        console.log(examResults)
+        //hideLoadingComponent('loading')
         if (examResults.status === "failure") {
           showPopUp("No se encontraron Resultados")
+          console.log(examResults)
           return;
         }
 
         loadResults(examResults);
-        showModal('d-modal')
+        const modal = document.getElementById('d-modal')
+        modal.show()
 
       } catch(err) {
-        showPopUp("No se encontraron Resultados")
+        showPopUp("Error al buscar resultados")
+        console.log(err)
       }
 
       searchValue.value = ''
