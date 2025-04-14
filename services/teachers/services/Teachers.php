@@ -220,9 +220,6 @@
     }
 
     public static function uploadGrades(int $sectionId, int $userId, array $grades){
-      if (!self::hasSection($sectionId, $userId)) {
-        return new DataResponse("failure", error: new ErrorResponse(404, "Section not assigned to user"));
-      }
       try{
           $notFoundStudents = array();
           self::uploadGradesDB($sectionId, $grades, $notFoundStudents);
