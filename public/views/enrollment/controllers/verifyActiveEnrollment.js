@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (res.status == 'success' && !res.isActive) {
       showPopUp('matricula no activa')
       console.log('no se encontraron matricula activas', res)
+      setTimeout(() => {
+      window.location.replace('/')
+      }, 3000)
     }
 
   } catch(err) {
