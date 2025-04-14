@@ -73,3 +73,11 @@ export function isValidAccountNumber(accountNumber) {
   const re = new RegExp(PATTERN)
   return re.test(accountNumber)
 }
+
+export function isInt(value){
+  // Verificar si una cadena representa un número entero
+  const PATTERN = /^\d*/
+  const re = new RegExp(PATTERN)
+  return re.test(value)
+
+}

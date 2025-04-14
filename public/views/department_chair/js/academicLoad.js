@@ -1,6 +1,36 @@
 // Lógica para la vista academicLoad.php
 
 import { changeBorder, cleanTableBody, disableElement, enableElement, exportTableToCSV, newDangerBtn, newPrimaryBtn, newTableData, showLoadingIcon, showPopUp } from "../../js/modules/utlis.mjs"
+import { isInt } from "../../js/modules/validator.mjs";
+
+function isFull(domElement){
+    return domElement.value !== ""
+}
+
+function emptyControl(formControl){
+    // Handle empty control logic
+    changeBorder(formControl, "var(--bs-border-width)", "red");
+    showPopUp("El campo es obligatorio")
+}
+
+function enableFormSubmission(){
+    // Habilitar el envío del formulario si todos los campos están correctos y llenos
+    let form = document.querySelector(".load-form")
+    let formControls = form.querySelectorAll("input,select")
+    let submit = document.getElementById("submit")
+    for (let control of formControls){
+        if (control.value === ""){
+            disableElement(submit)
+            return
+        }
+    }
+    if (!validQuota()){
+        
+        return
+    }
+    // TODO: Add logic to check if the schedule is enabled
+    enableElement(submit)
+}
 
 function fetchDeparmentMajors(selectMajor){
     selectMajor.innerHTML = `<option value="">Cargando Carreras...</option>` 
@@ -123,7 +153,7 @@ function majorSelected(filterInput, filterSearchBtn, newSectionBtn, excelImportB
         disableElement(newSectionBtn)
         disableElement(excelImportBtn)
         // Empty the academic load table
-        showPopUp("Por favor elija una carrera")
+        showPopUp("Por favor Seleccione una carrera")
         academicLoadTableInfo.innerText = "No se ha seleccionado una carrera"
         academicLoadTitle.innerText = ""
         return
@@ -206,6 +236,7 @@ function fetchMajorClasses(){
             let option = document.createElement("option")
             option.value = elem["CLASS_CODE"]
             option.innerText = elem["CLASS_NAME"]
+            option.dataset.uv = elem["UV"]
             classesSelect.appendChild(option)
         })
         enableElement(classesSelect)
@@ -216,7 +247,6 @@ function fetchMajorClasses(){
         console.log(error)
     })
 }
-
 
 function fetchMajorTeachers(){
     // Fetch las clases de un Major
@@ -281,11 +311,12 @@ function fetchDeparmentBuildingClassrooms(classRoomSelect, event){
     let buildingSelect = event.target
     let building = buildingSelect.value
     if (building === ""){
-        showPopUp("Elija un edificio porfavor")
-        classRoomSelect.innerHTML = ``
+        emptyControl(event.target)
         disableElement(classRoomSelect)
+        classRoomSelect.innerHTML = ``
         return
     }
+    changeBorder(event.target, "var(--bs-border-width)", "var(--bs-border-color)")
     classRoomSelect.innerHTML = `<option value="">Cargando Aulas...</option>`
     disableElement(classRoomSelect)
     fetch(`/api/department_chair/controllers/getDepartmentClassrooms.php?building=${building}`)
@@ -304,6 +335,7 @@ function fetchDeparmentBuildingClassrooms(classRoomSelect, event){
             classRoomSelect.appendChild(option)
         })
         enableElement(classRoomSelect)
+        enableFormSubmission()
     })
     .catch(error => {
         showPopUp("No se pudieron cargar las aulas de este edificio")
@@ -323,6 +355,109 @@ function newSectionModal(academicLoadMajorTitle, event){
     fetchDepartmentBuildings();
 }
 
+function validQuota(){
+    // Check if the quota is valid
+    let quota = document.getElementById("quota")
+    let quotaInfo = document.getElementById("quota-info")
+    if (isNaN(quota.value) || !isInt(quota)){
+        changeBorder(quota, "var(--bs-border-width)", "red");
+        showPopUp("Los cupos deben de ser un número entero")
+        quotaInfo.innerText = "Los cupos deben de ser un número entero"
+        return false
+    }
+    if (parseInt(quota.value) > 40){
+        changeBorder(quota, "var(--bs-border-width)", "red");
+        showPopUp("Cantidad de cupos máxima superada")
+        quotaInfo.innerText = "Cantidad de cupos máxima superada (Cantidad máxima: 40)"
+        return false
+    }
+    changeBorder(quota, "var(--bs-border-width)", "var(--bs-border-color)")
+    quotaInfo.innerText = ""
+    return true
+}
+
+function getEndTime(startTime, classDays, selectClass, endTime, event){
+    if (!isFull(event.target)){
+        emptyControl(event.target)
+        return
+    }
+    changeBorder(event.target, "var(--bs-border-width)", "var(--bs-border-color)")
+    // Check to change schedule for the weekend schedule
+    let weekDayOnly = startTime.querySelectorAll(".weekday-only")
+    if (event.target.value === "SAT"){
+        weekDayOnly.forEach(time => {disableElement(time)})
+        startTime.value = ""
+        endTime.value = ""
+        return
+    }
+    weekDayOnly.forEach(time => {enableElement(time)})
+    let selectedClassDays  = classDays[0].checked ? classDays[0] : classDays[1]
+    let selectedClassUv = selectClass.options[selectClass.selectedIndex].dataset.uv
+    let startTimeValue = startTime.value
+    if (startTimeValue === "" || !selectedClassUv){
+        return
+    }
+    startTimeValue = parseInt(startTimeValue)
+    // Calculate the section's end time
+    let classHours = 100 * parseInt(selectedClassUv)
+    // Calculate the endtime according to the UVs
+    let end = selectedClassDays.value === "SAT" ? startTimeValue + classHours : startTimeValue + 100
+    let endOption = document.createElement("option")
+    endOption.setAttribute("selected", true)
+    // Add a zero to the start if the number has less than four digits
+    endOption.innerText = end < 1000 ? "0".concat(end): end
+    endOption.value = end
+    endTime.innerHTML = ""
+    endTime.appendChild(endOption)
+    enableFormSubmission()
+}
+
+function controlOnChangeHandler(event){
+    if (!isFull(event.target)){
+        emptyControl(event.target)
+        console.log("EJECUCIÓN")
+        return
+    }
+    changeBorder(event.target, "var(--bs-border-width)", "var(--bs-border-color)")
+    enableFormSubmission()
+}
+
+function submitForm(event){
+    // Enviar la carga académica
+    let selectedClass = document.getElementById("class")
+    let teacherSelect = document.getElementById("teacher")
+    let classDays = document.getElementsByName("classDays")
+    let startTime = document.getElementById("start-time")
+    let endTime = document.getElementById("end-time")
+    let buildingSelect = document.getElementById("building")
+    let classRoomSelect = document.getElementById("classroom")
+    let quota = document.getElementById("quota")
+    let selectedClassDays  = classDays[0].checked ? classDays[0] : classDays[1]
+    let form = new FormData()
+    form.append("class-code", selectedClass.value)
+    form.append("teacher-number", teacherSelect.value)
+    form.append("class-days", selectedClassDays.value)
+    form.append("start-time", startTime.value)
+    form.append("end-time", endTime.value)
+    form.append("building", buildingSelect.value)
+    form.append("classroom", classRoomSelect.value)
+    form.append("quota", quota.value)
+    fetch(`/api/department_chair/controllers/uploadSectionToAcademicLoad.php`, {method: "POST", body: form})
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "failure"){
+            showPopUp("No se pudo subir la sección")
+            return
+        }
+        showPopUp("Se guardó la sección exitosamente!", "success-popup", "/views/assets/img/checkmark.png")
+        document.getElementById("closeNewSectionModal").click()
+    })
+    .catch(error => {
+        showPopUp("Hubo un error al subir la sección")
+        console.log(error)
+    })
+}
+
 function main(){
     let selectMajor = document.getElementById("departmentMajor")
     let filterInput = document.getElementById("academicLoadFilter")
@@ -332,13 +467,29 @@ function main(){
     let academicLoadTable = document.getElementById("academicLoadTable")
     let academicLoadTableInfo = document.getElementById("table-info")
     let academicLoadMajorTitle = document.getElementById("academicLoadMajor")
+    // New Section Form Controls
     let buildingSelect = document.getElementById("building")
     let classRoomSelect = document.getElementById("classroom")
+    let teacherSelect = document.getElementById("teacher")
+    let startTime = document.getElementById("start-time")
+    let classDays = document.getElementsByName("classDays")
+    let selectClass = document.getElementById("class")
+    let endTime = document.getElementById("end-time")
+    let quota = document.getElementById("quota")
+    let submit = document.getElementById("submit")
     fetchDeparmentMajors(selectMajor)
     selectMajor.addEventListener("change", majorSelected.bind(null, filterInput, filterSearchBtn, newSectionBtn, excelImportBtn, academicLoadTable, academicLoadTableInfo))
     excelImportBtn.addEventListener("click", exportLoadToExcel.bind(null, selectMajor))
     newSectionBtn.addEventListener("click", newSectionModal.bind(null, academicLoadMajorTitle))
+    // New Section Modal
     buildingSelect.addEventListener("change", fetchDeparmentBuildingClassrooms.bind(null, classRoomSelect))
+    startTime.addEventListener("change", getEndTime.bind(null, startTime, classDays, selectClass, endTime));
+    classDays.forEach(elem => {elem.addEventListener("change", getEndTime.bind(null, startTime, classDays, selectClass, endTime))})
+    selectClass.addEventListener("change", getEndTime.bind(null, startTime, classDays, selectClass, endTime));
+    teacherSelect.addEventListener("change", controlOnChangeHandler)
+    classRoomSelect.addEventListener("change", controlOnChangeHandler)
+    quota.addEventListener("change", controlOnChangeHandler)
+    submit.addEventListener("click", submitForm)
 }
 
 main()

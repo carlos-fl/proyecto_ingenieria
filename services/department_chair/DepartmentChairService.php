@@ -173,4 +173,19 @@ class DepartmentChairService {
             return ["status" => "failure", "code" => 500, "message" => $err->getMessage()];
         }
     }
+
+    public static function newSection($departmentChairNumber, $classId, $teacher, $classDays, $startTime, $endTime, $building, $classRoom, $quota){
+        // Crear una nueva sección en la carga académica
+        $db = Database::getDatabaseInstace();
+        $mysqli = $db->getConnection();
+        $query = "CALL SP_ADD_SECTION_ACADEMIC_LOAD(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try {
+            $results = $db->callStoredProcedure($query, 'iiisiiiii', [$departmentChairNumber, $classId, $teacher, $classDays, $startTime, $endTime, $building, $classRoom, $quota], $mysqli);
+            $mysqli->close();
+            return ["status" => "success"];
+        } catch(Throwable $err) {
+            return ["status" => "failure", "code" => 500, "message" => $err->getMessage()];
+        }
+        
+    }
 }

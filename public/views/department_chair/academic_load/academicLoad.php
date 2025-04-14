@@ -146,7 +146,6 @@
           <th scope="col">Aula</th>
           <th scope="col">Cupos</th>
           <th scope="col">Periodo Académico</th>
-          <th scope="col">Acciones</th>
         </tr>
       </thead>
       <tbody id="exportTableBody">
@@ -159,9 +158,9 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="alumnosModalLabel">Nueva sección de <span class="titleSuffix"></span></h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          <button id="closeNewSectionModal" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body load-form">
           <div class="mt-3">
             <label for="class">Clase</label>
             <select id="class" type="text" class="form-select">
@@ -173,37 +172,18 @@
             </select>
           </div>
           <div class="mt-3">
-            <label for="">Días de clase</label>
-            <div class="input-group">
-              <div class="input-group-text">
-                <input type="checkbox" class="form-check-input m-2" name="daysOfWeek" id="lunes" value="Mon">
-                <label for="lunes">Lunes</label>
-              </div>
-              <div class="input-group-text">
-                <input type="checkbox" class="form-check-input m-2" name="daysOfWeek" id="lunes" value="Tue">
-                <label for="lunes">Martes</label>
-              </div>
-              <div class="input-group-text">
-                <input type="checkbox" class="form-check-input m-2" name="daysOfWeek" id="lunes" value="Wed">
-                <label for="lunes">Miércoles</label>
-              </div>
-              <div class="input-group-text">
-                <input type="checkbox" class="form-check-input m-2" name="daysOfWeek" id="lunes" value="Thu">
-                <label for="lunes">Jueves</label>
-              </div>
-              <div class="input-group-text">
-                <input type="checkbox" class="form-check-input m-2" name="daysOfWeek" id="lunes" value="Fri">
-                <label for="lunes">Viernes</label>
-              </div>
-              <div class="input-group-text">
-                <input type="checkbox" class="form-check-input m-2" name="daysOfWeek" id="lunes" value="Sat">
-                <label for="lunes">Sábado</label>
-              </div>
-            </div>
+            <p>Dias de Clase:</p>
+            <div class="btn-group" role="group" aria-label="Class days selection radio button">
+              <input type="radio" class="btn-check" name="classDays" id="btnradio1" autocomplete="off" value="WEEK" checked>
+              <label class="btn btn-outline-warning" for="btnradio1">Dias de Semana</label>
+
+              <input type="radio" class="btn-check" name="classDays" id="btnradio2" autocomplete="off" value="SAT">
+              <label class="btn btn-outline-warning" for="btnradio2">Sábados</label>
+          </div>
           </div>
           <div class="mt-3">
             <label for="start_time">Hora Inicial</label>
-            <select type="text" id="start_time" class="form-select">
+            <select type="text" id="start-time" class="form-select">
               <option value="">Seleccione una hora inicial...</option>
               <option value="700">0700</option>
               <option value="800">0800</option>
@@ -214,16 +194,19 @@
               <option value="1300">1300</option>
               <option value="1400">1400</option>
               <option value="1500">1500</option>
-              <option value="1600">1600</option>
-              <option value="1700">1700</option>
-              <option value="1800">1800</option>
-              <option value="1900">1900</option>
-              <option value="2000">2000</option>
+              <option value="1600" class="weekday-only">1600</option>
+              <option value="1700" class="weekday-only">1700</option>
+              <option value="1800" class="weekday-only">1800</option>
+              <option value="1900" class="weekday-only">1900</option>
+              <option value="2000" class="weekday-only">2000</option>
             </select>
           </div>
           <div class="mt-3">
             <label for="edificio">Hora Final</label>
-            <select type="text" id="end_time" class="form-control" disabled></select>
+            <div>
+              <small class="text-secondary">Tiene que seleccionar la clase, los días de clase y la hora inicial para obtener la hora final</small>
+            </div>
+            <select type="text" id="end-time" class="form-control" disabled></select>
           </div>
           <div class="mt-3">
             <label for="building">Edificio</label>
@@ -231,15 +214,16 @@
           </div>
           <div class="mt-3">
             <label for="classroom">Aula</label>
-            <select type="text" id="classroom" class="form-select"></select>
+            <select type="text" id="classroom" class="form-select" disabled ></select>
           </div>
           <div class="mt-3">
-            <label for="cupos">Cupos</label>
-            <input type="text" id="cupos" class="form-control">
+            <label for="quota">Cupos</label>
+            <input type="number" id="quota" class="form-control">
+            <div class="text-red" id="quota-info"></div>
           </div>
         </div>
         <div class="modal-footer">
-          <button id="downloadStudentTableBtn" class="btn btn-primary" disabled>Crear Sección</button>
+          <button id="submit" class="btn btn-primary" disabled>Crear Sección</button>
         </div>
       </div>
     </div>
