@@ -26,8 +26,6 @@
     </div>
   </header>
 
-  <loading-modal loading-id="loading" modal-id="loading-modal"></loading-modal>
-
 <!-- modal to see exam results -->
   <d-modal tag-id="d-modal" modal-id="results" arial-label-led-by="resultsModal" header-title="Resultados de Admisión" arial-label="TEXT" hidden="false">
     <d-table id="tb" body-id="table-body-results" table-row='["Examen", "Fecha", "Calificación", "Numero de Solicitud"]'></d-table>
