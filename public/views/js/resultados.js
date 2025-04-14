@@ -46,6 +46,7 @@ function loadResults(filteredResults) {
         hideLoadingComponent('loading')
         if (examResults.status === "failure") {
           showPopUp("No se encontraron Resultados")
+          console.log(examResults)
           return;
         }
 
