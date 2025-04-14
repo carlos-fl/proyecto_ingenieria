@@ -43,6 +43,7 @@ function loadResults(filteredResults) {
         const ENDPOINT = "/api/auth/controllers/applicantAuth.php"
         const body = { applicantCode: searchValue.value.trim() }
         const examResults = await Request.fetch(ENDPOINT, 'POST', body);
+        console.log(examResults)
         hideLoadingComponent('loading')
         if (examResults.status === "failure") {
           showPopUp("No se encontraron Resultados")
