@@ -14,27 +14,24 @@ if (empty($_SESSION) || !isset($_SESSION["ID_STUDENT"])) {
 }
 
 $request = json_decode(file_get_contents("php://input"));
+$studentId = (int) $_SESSION["ID_STUDENT"];
+$groupId = isset($request->groupId) ? (int) $request->groupId : null;
 
-$senderId = (int) $_SESSION["ID_STUDENT"];
-$receiverId = isset($request->receiverId) ? (int) $request->receiverId : null;
-$receiverType = strtoupper(trim($request->receiverType ?? ''));
-$content = trim($request->content ?? '');
-
-if (!$receiverId || empty($content) || !in_array($receiverType, ['STUDENT', 'GROUP'])) {
-    echo json_encode(new StudentResponse("failure", error: new ErrorResponse(400, "Missing or invalid required fields")));
+if (!$groupId) {
+    echo json_encode(new StudentResponse("failure", error: new ErrorResponse(400, "Missing groupId")));
     return;
 }
 
-$db = Database::getDatabaseInstace();
-$mysqli = $db->getConnection();
-
-$query = "CALL SP_SEND_MESSAGE(?, ?, ?, ?)";
-
 try {
-    $db->callStoredProcedure($query, "iiss", [$senderId, $receiverId, $receiverType, $content], $mysqli);
+    $db = Database::getDatabaseInstace();
+    $mysqli = $db->getConnection();
+
+    $query = "CALL SP_LEAVE_GROUP(?, ?)";
+    $db->callStoredProcedure($query, "ii", [$studentId, $groupId], $mysqli);
     $mysqli->close();
+
     echo json_encode(new StudentResponse("success"));
 } catch (Throwable $err) {
-    $mysqli->close();
+    http_response_code(500);
     echo json_encode(new StudentResponse("failure", error: new ErrorResponse(500, $err->getMessage())));
 }
