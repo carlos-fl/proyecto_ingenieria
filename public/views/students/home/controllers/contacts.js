@@ -64,7 +64,7 @@ function renderContactsPage(page) {
       <div class="list-group-item list-group-item-action">
         <div class="d-flex w-100 justify-content-between align-items-center">
           <div class="d-flex align-items-center">
-            <img src="${contact.profilePhoto}" alt="Foto de perfil" class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
+            <img src="../../assets/img/default-profile.png" alt="Foto de perfil" class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
             <div>
               <h6 class="mb-1">${contact.fullName}</h6>
               <p class="mb-1 small text-muted">Email: ${contact.institutionalEmail}</p>
@@ -81,7 +81,6 @@ function renderContactsPage(page) {
         </div>
         <div class="collapse mt-2" id="contactActions${realIndex}">
           <div class="d-flex">
-            <button class="btn btn-sm btn-primary me-2">Agregar a Grupo</button>
             <button class="btn btn-sm btn-danger" onclick="deleteContact(this)" data-target-id="${contact.studentId}">
               Eliminar Contacto
             </button>
@@ -233,8 +232,23 @@ function loadGroups(page = 1) {
         data.data.forEach((group) => {
           const groupItem = document.createElement("div");
           groupItem.className = "list-group-item";
+
+          let groupActionButton = "";
+
+          if (group.ownerId === parseInt(loggedUserId)) {
+            groupActionButton = `
+              <button class="btn btn-sm btn-outline-danger delete-group-btn me-1" data-group-id="${group.groupId}">
+                <i class="fa-solid fa-trash"></i> Borrar Grupo
+              </button>`;
+          } else {
+            groupActionButton = `
+              <button class="btn btn-sm btn-outline-danger leave-group-btn me-1" data-group-id="${group.groupId}">
+                <i class="fa-solid fa-right-from-bracket"></i> Salir del Grupo
+              </button>`;
+          }
+
           groupItem.innerHTML = `
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-between align-items-center group-header" style="cursor: pointer;">
               <div>
                 <h6 class="mb-1">${group.groupName}</h6>
                 <small>Miembros: ${group.membersCount}</small>
@@ -246,11 +260,79 @@ function loadGroups(page = 1) {
                 <button class="btn btn-sm btn-outline-success me-1" onclick="openAddMembersModal('${group.groupId}')">
                   <i class="fa-solid fa-user-plus"></i> Agregar Miembro
                 </button>
-                <button class="btn btn-sm btn-outline-danger delete-group-btn" data-group-id="${group.groupId}">
-                  <i class="fa-solid fa-trash"></i> Borrar Grupo
-                </button>
+                ${groupActionButton}
               </div>
-            </div>`;
+            </div>
+            <div class="group-members mt-2 ms-3 collapse" id="groupMembers-${group.groupId}">
+              <div class="text-muted">Cargando miembros...</div>
+            </div>
+            <!-- Contenedor para el mensaje de confirmación -->
+            <div class="confirmation-message" id="confirmationMessage-${group.groupId}" style="display: none;">
+              <p class="text-muted">¿Estás seguro de que quieres salir de este grupo?</p>
+              <button class="btn btn-sm btn-danger" id="confirmLeave-${group.groupId}">Confirmar</button>
+              <button class="btn btn-sm btn-secondary" id="cancelLeave-${group.groupId}">Cancelar</button>
+            </div>
+          `;
+
+          groupItem
+            .querySelector(".group-header")
+            .addEventListener("click", (e) => {
+              if (e.target.closest("button")) return;
+              const membersDiv = groupItem.querySelector(
+                `#groupMembers-${group.groupId}`
+              );
+              const isCollapsed = membersDiv.classList.contains("collapse");
+              document
+                .querySelectorAll(".group-members")
+                .forEach((el) => el.classList.add("collapse"));
+              if (isCollapsed) {
+                membersDiv.classList.remove("collapse");
+                loadGroupMembers(group.groupId, membersDiv);
+              } else {
+                membersDiv.classList.add("collapse");
+              }
+            });
+
+          const leaveBtn = groupItem.querySelector(".leave-group-btn");
+          if (leaveBtn) {
+            leaveBtn.addEventListener("click", (e) => {
+              e.stopPropagation();
+
+              const groupId = e.currentTarget.dataset.groupId;
+              const confirmationMessage = document.getElementById(
+                `confirmationMessage-${groupId}`
+              );
+
+              confirmationMessage.style.display = "block";
+            });
+          }
+
+          const cancelLeaveBtn = groupItem.querySelector(
+            `#cancelLeave-${group.groupId}`
+          );
+          if (cancelLeaveBtn) {
+            cancelLeaveBtn.addEventListener("click", () => {
+              const confirmationMessage = document.getElementById(
+                `confirmationMessage-${group.groupId}`
+              );
+              confirmationMessage.style.display = "none";
+            });
+          }
+
+          const confirmLeaveBtn = groupItem.querySelector(
+            `#confirmLeave-${group.groupId}`
+          );
+          if (confirmLeaveBtn) {
+            confirmLeaveBtn.addEventListener("click", () => {
+              const groupId = group.groupId;
+              leaveGroup(groupId, groupItem);
+              const confirmationMessage = document.getElementById(
+                `confirmationMessage-${groupId}`
+              );
+              confirmationMessage.style.display = "none";
+            });
+          }
+
           groupsList.appendChild(groupItem);
         });
 
@@ -688,108 +770,388 @@ document
       });
   });
 
+let currentAddMemberGroupId = null;
+let currentGroupMembersSet = new Set();
 
-  let selectedGroupId = null;
-  
+// Modal para agregar miembros al grupo
 function openAddMembersModal(groupId) {
-  selectedGroupId = groupId;
+  currentAddMemberGroupId = groupId;
+  currentGroupMembersSet = new Set();
 
-  // Cierra el modal de grupos inmediatamente
-  const groupsModal = bootstrap.Modal.getInstance(document.getElementById("groupsModal"));
-  groupsModal.hide();
+  const addMemberModalEl = document.getElementById("addMemberModal");
+  const addMemberModal = new bootstrap.Modal(addMemberModalEl);
+  addMemberModal.show();
 
-  // Muestra el modal de agregar miembros sin delay
-  const addMembersModal = new bootstrap.Modal(document.getElementById("addMembersModal"));
-  addMembersModal.show();
-
-  // Llama a loadStudentContacts pasando el groupId
-  loadStudentContacts(groupId);
+  // Cargar los miembros actuales del grupo
+  fetch(`/api/students/controllers/getGroupMembers.php?groupId=${groupId}`, {
+    method: "GET",
+    credentials: "include",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === "success" && Array.isArray(data.data)) {
+        data.data.forEach((member) => {
+          if (member.institutionalEmail) {
+            currentGroupMembersSet.add(member.institutionalEmail.toLowerCase());
+          }
+        });
+      }
+    })
+    .catch((error) => {
+      console.error("Error al obtener miembros del grupo:", error);
+    })
+    .finally(() => {
+      loadGroupContacts(1);
+    });
 }
 
-function loadStudentContacts(groupId, page = 1) {
-  const loading = document.getElementById("contactsLoading");
-  const list = document.getElementById("contactsList");
-  const feedback = document.getElementById("contactsFeedback");
+// Carga y muestra la lista de contactos del usuario
+function loadGroupContacts(page = 1) {
+  const contactsLoading = document.getElementById("groupContactsLoading");
+  const contactsList = document.getElementById("groupContactsList");
 
-  feedback.innerHTML = '';  // Limpiar mensajes previos
-  loading.classList.remove("hidden");
-  list.classList.add("hidden");
-  list.innerHTML = '';  // Limpiar lista anterior
+  contactsLoading.classList.remove("hidden");
+  contactsList.classList.add("hidden");
+  contactsList.innerHTML = "";
 
   fetch(`/api/students/controllers/getStudentContacts.php?page=${page}`, {
     method: "GET",
     credentials: "include",
   })
-    .then((res) => res.json())
+    .then((response) => response.json())
     .then((data) => {
-      loading.classList.add("hidden");
-      if (data.status === "success" && data.data.length > 0) {
-        list.classList.remove("hidden");
+      contactsLoading.classList.add("hidden");
+      contactsList.classList.remove("hidden");
+
+      if (
+        data.status === "success" &&
+        Array.isArray(data.data) &&
+        data.data.length > 0
+      ) {
         data.data.forEach((contact) => {
-          const item = document.createElement("div");
-          item.className = "list-group-item d-flex justify-content-between align-items-center";
-          item.innerHTML = `
-            <div class="d-flex align-items-center">
-              <img src="${contact.profilePhoto}" alt="${contact.fullName}'s photo" class="rounded-circle me-2" width="40" height="40">
-              <div>
-                <strong>${contact.fullName}</strong><br>
-                <small>${contact.institutionalEmail}</small>
-              </div>
+          const contactEmail = contact.institutionalEmail?.toLowerCase();
+          const isAlreadyMember = currentGroupMembersSet.has(contactEmail);
+
+          const contactItem = document.createElement("div");
+          contactItem.className =
+            "list-group-item d-flex justify-content-between align-items-center";
+
+          contactItem.innerHTML = `
+            <div><strong>${contact.fullName || "Contacto"}</strong></div>
+            <div>
+              <button 
+                class="btn btn-sm ${
+                  isAlreadyMember ? "btn-secondary" : "btn-outline-primary"
+                }"
+                ${
+                  isAlreadyMember
+                    ? "disabled"
+                    : `onclick="confirmAddMember('${
+                        contact.institutionalEmail
+                      }', '${contact.fullName || "Contacto"}')"`
+                }>
+                ${isAlreadyMember ? "Ya es miembro" : "Agregar al grupo"}
+              </button>
             </div>
-            <button class="btn btn-sm btn-primary" onclick="addMemberToGroup('${groupId}', '${contact.institutionalEmail}')">
-              <i class="fa-solid fa-user-plus"></i> Agregar
-            </button>
           `;
-          list.appendChild(item);
+          contactsList.appendChild(contactItem);
         });
       } else {
-        list.innerHTML = `<div class="text-muted text-center w-100">No tienes contactos disponibles.</div>`;
-        list.classList.remove("hidden");
+        contactsList.innerHTML = `<div class="list-group-item text-center text-muted">No tienes contactos.</div>`;
       }
     })
     .catch((error) => {
-      loading.classList.add("hidden");
-      list.classList.remove("hidden");
-      list.innerHTML = `<div class="text-danger text-center w-100">Error al cargar los contactos.</div>`;
+      console.error("Error al cargar contactos:", error);
+      contactsLoading.classList.add("hidden");
+      contactsList.classList.remove("hidden");
+      contactsList.innerHTML = `<div class="list-group-item text-center text-danger">Error al cargar contactos.</div>`;
     });
 }
 
-function addMemberToGroup(email) {
-  const feedback = document.getElementById("contactsFeedback");
+function showNotification(message, type = "info", duration = 3000) {
+  const container = document.getElementById("notificationContainer");
+  if (!container) return;
 
-  feedback.innerHTML = `
-    <div class="text-info mb-2">
-      <i class="fa-solid fa-spinner fa-spin me-1"></i> Agregando a ${email}…
-    </div>`;
+  const alertDiv = document.createElement("div");
+  alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+  alertDiv.role = "alert";
+  alertDiv.innerHTML = `
+    ${message}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+  `;
+  container.appendChild(alertDiv);
+
+  setTimeout(() => {
+    alertDiv.classList.remove("show");
+    alertDiv.classList.add("hide");
+    setTimeout(() => {
+      container.removeChild(alertDiv);
+    }, 500);
+  }, duration);
+}
+
+function showConfirmation(message, onConfirm) {
+  const container = document.getElementById("notificationContainer");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const confirmDiv = document.createElement("div");
+  confirmDiv.className = `alert alert-warning`;
+  confirmDiv.role = "alert";
+  confirmDiv.innerHTML = `
+    <p>${message}</p>
+    <button id="confirmYes" class="btn btn-sm btn-primary me-2">Sí</button>
+    <button id="confirmNo" class="btn btn-sm btn-secondary">Cancelar</button>
+  `;
+  container.appendChild(confirmDiv);
+
+  document.getElementById("confirmYes").addEventListener("click", () => {
+    onConfirm();
+    container.removeChild(confirmDiv);
+  });
+  document.getElementById("confirmNo").addEventListener("click", () => {
+    container.removeChild(confirmDiv);
+  });
+}
+
+function confirmAddMember(memberIdentifier, memberName) {
+  console.log("Correo del miembro a agregar:", memberIdentifier);
+  showConfirmation(`¿Estás seguro de agregar a ${memberName} al grupo?`, () => {
+    addGroupMember(memberIdentifier);
+  });
+}
+
+// Envía la solicitud para agregar un miembro
+function addGroupMember(memberIdentifier) {
+  const addBtns = document.querySelectorAll(
+    `button[onclick*="confirmAddMember('${memberIdentifier}'"]`
+  );
+  addBtns.forEach((btn) => {
+    btn.disabled = true;
+    btn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Agregando...`;
+  });
 
   fetch("/api/students/controllers/addGroupMember.php", {
     method: "POST",
     credentials: "include",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify({
-      groupId: selectedGroupId,
-      memberIdentifier: email,
+      groupId: currentAddMemberGroupId,
+      memberIdentifier: memberIdentifier,
     }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === "success") {
+        showNotification("Miembro agregado exitosamente.", "success");
+        currentGroupMembersSet.add(memberIdentifier.toLowerCase());
+        loadGroupContacts();
+      } else {
+        showNotification(
+          "Error al agregar miembro: " +
+            (data.error ? data.error.message : "Error desconocido"),
+          "danger"
+        );
+        addBtns.forEach((btn) => {
+          btn.disabled = false;
+          btn.innerHTML = "Agregar al grupo";
+        });
+      }
+    })
+    .catch((error) => {
+      console.error("Error al agregar miembro:", error);
+      showNotification("Error al agregar miembro.", "danger");
+      addBtns.forEach((btn) => {
+        btn.disabled = false;
+        btn.innerHTML = "Agregar al grupo";
+      });
+    });
+}
+
+//Trae miembros de un grupo
+function loadGroupMembers(groupId, container) {
+  container.innerHTML = `
+    <div class="d-flex justify-content-center align-items-center my-4">
+      <div class="spinner-border text-secondary me-2" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+      <span class="text-secondary">Cargando miembros...</span>
+    </div>
+  `;
+
+  fetch(`/api/students/controllers/getGroupMembers.php?groupId=${groupId}`, {
+    method: "GET",
+    credentials: "include",
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.status === "success" && Array.isArray(data.data)) {
+        if (data.data.length === 0) {
+          container.innerHTML = `<div class="alert alert-info my-3">Este grupo no tiene miembros.</div>`;
+          return;
+        }
+
+        const listGroup = document.createElement("ul");
+        listGroup.className = "list-group my-3";
+        data.data.forEach((member) => {
+          const listItem = document.createElement("li");
+          listItem.className =
+            "list-group-item d-flex justify-content-between align-items-center";
+
+          listItem.innerHTML = `
+            <div>
+              <strong>${member.fullName || "Sin nombre"}</strong>
+              <br>
+              <small class="text-muted">${member.institutionalEmail}</small>
+            </div>
+            <button 
+              class="btn btn-sm btn-outline-danger" 
+              title="Eliminar miembro del grupo"
+              onclick="confirmRemoveGroupMember(${groupId}, ${
+            member.studentId
+          }, this)"
+            >
+              <i class="fa-solid fa-user-minus"></i> Quitar
+            </button>
+          `;
+          listGroup.appendChild(listItem);
+        });
+        container.innerHTML = "";
+        container.appendChild(listGroup);
+      } else {
+        container.innerHTML = `<div class="alert alert-danger my-3">Error al cargar los miembros.</div>`;
+      }
+    })
+    .catch((err) => {
+      console.error("Error al cargar miembros:", err);
+      container.innerHTML = `<div class="alert alert-danger my-3">Error al cargar los miembros.</div>`;
+    });
+}
+
+function confirmRemoveGroupMember(groupId, memberId, btn) {
+  const confirmDiv = document.createElement("div");
+  confirmDiv.className = "alert alert-warning alert-dismissible fade show mt-2";
+  confirmDiv.role = "alert";
+  confirmDiv.innerHTML = `
+    <div class="mb-2">¿Estás seguro de eliminar a este miembro?</div>
+    <div class="d-flex">
+      <button class="btn btn-sm btn-danger me-2">Sí</button>
+      <button class="btn btn-sm btn-secondary" data-bs-dismiss="alert">Cancelar</button>
+    </div>
+  `;
+
+  const parent = btn.closest("li");
+  parent.appendChild(confirmDiv);
+
+  const yesBtn = confirmDiv.querySelector(".btn-danger");
+  yesBtn.addEventListener("click", () => {
+    removeGroupMember(groupId, memberId, parent);
+    confirmDiv.remove();
+  });
+}
+
+//Elimina un miembro del grupo
+function removeGroupMember(groupId, memberId, container) {
+  fetch("/api/students/controllers/removeGroupMember.php", {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ groupId, memberId }),
   })
     .then((res) => res.json())
     .then((data) => {
       if (data.status === "success") {
-        feedback.innerHTML = `
-          <div class="text-success mb-2">
-            <i class="fa-solid fa-check-circle me-1"></i> ${email} fue agregado correctamente.
-          </div>`;
+        showNotification("Miembro eliminado del grupo.", "success");
+        container.remove();
       } else {
-        feedback.innerHTML = `
-          <div class="text-danger mb-2">
-            <i class="fa-solid fa-circle-exclamation me-1"></i> ${data.error.message}
-          </div>`;
+        if (data.error && data.error.errorMessage) {
+          showNotification(data.error.errorMessage, "danger");
+        } else {
+          showNotification("No se pudo eliminar el miembro.", "danger");
+        }
       }
     })
-    .catch(() => {
-      feedback.innerHTML = `
-        <div class="text-danger mb-2">
-          <i class="fa-solid fa-triangle-exclamation me-1"></i> Error al intentar agregar a ${email}.
-        </div>`;
+    .catch((err) => {
+      console.error("Error al eliminar miembro:", err);
+      showNotification("Error al eliminar miembro.", "danger");
     });
 }
 
+function showNotification(message, type = "info", duration = 3000) {
+  const container = document.getElementById("globalNotificationContainer");
+  if (!container) return;
+
+  const alertDiv = document.createElement("div");
+  alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+  alertDiv.role = "alert";
+  alertDiv.innerHTML = `
+    ${message}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+  `;
+
+  container.appendChild(alertDiv);
+
+  setTimeout(() => {
+    alertDiv.classList.remove("show");
+    alertDiv.classList.add("hide");
+    setTimeout(() => {
+      if (container.contains(alertDiv)) {
+        container.removeChild(alertDiv);
+      }
+    }, 500);
+  }, duration);
+}
+
+// Evento para salir del grupo
+function leaveGroup(groupId, groupElement) {
+  fetch("/api/students/controllers/leaveGroup.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ groupId }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.status === "success") {
+        showMessage("Has salido del grupo exitosamente.", "success");
+        groupElement.remove();
+      } else {
+        showMessage("No se pudo salir del grupo.", "danger");
+      }
+    })
+    .catch(() => {
+      showMessage("Ocurrió un error al salir del grupo.", "danger");
+    });
+}
+
+function showMessage(message, type = "info") {
+  let alertContainer = document.getElementById("customAlertContainer");
+  if (!alertContainer) {
+    alertContainer = document.createElement("div");
+    alertContainer.id = "customAlertContainer";
+    alertContainer.style.position = "fixed";
+    alertContainer.style.top = "1rem";
+    alertContainer.style.right = "1rem";
+    alertContainer.style.zIndex = "1050";
+    document.body.appendChild(alertContainer);
+  }
+
+  const alert = document.createElement("div");
+  alert.className = `alert alert-${type} alert-dismissible fade show`;
+  alert.style.minWidth = "250px";
+  alert.role = "alert";
+  alert.innerHTML = `
+    ${message}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  `;
+
+  alertContainer.appendChild(alert);
+
+  setTimeout(() => {
+    alert.classList.remove("show");
+    alert.classList.add("hide");
+    setTimeout(() => alert.remove(), 500);
+  }, 4000);
+}

@@ -27,7 +27,7 @@ $mysqli = $db->getConnection();
 
 try {
     $query = "CALL SP_REMOVE_GROUP_MEMBER(?, ?, ?)";
-    $db->callStoredProcedure($query, "iii", [$groupId, $memberId, $studentId], $mysqli);
+    $db->callStoredProcedure($query, "iii", [$groupId, $studentId, $memberId], $mysqli);
     $mysqli->close();
 
     echo json_encode(new StudentResponse("success"));
