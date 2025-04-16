@@ -574,28 +574,27 @@ if (empty($_SESSION)) {
     </div>
   </div>
 
-  <!-- Modal Agregar Miembros -->
-<div class="modal fade" id="addMembersModal" tabindex="-1" aria-labelledby="addMembersModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addMembersModalLabel">Agregar Miembros al Grupo</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body">
-        <div id="contactsFeedback" class="mb-3"></div>
-        <div id="contactsLoading" class="text-center" style="height: 200px; line-height: 200px;">
-          Cargando contactos…
+  <!-- Modal para Agregar Miembro al Grupo -->
+  <div class="modal fade" id="addMemberModal" tabindex="-1" aria-labelledby="addMemberModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addMemberModalLabel">Agregar Miembro al Grupo</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
-        <div id="contactsList" class="list-group hidden" style="max-height: 400px; overflow-y: auto;"></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <div class="modal-body">
+          <div id="notificationContainer"></div>
+          <div id="groupContactsLoading" class="text-center" style="height: 150px; line-height: 150px;">Cargando contactos...</div>
+          <div id="groupContactsList" class="list-group hidden" style="max-height: 300px; overflow-y: auto;"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
+  <div id="globalNotificationContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1055; max-width: 300px;"></div>
 
   <div id="toastContainer" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;"></div>
 
