@@ -19,8 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
       hideLoadingComponent('loading')
     } catch(err) {
       event.target.disabled = false
-      console.log(err)
       hideLoadingComponent('loading')
+      if (err.message == 'Not Sections Found') {
+        showPopUp('No hay secciones disponibles')
+        return
+      }
       showPopUp('Error en el servidor')
     }
   })
