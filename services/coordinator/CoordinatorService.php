@@ -135,11 +135,13 @@
 
         if (!file_exists($path['URL'])) {
           $pdf = @file_get_contents(__DIR__ . '/../../uploads/files/generico.pdf');
+          echo $pdf;
+        } else {
+          $pdf = @file_get_contents($path['URL']);
+          echo $pdf;
         }
 
-        $pdf = @file_get_contents($path['URL']);
 
-        echo $pdf;
       } catch(Throwable) {
         echo $pdf = @file_get_contents(__DIR__ . '/../../uploads/files/generico.pdf');
       }
@@ -200,6 +202,61 @@
 
       } catch(Throwable $err) {
         return new LoadResponse("failure", error: new ErrorResponse(500, "Server Error " . $err->getMessage()));
+      }
+    }
+
+    public static function deleteStudentFromSection(int $sectionID, int $requestID): LoadResponse {
+      $db = Database::getDatabaseInstace();
+      $mysqli = $db->getConnection();
+      $query = 'CALL SP_CANCELL_STUDENT_CLASS(?, ?)';
+      try {
+        $res = $db->callStoredProcedure($query, 'ii', [$sectionID, $requestID], $mysqli);
+        $mysqli->close();
+        if ($res->num_rows == 0) {
+          return new LoadResponse('failure', error: new ErrorResponse(404, 'Not Data Found'));
+        }
+
+        return new LoadResponse('success', data: [$sectionID, $requestID]);
+        
+      } catch(Throwable $err) {
+          return new LoadResponse('failure', error: new ErrorResponse(500, 'Server Error ' . $err->getMessage()));
+      }
+    }
+
+    public static function getCurrentStudentClasses(int $requestID): LoadResponse {
+      $db = Database::getDatabaseInstace();
+      $mysqli = $db->getConnection();
+      $query = "CALL SP_GET_STUDENT_CURRENT_CLASSES_TO_CANCELL(?)";
+      try {
+        $res = $db->callStoredProcedure($query, 'i', [$requestID], $mysqli);
+        if ($res->num_rows == 0) {
+          return new LoadResponse('failure', error: new ErrorResponse(404, 'Not Data Found'));
+        }
+
+        $res = $res->fetch_all(1);
+        return new LoadResponse('success', data: $res);
+
+      } catch(Throwable $err) {
+        return new LoadResponse('failure', error: new ErrorResponse(500, 'Server Error ' . $err->getMessage()));
+      }
+    }
+
+    public static function setRequestAsApproved(int $requestID): LoadResponse {
+      $db = Database::getDatabaseInstace();
+      $mysqli = $db->getConnection();
+      $query = "CALL SP_UPDATE_STUDENT_CANCELLATION_REQUEST(?)";
+      try {
+
+        $res = $db->callStoredProcedure($query, 'i', [$requestID], $mysqli);
+        $mysqli->close();
+        if ($res->num_rows == 0) {
+          return new LoadResponse('failure', error: new ErrorResponse(500, 'Could Not Process Request'));
+        }
+
+        return new LoadResponse('success', data: [$requestID]);
+
+      } catch(Throwable $err) {
+        return new LoadResponse('failure', error: new ErrorResponse('Server Error ' . $err->getMessage()));
       }
     }
   }
