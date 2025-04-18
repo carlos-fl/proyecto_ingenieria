@@ -50,7 +50,8 @@
       "user" => $sessionData->user,
       "roles" => $sessionData->roles,
       "teacherNumber" => $teacherNumber,
-      "employeeNumber" => $employeeNumber["EMPLOYEE_NUMBER"]
+      "employeeNumber" => $employeeNumber["EMPLOYEE_NUMBER"],
+      "photo" => $sessionData->photo
     ],
     "error" => null
   ]);

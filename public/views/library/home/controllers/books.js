@@ -171,7 +171,8 @@ function applyCardEvents(bookList) {
         fetch(selectedBook.url, { method: "HEAD" })
           .then((response) => {
             if (response.ok) {
-              modalBody.innerHTML = `<iframe src="${selectedBook.url}" allowfullscreen></iframe>`;
+              const URL = `/api/resources/controllers/getPDF.php?path=${selectedBook.url}`;
+              modalBody.innerHTML = `<iframe src=${URL} allowfullscreen></iframe>`;
             } else {
               modalBody.innerHTML = `
                 <div class="alert alert-warning text-center m-4" role="alert">

@@ -46,6 +46,16 @@
        * returns data instead of mysqli_result object
        */
       $userData = $user->fetch_assoc();
+
+      $photo = '';
+      if (file_exists($userData['PHOTO'])) {
+        $photo = base64_encode(@file_get_contents($userData['PHOTO']));
+      } else {
+        $photo = base64_encode(@file_get_contents(__DIR__ . '/../../../public/views/assets/img/default-profile.png'));
+      }
+
+      $userData['PHOTO'] = $photo;
+
       if (strcmp($userData['PASSWORD'], $hashedPassword) != 0) {
         return Response::returnPostResponse(true, 'failure', 401, 'Incorrect email or password');
       }
