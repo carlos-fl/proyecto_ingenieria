@@ -13,11 +13,10 @@ if (empty($_SESSION) || !isset($_SESSION["ID_STUDENT"])) {
     return;
 }
 
-$pacCode = isset($_GET["pacCode"]) ? (int) $_GET["pacCode"] : null;
 $typeAbbreviation = isset($_GET["type"]) ? strtoupper(trim($_GET["type"])) : null;
 
-if (!$pacCode || !$typeAbbreviation) {
-    echo json_encode(new StudentResponse("failure", error: new ErrorResponse(400, "Missing PAC code or type abbreviation")));
+if (!$typeAbbreviation) {
+    echo json_encode(new StudentResponse("failure", error: new ErrorResponse(400, "Missing type abbreviation")));
     return;
 }
 
@@ -25,8 +24,8 @@ $db = Database::getDatabaseInstace();
 $mysqli = $db->getConnection();
 
 try {
-    $query = "CALL SP_GET_ACTIVE_PROCESS_BY_PAC_AND_TYPE(?, ?)";
-    $result = $db->callStoredProcedure($query, "is", [$pacCode, $typeAbbreviation], $mysqli);
+    $query = "CALL SP_GET_ACTIVE_PROCESS_BY_PAC_AND_TYPE(?)";
+    $result = $db->callStoredProcedure($query, "s", [$typeAbbreviation], $mysqli);
 
     if ($result->num_rows === 0) {
         $mysqli->close();
