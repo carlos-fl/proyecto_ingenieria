@@ -168,27 +168,8 @@ function applyCardEvents(bookList) {
       modalTitle.textContent = selectedBook.title;
 
       if (selectedBook.url && selectedBook.url.endsWith(".pdf")) {
-        fetch(selectedBook.url, { method: "HEAD" })
-          .then((response) => {
-            if (response.ok) {
-              const URL = `/api/resources/controllers/getPDF.php?path=${selectedBook.url}`;
-              modalBody.innerHTML = `<iframe src=${URL} allowfullscreen></iframe>`;
-            } else {
-              modalBody.innerHTML = `
-                <div class="alert alert-warning text-center m-4" role="alert">
-                  URL de PDF no válida o archivo no disponible.
-                </div>
-              `;
-            }
-          })
-          .catch((error) => {
-            console.error("Error al verificar el PDF:", error);
-            modalBody.innerHTML = `
-              <div class="alert alert-warning text-center m-4" role="alert">
-                URL de PDF no válida o archivo no disponible.
-              </div>
-            `;
-          });
+        const URL = `/api/resources/controllers/getPDF.php?path=${encodeURIComponent(selectedBook.url)}`;
+        modalBody.innerHTML = `<iframe src="${URL}" allowfullscreen></iframe>`;
       } else {
         modalBody.innerHTML = `
           <div class="alert alert-warning text-center m-4" role="alert">

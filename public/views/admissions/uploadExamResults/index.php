@@ -63,5 +63,6 @@
   <script src="../../js/components/pop-up.js"></script>
   <script type="module" src="./controllers/parseCsv.js"></script>
   <script type="module" src="./controllers/downloadBlueprint.js"></script>
+  <script src="../../coordinator/controllers/setUserProfileInfo.js"></script>
 </body>
 </html>

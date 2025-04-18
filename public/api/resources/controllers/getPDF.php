@@ -8,7 +8,7 @@
   header('Content-Type: application/pdf');
 
   if (!Request::haveRol('COORDINATOR') && !Request::haveRol('TEACHERS') && !Request::haveRol('ADMINISTRATOR' && !Request::haveRol('STUDENTS') && !Request::haveRol('DEPARTMENT_CHAIR'))) {
-    return;
+    Resources::getPDF('NOFILE');
   }
 
   Request::isWrongRequestMethod('GET');
@@ -16,15 +16,7 @@
   $request = $_GET['path'];
 
   if (!isset($request)) {
-    http_response_code(400);
-    echo json_encode([
-      "status" => "failure",
-      "data" => [],
-      "error" => [
-        "errorCode" => 400,
-        "errorMessage" => "Missing data"
-      ]
-    ]);
+    Resources::getPDF('NOFILE');
     return;
   }
 
