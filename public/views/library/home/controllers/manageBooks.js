@@ -226,28 +226,8 @@ function applyCardEvents() {
       modalTitle.textContent = selectedBook.title;
 
       if (selectedBook.url && selectedBook.url.endsWith(".pdf")) {
-        fetch(selectedBook.url, { method: "HEAD" })
-          .then((response) => {
-            if (response.ok) {
-              modalBody.innerHTML = `
-                <iframe src="${selectedBook.url}" allowfullscreen style="width: 100%; height: 100%;"></iframe>
-              `;
-            } else {
-              modalBody.innerHTML = `
-                <div class="alert alert-warning text-center m-4" role="alert">
-                  URL de PDF no válida o archivo no disponible.
-                </div>
-              `;
-            }
-          })
-          .catch((error) => {
-            console.error("Error al verificar el PDF:", error);
-            modalBody.innerHTML = `
-              <div class="alert alert-warning text-center m-4" role="alert">
-                URL de PDF no válida o archivo no disponible.
-              </div>
-            `;
-          });
+        const URL = `/api/resources/controllers/getPDF.php?path=${encodeURIComponent(selectedBook.url)}`;
+        modalBody.innerHTML = `<iframe src="${URL}" allowfullscreen></iframe>`;
       } else {
         modalBody.innerHTML = `
           <div class="alert alert-warning text-center m-4" role="alert">
@@ -405,7 +385,6 @@ function renderSelectedTags() {
 function loadClasses() {
   const classSelect = document.getElementById("idClass");
   classSelect.innerHTML = '<option value="">Cargando clases...</option>';
-
   fetch("/api/library/controllers/classesByAuthority.php", {
     method: "GET",
     credentials: "include",
