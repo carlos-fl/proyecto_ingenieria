@@ -34,8 +34,14 @@ async function modalContent(requestID, type) {
 
   modalBody.innerHTML = ''
 
-  acceptButton.onclick = () => acceptRequest(requestID, type)
-  acceptButton.textContent = "ACEPTAR"
+  if (type != 'cancellation') {
+    acceptButton.onclick = () => acceptRequest(requestID, type)
+    acceptButton.textContent = "ACEPTAR"
+  }
+  else {
+    acceptButton.onclick = (event) => showStudentCurrentClasses(event, requestID)
+    acceptButton.textContent = 'Ver Clases'
+  }
   
   rejectButton.onclick = () => rejectRequest(requestID, type)
   rejectButton.textContent = 'RECHAZAR'
@@ -75,6 +81,90 @@ async function modalContent(requestID, type) {
   modal.show()
 }
 
+/**
+ * 
+ * @param {Event} event 
+ * @param {number} requestID 
+ */
+async function showStudentCurrentClasses(event, requestID) {
+  event.target.disabled = true
+  const modal = document.getElementById('current-classes-modal')
+  const previousModal = document.getElementById('request-modal')
+
+  // table to show Ongoing classes for student
+  const table = document.getElementById('c-table') 
+  const tableBody = document.getElementById('table-body-student-classes')
+  table.style.display = 'block'
+  previousModal.hide()
+
+  const URL = `/api/coordinator/controllers/getCurrentStudentClasses.php?request=${requestID}`
+  try {
+    showLoadingComponent('loading')
+    const response = await Request.fetch(URL, 'GET')
+    hideLoadingComponent('loading') 
+    renderStudentCurrentClasses(response.data, tableBody, requestID)
+    modal.show()
+  
+    event.target.disabled = false
+  } catch(err) {
+    console.log(err)
+    hideLoadingComponent('loading')
+    showPopUp('No se pudo obtener clases...')
+  }
+}
+
+/**
+ * 
+ * @param {Array} classes 
+ * @param {HTMLTableSectionElement}
+ * @param {number} requestID
+ */
+function renderStudentCurrentClasses(classes, tableBody, requestID) {
+  tableBody.innerHTML = ''
+  classes.forEach(el => {
+    const row = document.createElement('tr')
+    row.innerHTML = `
+      <td>${el.CLASS_NAME}</td> 
+      <td>${el.UV}</td> 
+      <td>${el.SECTION_CODE}</td> 
+      <td>${el.START_TIME}</td> 
+      <td>${el.END_TIME}</td> 
+      <td>${el.TEACHER_NAME}</td> 
+    `
+    const button = document.createElement('button')
+    const td = document.createElement('td')
+    button.textContent = 'Cancelar'
+    button.classList.add('btn', 'btn-primary')
+    button.onclick = (event) => cancellStudentClass(event, el.ID_SECTION, requestID)
+    td.appendChild(button)
+    row.appendChild(td)
+
+    tableBody.appendChild(row)
+  })
+}
+
+/**
+ * 
+ * @param {Event} event 
+ * @param {number} sectionID 
+ * @param {number} requestID
+ */
+async function cancellStudentClass(event, sectionID, requestID) {
+  event.target.disabled = true
+  const URL = '/api/coordinator/controllers/cancelStudentCurrentClass.php'
+  const body = { sectionID, requestID }
+  try {
+    showLoadingComponent('loading')
+    await Request.fetch(URL, 'POST', body)
+    hideLoadingComponent('loading') 
+    showPopUp('Clase cancelada', 'success-popup', '/views/assets/img/checkmark.png')
+  } catch(err) {
+    hideLoadingComponent('loading')
+    console.log(err)
+    event.target.disabled = false
+    showPopUp('No se pudo cancelar clase')
+  }
+}
 
 /**
  * 
@@ -87,7 +177,7 @@ async function acceptRequest(requestID, type) {
     showLoadingComponent('loading')
     await Request.fetch(URL, 'PUT')
     hideLoadingComponent('loading')
-    showSuccessModal("request-success")
+    showPopUp("Solicitud actualizada correctamente", 'success-popup', '/views/assets/img/checkmark.png')
 
     const modal = document.getElementById('request-modal')
     modal.hide()
@@ -216,6 +306,9 @@ async function getRequests(requestName) {
  */
 function showRequests(requests, requestName) {
   const table = document.getElementById('r-table')
+  if (requestName == 'cancellation')
+    table.setAttribute('table-row', '["Estudiante", "Número de cuenta", "GPA", "Fecha de solicitud", "Documento", "Finalizado"]')
+
   const body = document.getElementById('table-body-results')
 
 
@@ -242,12 +335,47 @@ function showRequests(requests, requestName) {
     button.textContent = 'VER';
     button.classList.add('btn', 'btn-sm', 'b');
     button.addEventListener('click', () => modalContent(element['REQUEST_ID'], requestName));
+    
     td.appendChild(button)
     row.appendChild(td);
+
+    if (requestName == 'cancellation') {
+      const doneButton = document.createElement('button')
+      const doneTd = document.createElement('td')
+      doneButton.textContent = 'Completado'
+      doneButton.classList.add('btn', 'btn-sm', 'b')
+      doneButton.onclick = (event) => completedCancellationRequest(event, element['REQUEST_ID'])
+      doneTd.appendChild(doneButton) 
+      row.appendChild(doneTd)
+    }
 
     body.appendChild(row)
   })
   table.style.display = 'block'
+}
+
+/**
+ * 
+ * @param {Event} event 
+ * @param {number} requestID 
+ */
+async function completedCancellationRequest(event, requestID) {
+  event.target.disabled = true
+  const URL = '/api/coordinator/controllers/completedCancellationRequest.php'
+  const body = { requestID }
+  try {
+    showLoadingComponent('loading')
+    await Request.fetch(URL, 'POST', body)
+    hideLoadingComponent('loading')
+    showPopUp('Solicitud Actualizada', 'success-popup', '/views/assets/img/checkmark.png')
+
+    getRequests('cancellation')
+
+  } catch(err) {
+    hideLoadingComponent('loading')
+    console.log(err)
+    showPopUp('No se pudo actualizar solicitud')
+  }
 }
 
 /**

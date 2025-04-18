@@ -52,6 +52,9 @@
 
   <d-modal tag-id="request-modal" modal-id="y-student-modal" arial-label-led-by="history-student-modal-results" header-title="Historial" arial-label="student-history" hidden="false"></d-modal>
   
+  <d-modal tag-id="current-classes-modal" modal-body-id="classes-modal-body-id" modal-id="classes-modal" arial-label-led-by="classes-student-modal-results" header-title="Clases Matriculadas" arial-label="student-classes" hidden="false">
+    <d-table class="p-3" table-row='["Clase", "UV", "Sección", "Hora Inicio", "Hora Final", "Docente", "Cancelar"]' body-id="table-body-student-classes" tag-id="c-table" style="display: none;"></d-table>
+  </d-modal>
 
 <!-- pop up to show errors -->
   <pop-up

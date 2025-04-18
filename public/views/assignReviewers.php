@@ -87,6 +87,7 @@
     <script src="js/components/log-out.js"></script>
     <script src="js/components/userProfile.js"></script>
     <script src="js/assingReviewers.js"></script>
+    <script src="./coordinator/controllers/setUserProfileInfo.js"></script>
 
 </body>
 

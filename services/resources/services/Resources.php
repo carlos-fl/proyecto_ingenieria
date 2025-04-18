@@ -72,4 +72,14 @@
 
       }
     }
+
+    public static function getPDF(string $path): void {
+      if (!file_exists($path)) {
+        $pdf = file_get_contents(__DIR__ . '/../../../uploads/files/generico.pdf');
+        echo $pdf;
+        return;
+      }
+      $pdf = file_get_contents($path);
+      echo $pdf;
+    }
   }
