@@ -102,81 +102,8 @@ function renderRequest(request) {
 
 // Función que determina y muestra el visor adecuado según la extensión
 function showCertificate(url) {
-  var spinner = document.getElementById("spinnerCertificate");
-
-  // Si la URL es nula, vacía o no existe, mostrar mensaje y salir
-  if (!url) {
-    if (spinner) spinner.style.display = "none";
-    var modalBody = document.getElementById("modalBody");
-    if (modalBody) {
-      modalBody.innerHTML = `
-        <div class="text-center">
-          <p>No se encontró certificado.</p>
-        </div>
-      `;
-    }
-    return;
-  }
-
-  if (spinner) spinner.style.display = "block";
-
-  // Ocultar todos los contenedores de visor
-  var pdfViewer = document.getElementById("pdfViewer");
-  var imgViewer = document.getElementById("imgViewer");
-  var docViewer = document.getElementById("docViewer");
-  var fallbackViewer = document.getElementById("fallbackViewer");
-
-  if (pdfViewer) pdfViewer.style.display = "none";
-  if (imgViewer) imgViewer.style.display = "none";
-  if (docViewer) docViewer.style.display = "none";
-  if (fallbackViewer) fallbackViewer.style.display = "none";
-
-  // Obtener la extensión del archivo
-  var extension = url.split(".").pop().toLowerCase();
-
-  if (extension === "pdf") {
-    var pdfObject = document.getElementById("pdfObject");
-    if (pdfObject) {
-      pdfObject.setAttribute("data", url);
-      var pdfDownloadLink = document.getElementById("pdfDownloadLink");
-      if (pdfDownloadLink) pdfDownloadLink.setAttribute("href", url);
-      // Cuando se cargue el PDF, ocultar el spinner
-      pdfObject.onload = function () {
-        if (spinner) spinner.style.display = "none";
-      };
-      if (pdfViewer) pdfViewer.style.display = "block";
-    }
-  } else if (["jpg", "jpeg", "png", "gif", "tiff", "bmp"].includes(extension)) {
-    var certificateImg = document.getElementById("certificateImg");
-    if (certificateImg) {
-      certificateImg.onload = function () {
-        if (spinner) spinner.style.display = "none";
-      };
-      certificateImg.setAttribute("src", url);
-      if (imgViewer) imgViewer.style.display = "block";
-    }
-  } else if (
-    ["doc", "docx", "xls", "xlsx", "ppt", "pptx"].includes(extension)
-  ) {
-    var viewerUrl =
-      "https://docs.google.com/gview?url=" +
-      encodeURIComponent(url) +
-      "&embedded=true";
-    var docIframe = document.getElementById("docIframe");
-    if (docIframe) {
-      docIframe.onload = function () {
-        if (spinner) spinner.style.display = "none";
-      };
-      docIframe.setAttribute("src", viewerUrl);
-      if (docViewer) docViewer.style.display = "block";
-    }
-  } else {
-    var fallbackDownloadLink = document.getElementById("fallbackDownloadLink");
-    if (fallbackDownloadLink) fallbackDownloadLink.setAttribute("href", url);
-    // Si no hay visor definido, ocultamos el spinner inmediatamente
-    if (spinner) spinner.style.display = "none";
-    if (fallbackViewer) fallbackViewer.style.display = "block";
-  }
+  var modalBody = document.getElementById("modalBody");
+  modalBody.innerHTML = `<iframe src="/api/resources/controllers/getCertificate.php?path=${encodeURIComponent(url)}" style="height: 400px; width: 100%"></iframe>`
 }
 
 // Listener para actualizar el contenido del modal al abrirlo
