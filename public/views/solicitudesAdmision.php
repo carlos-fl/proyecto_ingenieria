@@ -56,26 +56,8 @@ session_start();
               <span class="visually-hidden">Loading...</span>
             </div>
           </div>
-          <!-- Contenedor para PDF -->
-          <div id="pdfViewer" style="display: none;">
-            <object id="pdfObject" data="" type="application/pdf" width="100%" height="600px">
-              <p>Tu navegador no soporta la visualización de PDFs.
-                <a id="pdfDownloadLink" href="" target="_blank">Descargar el certificado</a>.
-              </p>
-            </object>
-          </div>
-          <!-- Contenedor para imágenes -->
-          <div id="imgViewer" style="display: none;">
-            <img id="certificateImg" src="" alt="Certificado" class="img-fluid" />
-          </div>
-          <!-- Contenedor para documentos -->
-          <div id="docViewer" style="display: none;">
-            <iframe id="docIframe" src="" width="100%" height="600px" frameborder="0"></iframe>
-          </div>
-          <!-- Contenedor si no se puede mostrar -->
-          <div id="fallbackViewer" style="display: none;">
-            <p>No se puede visualizar el archivo. <a id="fallbackDownloadLink" href="" target="_blank">Descargar certificado</a>.</p>
-          </div>
+          <!-- contenedor para visualizacion de certificado -->
+          <div id="certificate-iframe-render-container"></div> 
         </div>
       </div>
     </div>

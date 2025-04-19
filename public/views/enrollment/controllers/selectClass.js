@@ -21,6 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
       event.target.disabled = false
       hideLoadingComponent('loading')
       if (err.message == 'Not Sections Found') {
+        const sections = document.getElementById('sections')
+        sections.innerHTML = '<option value="">Secciones</option>'
         showPopUp('No hay secciones disponibles')
         return
       }

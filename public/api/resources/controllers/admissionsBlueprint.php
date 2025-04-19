@@ -14,7 +14,8 @@
       "error" => [
         "errorCode" => 403,
         "errorMessage" => "Forbidden"
-      ]
+      ],
+      "session" => $_SESSION
     ]);
     return;
   }

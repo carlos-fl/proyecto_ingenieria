@@ -52,7 +52,9 @@ async function setMajorInLocalstorage(major) {
     window.localStorage.setItem('major-chosen-enrollment', JSON.stringify(major))
   }
 
+  if (modal) {
+    modal.hide()
+  }
 
-  modal.hide()
   fillDepartments(major)
 }

@@ -1,5 +1,10 @@
 <?php 
   session_start();
+
+  if (empty($_SESSION) || !in_array('ADMINISTRATOR', $_SESSION['ROLES'])) {
+    header('Location: /views/admissions/uploadExamResults/login.php');
+  }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

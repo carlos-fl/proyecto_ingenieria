@@ -1,5 +1,5 @@
 <?php
-
+  session_start();
   include_once __DIR__ . '/../../services/auth/types/loginRequest.php';
   include_once __DIR__ . '/../functions/jsonParse.php';
   include_once __DIR__ . '/../../services/contentManagement/ContentManagement.php';
@@ -26,7 +26,7 @@
           "error" => [
             "errorCode" => 403,
             "errorMessage" => "forbidden"
-          ]
+          ],
         ]);
         return;
       }

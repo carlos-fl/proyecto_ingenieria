@@ -6,19 +6,23 @@ document.addEventListener('DOMContentLoaded', () => {
     showLoadingComponent('loading')
     event.target.disabled = true
     try {
-      const VERIFY_URL = '/api/enrollment/controllers/validateEnrollment.php'
+      const VERIFY_URL = '/api/enrollment/controllers/sectionsValidateEnrollment.php'
       const URL = '/api/enrollment/controllers/enrol.php'
       const section = document.getElementById('sections')
       
       const body = { section: section.value }
       const bodyToVerify = { sectionId: section.value }
-      //const validEnrollmentResponse = await Request.fetch(VERIFY_URL, 'POST', bodyToVerify)
-      //console.log(validEnrollmentResponse)
-      await Request.fetch(URL, 'POST', body)
-      hideLoadingComponent('loading')
-      showPopUp('Clase matriculada exitosamente', 'success-popup', '/views/assets/img/checkmark.png')
-      event.target.disabled = false
-
+      const validEnrollmentResponse = await Request.fetch(VERIFY_URL, 'POST', bodyToVerify)
+      console.log(validEnrollmentResponse)
+      if (validEnrollmentResponse.status == 'success') {
+        await Request.fetch(URL, 'POST', body)
+        hideLoadingComponent('loading')
+        showPopUp('Clase matriculada exitosamente', 'success-popup', '/views/assets/img/checkmark.png')
+        event.target.disabled = false
+      } else {
+        hideLoadingComponent('loading')
+        showPopUp('No se pudo matricular clase')
+      }
 
       const tableBody = document.getElementById('table-body-results')
 
@@ -46,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log(err)
       event.target.disabled = false
       hideLoadingComponent('loading')
-      showPopUp('Error en el servidor... No se guardó clase')
+      showPopUp(err.message)
     }
   })
 })
