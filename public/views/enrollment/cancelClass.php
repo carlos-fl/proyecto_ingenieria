@@ -1,8 +1,8 @@
 <?php
   session_start();
 
-  if (!isset($_SESSION)) {
-    header('Location: /');
+  if (empty($_SESSION) || !in_array('STUDENTS', $_SESSION['ROLES'])) {
+    header('Location: /views/loginEstudiantes.php');
   }
 
 ?>

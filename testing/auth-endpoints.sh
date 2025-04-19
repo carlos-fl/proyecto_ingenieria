@@ -22,7 +22,7 @@ logout () {
 auth_login $(jo email=carlos.rodriguez@unah.hn password=1234) "$URL/auth/controllers/adminLogin.php" "auth de admin"
 auth_login $(jo email=mfernandez@unah.hn password=1234) "$URL/auth/controllers/teacherAuth.php" "auth de docentes"
 auth_login $(jo email=carlos@gmail.com password=1234) "$URL/auth/controllers/applicantReviewer.php" "auth de revisor de datos de aplicante"
-auth_login $(jo email=carlos@gmail.com password=1234) "$URL/auth/controllers/examReviewer.php" "auth de revisor de examenes"
+auth_login $(jo email=carlos.institutional@unah.hn password=1234) "$URL/auth/controllers/examReviewer.php" "auth de revisor de examenes"
 
 # log out
 logout "$URL/auth/controllers/logout.php" "Endpoint to logout"

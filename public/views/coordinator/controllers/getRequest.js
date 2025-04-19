@@ -306,8 +306,11 @@ async function getRequests(requestName) {
  */
 function showRequests(requests, requestName) {
   const table = document.getElementById('r-table')
-  if (requestName == 'cancellation')
+  if (requestName == 'cancellation') {
     table.setAttribute('table-row', '["Estudiante", "Número de cuenta", "GPA", "Fecha de solicitud", "Documento", "Finalizado"]')
+  } else {
+    table.setAttribute('table-row', '["Estudiante", "Número de cuenta", "GPA", "Fecha de solicitud", "Documento"]')
+  }
 
   const body = document.getElementById('table-body-results')
 
