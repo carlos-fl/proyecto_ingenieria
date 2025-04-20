@@ -152,12 +152,12 @@ if (empty($_SESSION)) {
                     </div>
                     <hr />
                     <div class="info-row info-labels">
-                      <span>Indice Global</span>
-                      <span>Indice Periodo</span>
+                      <span>Índice Global</span>
+                      <span>Índice Periodo</span>
                     </div>
                     <div class="info-row">
-                      <span id="globalIndex"></span>
-                      <span id="periodIndex "></span>
+                      <span id="globalIndex">—</span>
+                      <span id="periodIndex">—</span>
                     </div>
                     <div class="card text-center">
                       <div class="card-header">
