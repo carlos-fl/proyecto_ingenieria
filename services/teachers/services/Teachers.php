@@ -99,9 +99,6 @@
     public static function addVideo(AddVideoRequest $request, string $userId): DataResponse {
       $sectionID = $request->getSectionID();
       $URL = $request->getURL();
-      if (!self::hasSection($sectionID, $userId)) {
-        return new DataResponse("failure", error: new ErrorResponse(404, "Not Data Found"));
-      }
 
       if (self::isSameVideo($sectionID, $URL)) {
         // No se puede actualizar el video por el mismo video
