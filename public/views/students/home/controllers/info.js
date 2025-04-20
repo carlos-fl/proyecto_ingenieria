@@ -10,14 +10,18 @@ function loadPersonalInfo() {
     .then((response) => response.json())
     .then((data) => {
       if (data.status === "success") {
-        let fullName = `${data.data.firstName || ""} ${data.data.lastName || ""}`.trim();
+        let fullName = `${data.data.firstName || ""} ${
+          data.data.lastName || ""
+        }`.trim();
         fullName = fullName || "N/A";
 
-        document.getElementById("accountNumber").innerText = data.data.studentAccountNumber || "N/A";
+        document.getElementById("accountNumber").innerText =
+          data.data.studentAccountNumber || "N/A";
         document.getElementById("name").innerText = fullName || "N/A";
         document.getElementById("email").innerText = data.data.email || "N/A";
         document.getElementById("phone").innerText = data.data.phone || "N/A";
-        document.getElementById("description").innerText = data.data.description || "Sin descripción";
+        document.getElementById("description").innerText =
+          data.data.description || "Sin descripción";
       } else {
         console.error("Error al cargar la información personal", data.error);
       }
@@ -26,26 +30,28 @@ function loadPersonalInfo() {
 }
 
 // Mostrar la modal y precargar los valores actuales
-document.getElementById("editInfoModal").addEventListener("show.bs.modal", function () {
-  // Precargar teléfono y descripción actuales
-  document.getElementById("editPhone").value = document.getElementById("phone").innerText;
-  document.getElementById("editDescription").value = document.getElementById("description").innerText;
+document
+  .getElementById("editInfoModal")
+  .addEventListener("show.bs.modal", function () {
+    document.getElementById("editPhone").value =
+      document.getElementById("phone").innerText;
+    document.getElementById("editDescription").value =
+      document.getElementById("description").innerText;
 
-  // Ajustar atributos de accesibilidad
-  this.removeAttribute("aria-hidden");
-  this.setAttribute("aria-modal", "true");
+    this.removeAttribute("aria-hidden");
+    this.setAttribute("aria-modal", "true");
 
-  // Mover el foco al primer elemento interactivo dentro del modal
-  const firstButton = this.querySelector('.btn-primary');
-  if (firstButton) {
-    firstButton.focus();
-  }
-});
+    const firstButton = this.querySelector(".btn-primary");
+    if (firstButton) {
+      firstButton.focus();
+    }
+  });
 
-// Restaurar el atributo aria-hidden cuando se cierra la modal
-document.getElementById("editInfoModal").addEventListener("hidden.bs.modal", function () {
-  this.setAttribute("aria-hidden", "true");
-});
+document
+  .getElementById("editInfoModal")
+  .addEventListener("hidden.bs.modal", function () {
+    this.setAttribute("aria-hidden", "true");
+  });
 
 // Función para actualizar la información del perfil
 function updateInfo() {
@@ -68,12 +74,19 @@ function updateInfo() {
         document.getElementById("phone").innerText = phone;
         document.getElementById("description").innerText = description;
       } else {
-        console.error("Error al actualizar la información", data.error || data.message);
+        console.error(
+          "Error al actualizar la información",
+          data.error || data.message
+        );
       }
     })
-    .catch((error) => console.error("Error en la petición de actualización", error))
+    .catch((error) =>
+      console.error("Error en la petición de actualización", error)
+    )
     .finally(() => {
-      var editModal = bootstrap.Modal.getInstance(document.getElementById("editInfoModal"));
+      var editModal = bootstrap.Modal.getInstance(
+        document.getElementById("editInfoModal")
+      );
       editModal.hide();
     });
 }
@@ -100,7 +113,6 @@ function uploadProfileImage(file) {
     .then((response) => response.json())
     .then((data) => {
       if (data.status === "success") {
-        // Actualiza la imagen de perfil con la URL devuelta por el servidor
         document.getElementById("profileImg").src = data.data.profileImageUrl;
       } else {
         console.error("Error al subir la imagen", data.error);
@@ -128,21 +140,19 @@ function handleProfileImageUpload(files) {
   }
 }
 
-// Cuando se selecciona un archivo, se muestra una vista previa y se envía al servidor
-document.getElementById("fileInput").addEventListener("change", function (event) {
-  var file = event.target.files[0];
-  if (file) {
-    // Mostrar vista previa
-    var reader = new FileReader();
-    reader.onload = function (e) {
-      document.getElementById("profileImg").src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-
-    // Subir la imagen al servidor
-    uploadProfileImage(file);
-  }
-});
+document
+  .getElementById("fileInput")
+  .addEventListener("change", function (event) {
+    var file = event.target.files[0];
+    if (file) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        document.getElementById("profileImg").src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      uploadProfileImage(file);
+    }
+  });
 
 // Función para cargar el historial académico
 function loadClassHistorial() {
@@ -151,7 +161,6 @@ function loadClassHistorial() {
   const paginationContainer = document.getElementById("paginationContainer");
 
   loadingContainer.style.display = "block";
-  // Limpia la tabla y el paginador
   tableBody.innerHTML = "";
   paginationContainer.innerHTML = "";
 
@@ -166,7 +175,6 @@ function loadClassHistorial() {
         let currentPage = 1;
         const totalPages = Math.ceil(records.length / itemsPerPage);
 
-        // Función para renderizar una página específica
         function renderPage(page) {
           tableBody.innerHTML = "";
           const startIndex = (page - 1) * itemsPerPage;
@@ -188,15 +196,14 @@ function loadClassHistorial() {
           });
         }
 
-        // Función para generar el paginador dinámico
         function renderPagination() {
           paginationContainer.innerHTML = "";
           const ul = document.createElement("ul");
           ul.className = "pagination justify-content-end";
 
-          // Botón "Anterior"
           const liPrev = document.createElement("li");
-          liPrev.className = "page-item" + (currentPage === 1 ? " disabled" : "");
+          liPrev.className =
+            "page-item" + (currentPage === 1 ? " disabled" : "");
           const aPrev = document.createElement("a");
           aPrev.className = "page-link";
           aPrev.href = "#";
@@ -212,7 +219,6 @@ function loadClassHistorial() {
           liPrev.appendChild(aPrev);
           ul.appendChild(liPrev);
 
-          // Botones numéricos de páginas
           for (let i = 1; i <= totalPages; i++) {
             const li = document.createElement("li");
             li.className = "page-item" + (i === currentPage ? " active" : "");
@@ -230,9 +236,9 @@ function loadClassHistorial() {
             ul.appendChild(li);
           }
 
-          // Botón "Siguiente"
           const liNext = document.createElement("li");
-          liNext.className = "page-item" + (currentPage === totalPages ? " disabled" : "");
+          liNext.className =
+            "page-item" + (currentPage === totalPages ? " disabled" : "");
           const aNext = document.createElement("a");
           aNext.className = "page-link";
           aNext.href = "#";
@@ -251,10 +257,8 @@ function loadClassHistorial() {
           paginationContainer.appendChild(ul);
         }
 
-        // Renderiza la primera página
         renderPage(currentPage);
 
-        // Si hay más de 1 página, muestra el paginador
         if (totalPages > 1) {
           renderPagination();
         }
@@ -271,4 +275,34 @@ function loadClassHistorial() {
 document.addEventListener("DOMContentLoaded", function () {
   loadPersonalInfo();
   loadClassHistorial();
+});
+
+//Indices
+document.addEventListener("DOMContentLoaded", () => {
+  fetch("../../../../api/students/controllers/getStudentIndexes.php", {
+    method: "GET",
+    credentials: "include",
+  })
+    .then((resp) => {
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      return resp.json();
+    })
+    .then((json) => {
+      if (json.status === "success" && json.data) {
+        const { globalIndex, periodIndex } = json.data;
+        document.getElementById("globalIndex").innerText =
+          globalIndex !== null ? parseFloat(globalIndex).toFixed(2) : "—";
+        document.getElementById("periodIndex").innerText =
+          periodIndex !== null ? parseFloat(periodIndex).toFixed(2) : "—";
+      } else {
+        console.error("Error en la respuesta:", json);
+        document.getElementById("globalIndex").innerText = "Error";
+        document.getElementById("periodIndex").innerText = "Error";
+      }
+    })
+    .catch((err) => {
+      console.error("Fetch failed:", err);
+      document.getElementById("globalIndex").innerText = "Error red";
+      document.getElementById("periodIndex").innerText = "Error red";
+    });
 });
