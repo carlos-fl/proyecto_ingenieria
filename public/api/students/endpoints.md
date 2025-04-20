@@ -903,7 +903,62 @@ curl -X GET "http://18.117.9.170:80/api/students/controllers/getStudentGroups.ph
   
 ___
 
-## 18. Obtener información del estudiante
+## 18. Obtener índices académico global y de período
+
+#### Descripción
+Retorna el índice académico global acumulado del estudiante y el índice del período más reciente en el que cursó clases.
+
+- Requiere Autenticación
+
+
+#### Parámetros
+
+Solo utiliza el Student Id de la sesion.
+
+#### Ejemplo de Request
+```bash
+curl -X GET http://18.117.9.170:80/api/students/controllers/getStudentIndexes.php
+```
+
+#### Respuesta
+
+**200 OK**
+```json
+{
+  "status": "success",
+  "data": {
+    "globalIndex": 75.23,
+    "periodIndex": 80.00
+  }
+}
+
+```
+
+**401 Unauthorized**
+```json
+{
+  "status": "error",
+  "message": "Usuario no autenticado."
+}
+```
+
+**500 Internal Server Error**
+```json
+{
+  "status": "failure",
+  "error": {
+    "code": 500,
+    "message": "Error al consultar los índices: <mensaje del error>"
+  }
+}
+```
+
+#### Nota:
+- Los procedimiento almacenado utilizados son `SP_GET_GLOBAL_INDEX` y `SP_GET_PERIOD_INDEX`.
+- `SP_GET_GLOBAL_INDEX ` Calcula mediante el último pac cursado, no es necesario mandarle el pac, aunque el sp está diseñado para funcionar con un pac específico si se requiere.
+___
+
+## 19. Obtener información del estudiante
 
 #### Descripción
 Devuelve la información personal del estudiante, nombre, correo, descripción y otros detalles relevantes.
@@ -973,7 +1028,7 @@ curl -X GET http://18.117.9.170:80/api/students/controllers/getStudentPersonalIn
   
 ___
 
-## 19. Obtener perfil público del estudiante
+## 20. Obtener perfil público del estudiante
 
 #### Descripción
 Este endpoint devuelve el perfil del estudiante, incluyendo su descripción y fotos asociadas al perfil.
@@ -1044,7 +1099,7 @@ curl -X GET http://18.117.9.170:80/api/students/controllers/getStudentProfile.ph
   
 ___
 
-## 20. Salir del grupo
+## 21. Salir del grupo
 
 #### Descripción
 Permite a un estudiante abandonar un grupo al que pertenece.
@@ -1115,7 +1170,7 @@ curl -X POST http://18.117.9.170:80/api/students/controllers/leaveGroup.php
   
 ___
 
-## 20. Salir del grupo
+## 22. Salir del grupo
 
 #### Descripción
 Permite a un estudiante abandonar un grupo al que pertenece.
@@ -1186,7 +1241,7 @@ curl -X POST http://18.117.9.170:80/api/students/controllers/leaveGroup.php
   
 ___
 
-## 22. Eliminar miembro de grupo
+## 24. Eliminar miembro de grupo
 
 #### Descripción
 Permite al creador del grupo eliminar a un miembro del grupo.
@@ -1257,7 +1312,7 @@ curl -X POST http://18.117.9.170:80/api/students/controllers/removeGroupMember.p
   
 ___
 
-## 23. Responder solicitud de contacto
+## 25. Responder solicitud de contacto
 
 #### Descripción
 Permite a un estudiante responder a una solicitud de contacto recibida, aceptando, rechazando o bloqueando al solicitante.
@@ -1329,7 +1384,7 @@ curl -X POST http://18.117.9.170:80/api/students/controllers/respondContactReque
   
 ___
 
-## 24. Enviar solicitud de contacto
+## 26. Enviar solicitud de contacto
 
 #### Descripción
 Permite a un estudiante enviar una solicitud de contacto a otro estudiante usando su correo institucional.
@@ -1423,7 +1478,7 @@ curl -X POST http://18.117.9.170:80/api/students/controllers/sendFriendRequest.p
   
 ___
 
-## 24. Enviar mensaje
+## 27. Enviar mensaje
 
 #### Descripción
 Permite a un estudiante enviar un mensaje a otro estudiante o a un grupo.
@@ -1502,7 +1557,7 @@ curl -X POST http://18.117.9.170:80/api/students/controllers/sendMessage.php
   
 ___
 
-## 25. Transferir propiedad de grupo
+## 28. Transferir propiedad de grupo
 
 #### Descripción
 Permite al creador de un grupo transferir su propiedad a otro miembro.
@@ -1579,7 +1634,7 @@ curl -X POST http://18.117.9.170:80/api/students/controllers/transferGroupOwners
   
 ___
 
-## 26. Actualizar información personal del estudiante
+## 29. Actualizar información personal del estudiante
 
 #### Descripción
 Permite al estudiante autenticado actualizar su número de teléfono y descripción personal.
@@ -1646,7 +1701,7 @@ curl -X POST http://18.117.9.170:80/api/students/controllers/updateStudentPerson
 - Este endpoint fue sustituido por updateStudentProfile.php
 ___
 
-## 27. Actualizar perfil del estudiante
+## 30. Actualizar perfil del estudiante
 
 #### Descripción
 Permite al estudiante autenticado actualizar su número de teléfono y descripción personal.
@@ -1710,4 +1765,3 @@ curl -X POST http://18.117.9.170:80/api/students/controllers/updateStudentProfil
 
 #### Nota:
 - El procedimiento almacenado utilizado es `SP_UPDATE_STUDENT_INFO`.
-___
