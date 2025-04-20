@@ -1,5 +1,10 @@
 <?php 
   session_start();
+
+  if (empty($_SESSION) || !in_array('ADMINISTRATOR', $_SESSION['ROLES'])) {
+    header('Location: /views/admissions/uploadExamResults/login.php');
+  }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -63,5 +68,6 @@
   <script src="../../js/components/pop-up.js"></script>
   <script type="module" src="./controllers/parseCsv.js"></script>
   <script type="module" src="./controllers/downloadBlueprint.js"></script>
+  <script src="../../coordinator/controllers/setUserProfileInfo.js"></script>
 </body>
 </html>

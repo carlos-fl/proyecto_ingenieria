@@ -72,4 +72,21 @@
 
       }
     }
+
+    public static function getPDF(string $path): void {
+      if (!file_exists($path)) {
+        $pdf = file_get_contents(__DIR__ . '/../../../uploads/files/generico.pdf');
+        echo $pdf;
+        return;
+      }
+      $pdf = file_get_contents($path);
+      echo $pdf;
+    }
+
+    public static function getContentType(string $path): string {
+      if (!file_exists($path)) {
+        return 'application/pdf';
+      }
+      return mime_content_type($path);
+    }
   }

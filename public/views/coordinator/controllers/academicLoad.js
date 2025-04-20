@@ -1,5 +1,5 @@
 import { Request } from "../../js/modules/request.mjs"
-import { downlodFile, hideLoadingComponent, showLoadingComponent, showModal, showPopUp } from "../../js/modules/utlis.mjs"
+import { downloadFile, hideLoadingComponent, showLoadingComponent, showModal, showPopUp } from "../../js/modules/utlis.mjs"
 
 document.addEventListener('DOMContentLoaded', async () => {
   const URL = "/api/coordinator/controllers/academicLoad.php"
@@ -68,7 +68,7 @@ async function downloadAsCsv(event, loadID) {
     showLoadingComponent('loading')
     const response = await fetch(URL)
     const blob = await response.blob()
-    downlodFile('carga', blob)
+    downloadFile('carga', blob)
     hideLoadingComponent('loading')
 
     event.target.disabled = false
@@ -93,7 +93,7 @@ async function downloadAsPdf(event, loadID) {
     showLoadingComponent('loading')
     const response = await Request.fetch(URL, 'GET')
     const blob = await response.blob()
-    downlodFile('carga', blob)
+    downloadFile('carga', blob)
     hideLoadingComponent('loading')
     event.target.disabled = false
   } catch(err) {

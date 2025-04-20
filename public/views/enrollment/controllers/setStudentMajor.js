@@ -2,11 +2,11 @@ import { Request } from "../../js/modules/request.mjs";
 import { fillDepartments } from "./fillDepartments.mjs";
 
 document.addEventListener('DOMContentLoaded', async () => {
+  window.localStorage.removeItem('major-chosen-enrollment')
   const URL = `/api/enrollment/controllers/getStudentMajors.php`
   try {
     const res = await Request.fetch(URL, 'GET')
     if (res.data.length == 1) {
-      window.localStorage.setItem('major-chosen-enrollment', JSON.stringify(res.data[0]))
       setMajorInLocalstorage(res.data[0])
       return;
     }
@@ -16,8 +16,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!window.localStorage.getItem('major-chosen-enrollment')) {
       setModalContent(res.data) 
     }
-
-    setMajorInLocalstorage(JSON.parse(window.localStorage.getItem('major-chosen-enrollment')))
 
   } catch(err) {
     console.log(err)
@@ -52,6 +50,9 @@ async function setMajorInLocalstorage(major) {
   const modal = document.getElementById('major-modal')
   if (!window.localStorage.getItem('major-chosen-enrollment')) {
     window.localStorage.setItem('major-chosen-enrollment', JSON.stringify(major))
+  }
+
+  if (modal) {
     modal.hide()
   }
 

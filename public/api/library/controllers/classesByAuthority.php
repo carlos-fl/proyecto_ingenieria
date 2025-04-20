@@ -38,7 +38,7 @@ try {
 
     if ($result->num_rows === 0) {
         $mysqli->close();
-        echo json_encode(["status" => "success", "data" => []]);
+        echo json_encode(["status" => "success", "data" => [], "n" => $teacherNumber]);
         return;
     }
 

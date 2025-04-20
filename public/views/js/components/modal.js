@@ -40,7 +40,9 @@ class Modal extends HTMLElement {
   }
 
   hide() {
-    this.modalInstance.hide()
+    if (this.modalInstance) {
+      this.modalInstance.hide()
+    }
   }
 
   render() {
