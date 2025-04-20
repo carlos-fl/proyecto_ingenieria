@@ -38,7 +38,7 @@
         <h6 style="color: var(--primary-color)">Clases matriculadas</h6>
       </div>
       <div class="overflow-auto h-100">
-        <d-table tag-id="enroll-table" table-row='["UV", "clase", "hora inicio", "hora final"]' class="w-100 rounded"></d-table>
+        <d-table tag-id="enroll-table" table-row='["UV", "clase", "hora inicio", "hora final", "Días"]' class="w-100 rounded"></d-table>
       </div>
     </div>
   <!-- matricular clases -->
