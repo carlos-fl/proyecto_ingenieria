@@ -147,7 +147,7 @@ export function exportTableToCSV(tableId, filename) {
     // export a table to CSV format
     let csv = parseToCsv(tableId)
     // Crea un Blob y genera el enlace de descarga
-    let csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+    let csvFile = new Blob(["\uFEFF" + csv.join("\n")], { type: "text/csv;charset=UTF-8" });
     let downloadLink = document.createElement("a");
     downloadLink.download = filename;
     downloadLink.href = window.URL.createObjectURL(csvFile);
