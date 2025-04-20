@@ -38,10 +38,13 @@ document.addEventListener('DOMContentLoaded', () => {
         tableBody.innerHTML = ''
         res.data.forEach(el => {
           tableBody.innerHTML += `
-          <tr><td>${el.UV}</td>
-          <td>${el.CLASS_NAME}</td>
-          <td>${el.START_TIME}</td>
-          <td>${el.END_TIME}</td></tr>
+          <tr>
+            <td>${el.UV}</td>
+            <td>${el.CLASS_NAME}</td>
+            <td>${el.START_TIME}</td>
+            <td>${el.END_TIME}</td>
+            <td>${el.DAYS}</td>
+          </tr>
           `
         })
 
